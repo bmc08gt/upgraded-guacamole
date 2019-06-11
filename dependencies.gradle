@@ -13,7 +13,7 @@ def deps = [:]
 
 def versions = [:]
 versions.plugin_android_maven = "1.3"
-versions.plugin_build_tools = '3.6.0-alpha02'
+versions.plugin_build_tools = '3.6.0-alpha03'
 versions.plugin_google_services = "4.0.1"
 versions.plugin_fabric = '1.+'
 versions.plugin_firebase = '1.2.0'

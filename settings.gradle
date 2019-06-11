@@ -1,2 +1,1 @@
-include ':app'
-rootProject.name='template'
+include ':app', ':musickit', ':mediaplayback'
