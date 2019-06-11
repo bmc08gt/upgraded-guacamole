@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs'
+apply plugin: "com.github.ben-manes.versions"
+
+android {
+    compileSdkVersion androidbuild.compileSdkVersion
+
+    defaultConfig {
+        applicationId appInfo.applicationId
+        minSdkVersion androidbuild.minSdkVersion
+        targetSdkVersion androidbuild.targetSdkVersion
+        versionCode appInfo.versionCode
+        versionName appInfo.versionName
+        testInstrumentationRunner androidbuild.testInstrumentationRunner
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation deps.kotlin.stdlib
+    implementation deps.kotlin.coroutinesCore
+    implementation deps.kotlin.coroutinesAndroid
+
+    implementation deps.jetpack.appcompat
+    implementation deps.jetpack.corektx
+    implementation deps.jetpack.material
+    implementation deps.jetpack.constraintlayout
+    implementation deps.jetpack.navigation_fragment
+    implementation deps.jetpack.navigation_ui
+    implementation deps.jetpack.lifecycle_extensions
+    implementation deps.jetpack.navigation_fragment_ktx
+    implementation deps.jetpack.navigation_ui_ktx
+
+    implementation deps.anko.commons
+
+    testImplementation deps.test.junit
+    androidTestImplementation deps.test.junit
+    androidTestImplementation deps.test.espresso
+}
