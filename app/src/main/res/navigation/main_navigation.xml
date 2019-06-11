@@ -6,6 +6,6 @@
 
     <fragment android:id="@+id/fragment_library"
               android:name="dev.bmcreations.guacamole.ui.library.LibraryFragment"
-              android:label="@string/title_library" />
+              android:label="@string/title_library"/>
 
 </navigation>

@@ -1,5 +1,6 @@
 package dev.bmcreations.guacamole.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -7,8 +8,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.bmcreations.guacamole.R
+import dev.bmcreations.guacamole.extensions.userSignedIn
+import dev.bmcreations.guacamole.ui.login.LoginActivity
+import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
+import org.jetbrains.anko.AnkoLogger
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
 
     var navController: NavController? = null
 
@@ -22,4 +27,15 @@ class MainActivity : AppCompatActivity() {
             navView.setupWithNavController(it)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (!userSignedIn(this)) {
+            Intent(this, LoginActivity::class.java).also {
+                startActivity(it)
+            }
+        }
+    }
+
+    override fun onSupportNavigateUp() = navController?.navigateUp() ?: false
 }
