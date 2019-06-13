@@ -40,6 +40,9 @@ dependencies {
     implementation deps.jetpack.lifecycle_extensions
     implementation deps.jetpack.navigation_fragment_ktx
     implementation deps.jetpack.navigation_ui_ktx
+    implementation deps.jetpack.media
+
+    implementation deps.picasso
 
     implementation deps.anko.commons
 

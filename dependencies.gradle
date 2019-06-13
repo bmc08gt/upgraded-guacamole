@@ -80,6 +80,7 @@ jetpack.work = "androidx.work:work-runtime-ktx:$versions.androidx_work"
 jetpack.cardview = "androidx.cardview:cardview:1.0.0"
 jetpack.camera_core = "androidx.camera:camera-core:$versions.androidx_camerax"
 jetpack.camera2 = "androidx.camera:camera-camera2:$versions.androidx_camerax"
+jetpack.media = "androidx.media:media:1.0.0"
 deps.jetpack = jetpack
 
 def test = [:]
