@@ -2,6 +2,7 @@ package dev.bmcreations.musickit.networking.api.music.repository
 
 import android.content.Context
 import dev.bmcreations.musickit.networking.Outcome
+import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
 import dev.bmcreations.musickit.networking.api.models.Playlist
 import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
 import dev.bmcreations.musickit.networking.provideLibraryService
@@ -50,6 +51,23 @@ class MusicRepository(val context: Context,
             try {
                 req.await().run {
                     ret = Outcome.success(this.data)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ret = Outcome.failure(e)
+            }
+        }
+        return ret
+    }
+
+    suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum> {
+        var ret: Outcome<LibraryAlbum> = Outcome.failure(Throwable("Auth token is null"))
+        userToken?.let { token ->
+            val bearer = "Bearer $devToken"
+            val req = library.getLibraryAlbumByIdAsync(bearer, token, id)
+            try {
+                req.await().run {
+                    ret = Outcome.success(this.data.first())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

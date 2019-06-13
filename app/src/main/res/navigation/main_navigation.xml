@@ -6,6 +6,14 @@
 
     <fragment android:id="@+id/fragment_library"
               android:name="dev.bmcreations.guacamole.ui.library.LibraryFragment"
-              android:label="@string/title_library"/>
+              android:label="@string/title_library">
+        <action android:id="@+id/show_details_for_album" app:destination="@id/fragment_details" />
+    </fragment>
+
+    <fragment android:id="@+id/fragment_details"
+              android:name="dev.bmcreations.guacamole.ui.details.AlbumDetailFragment"
+              android:label="@string/title_details">
+
+    </fragment>
 
 </navigation>

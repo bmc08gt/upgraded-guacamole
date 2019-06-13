@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="16dp"
+        android:fillViewport="true"
+        android:clipToPadding="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ra_image"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_music_fail"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AppTheme.Details.AlbumTitle"
+                android:id="@+id/album_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/ra_image"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                app:layout_constrainedWidth="true"
+                tools:text="Confessions of A Dangerous Mind"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AppTheme.Details.AlbumArtist"
+                android:id="@+id/artist_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/ra_image"
+                app:layout_constraintTop_toBottomOf="@id/album_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                app:layout_constrainedWidth="true"
+                tools:text="Logic"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tracks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ra_image"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/album_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/tracks"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/tracks" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

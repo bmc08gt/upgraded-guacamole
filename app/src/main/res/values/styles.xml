@@ -1,17 +1,59 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme.Recents.AlbumTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeStepGranularity">0.1sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
     </style>
-    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+
+    <style name="AppTheme.Recents.AlbumArtist" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="autoSizeMaxTextSize">14sp</item>
+        <item name="autoSizeMinTextSize">10sp</item>
+        <item name="autoSizeStepGranularity">0.1sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge"/>
-    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge"/>
+
+    <style name="AppTheme.Details.AlbumTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="autoSizeMaxTextSize">16sp</item>
+        <item name="autoSizeMinTextSize">13sp</item>
+        <item name="autoSizeStepGranularity">0.1sp</item>
+    </style>
+
+    <style name="AppTheme.Details.AlbumArtist" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="autoSizeMaxTextSize">14sp</item>
+        <item name="autoSizeMinTextSize">10sp</item>
+        <item name="autoSizeStepGranularity">0.1sp</item>
+    </style>
+
+    <style name="AppTheme.TrackList.Number" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="AppTheme.TrackList.Song" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
 </resources>
