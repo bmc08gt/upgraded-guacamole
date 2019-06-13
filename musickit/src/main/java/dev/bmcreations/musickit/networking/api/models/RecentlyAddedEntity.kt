@@ -44,14 +44,11 @@ data class RecentlyAddedEntity(
             val urlWithDimensions: String?
                 get() {
                     return url?.let { url ->
-                        var populated = url
-                        width?.let { w ->
-                            populated = populated.replace("{w}", w.toString(), ignoreCase = false)
-                            height?.let { h ->
-                                populated = populated.replace("{h}", h.toString(), ignoreCase = false)
-                            }
-                        }
-                        return populated
+                        val w = width ?: 600
+                        val h = height ?: 600
+                        return url.replace(
+                            "{w}", w.toString(), ignoreCase = false).replace(
+                            "{h}", h.toString(), ignoreCase = false)
                     }
 
                 }
