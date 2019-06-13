@@ -44,10 +44,8 @@
             android:layout_marginBottom="46dp"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
-            android:drawablePadding="8dp"
-            android:drawableEnd="@drawable/ic_apple_music_logo"
             android:text="@string/sign_in_with"
-            android:background="@drawable/ripple_red_button"
+            android:background="@drawable/ic_music_kit_gradient"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
