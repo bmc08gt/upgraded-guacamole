@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel
 import com.apple.android.sdk.authentication.AuthenticationFactory
 import com.apple.android.sdk.authentication.TokenError
 import dev.bmcreations.guacamole.R
+import dev.bmcreations.guacamole.auth.TokenProvider
+import dev.bmcreations.guacamole.extensions.authTokenType
 import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.ui.login.authy.GuacamoleAuthenticator
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
@@ -31,6 +33,8 @@ class LoginViewModel private constructor(val context: Context): ViewModel() {
         data class InvalidAuthentication(val cause: Throwable?): State()
     }
 
+    val tokenProvider = TokenProvider.with(context)
+
     val authState = MutableLiveData<State>()
 
     private var authManager = AuthenticationFactory.createAuthenticationManager(context)
@@ -48,7 +52,7 @@ class LoginViewModel private constructor(val context: Context): ViewModel() {
     fun authenticate() {
         // TODO: Support webview callbacks for non-installed app
         startActivityForResultEvent.sendEvent {
-            val intent = authManager.createIntentBuilder(context.strings[R.string.musickit_token])
+            val intent = authManager.createIntentBuilder(tokenProvider.devToken)
                 .setHideStartScreen(true)
                 .setStartScreenMessage("Connect with Apple Music!")
                 .build()
@@ -85,6 +89,7 @@ class LoginViewModel private constructor(val context: Context): ViewModel() {
         AccountManager.get(context).also {
             val account = Account(name, GuacamoleAuthenticator.ACCOUNT_TYPE)
             it.addAccountExplicitly(account, null, authResult)
+            it.setAuthToken(account, authTokenType, token)
         }
     }
 

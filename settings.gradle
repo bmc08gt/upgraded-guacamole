@@ -1,1 +1,1 @@
-include ':app', ':musickit', ':mediaplayback'
+include ':app', ':musickit-sdk', ':mediaplayback', ':musickit'

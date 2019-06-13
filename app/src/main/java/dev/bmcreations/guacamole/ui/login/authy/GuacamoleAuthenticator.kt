@@ -14,7 +14,7 @@ class GuacamoleAuthenticator internal constructor(private val context: Context):
 
     companion object {
         const val ACCOUNT_TYPE = "guacamole_account_type"
-        const val AUTH_TYPE = "guacamole_auth_type"
+        const val AUTH_TOKEN_TYPE = "guacamole_auth_token_type"
     }
     override fun getAuthTokenLabel(authTokenType: String?): String? = null
 
@@ -54,7 +54,7 @@ class GuacamoleAuthenticator internal constructor(private val context: Context):
     private fun generateReAuthBundle(accountType: String, authTokenType: String, response: AccountAuthenticatorResponse?): Bundle {
         val intent = Intent(context, MainActivity::class.java).apply {
             this.putExtra(ACCOUNT_TYPE, accountType)
-            this.putExtra(AUTH_TYPE, authTokenType)
+            this.putExtra(AUTH_TOKEN_TYPE, authTokenType)
             this.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
         }
         return Bundle().apply {
