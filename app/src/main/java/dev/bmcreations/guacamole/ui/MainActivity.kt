@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.bmcreations.guacamole.R
@@ -26,6 +27,8 @@ class MainActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
         navController = findNavController(R.id.nav_host_fragment).also {
             navView.setupWithNavController(it)
         }
+
+        navController?.let { setupActionBarWithNavController(it) }
     }
 
     override fun onResume() {
