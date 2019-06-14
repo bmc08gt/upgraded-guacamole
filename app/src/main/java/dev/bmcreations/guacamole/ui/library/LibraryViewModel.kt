@@ -3,6 +3,7 @@ package dev.bmcreations.guacamole.ui.library
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.guacamole.extensions.uiScope
 import dev.bmcreations.musickit.networking.Outcome
@@ -14,6 +15,8 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
+
+
 
     private val musicRepo by lazy {
         MusicRepository(context, TokenProvider.with(context).devToken, TokenProvider.with(context).userToken)

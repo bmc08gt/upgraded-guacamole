@@ -7,17 +7,17 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.transition.TransitionInflater
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.guacamole.extensions.formattedStrings
-import dev.bmcreations.guacamole.extensions.invisible
-import dev.bmcreations.guacamole.extensions.picasso
-import dev.bmcreations.guacamole.extensions.visible
+import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
+import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.fragment_album_detail.*
 import kotlinx.android.synthetic.main.fragment_album_detail.view.*
@@ -30,7 +30,17 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         context?.let { ctx -> LibraryViewModel(ctx) }
     }
 
-    val adapter by lazy { TrackListAdapter() }
+    val nowPlaying by lazy {
+        activity?.let { a -> a.getViewModel { NowPlayingViewModel.create(a) } }
+    }
+
+    val adapter by lazy {
+        TrackListAdapter().apply {
+            this.onTrackSelected = {
+                nowPlaying?.updatePlayingTrack(it.entity)
+            }
+        }
+    }
 
     private var playlist: Boolean = false
     private var albumName: String? = null
