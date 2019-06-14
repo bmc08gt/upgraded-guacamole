@@ -1,47 +1,47 @@
 package dev.bmcreations.musickit.networking.extensions
 
-import android.media.MediaMetadata
+import android.support.v4.media.MediaMetadataCompat
 
-val MediaMetadata.mediaId: String
+val MediaMetadataCompat.mediaId: String
     get() {
-        return this.getString(MediaMetadata.METADATA_KEY_MEDIA_ID)
+        return this.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
     }
 
-val MediaMetadata.songName: String
+val MediaMetadataCompat.songName: String
     get() {
-        return this.getString(MediaMetadata.METADATA_KEY_TITLE)
+        return this.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
     }
 
-val MediaMetadata.trackNumber: Long
+val MediaMetadataCompat.trackNumber: Long
     get() {
-        return this.getLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER)
-    }
-
-
-val MediaMetadata.artistName: String
-    get() {
-        return this.getString(MediaMetadata.METADATA_KEY_ARTIST)
-    }
-
-val MediaMetadata.albumName: String
-    get() {
-        return this.getString(MediaMetadata.METADATA_KEY_ALBUM)
+        return this.getLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER)
     }
 
 
-val MediaMetadata.albumArtworkUrl: String
+val MediaMetadataCompat.artistName: String
     get() {
-        return this.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI)
+        return this.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+    }
+
+val MediaMetadataCompat.albumName: String
+    get() {
+        return this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)
     }
 
 
-val MediaMetadata.fullArtworkUri: String
+val MediaMetadataCompat.albumArtworkUrl: String
     get() {
-        return this.getString(MediaMetadata.METADATA_KEY_ART_URI)
+        return this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
     }
 
 
-val MediaMetadata.durationMillis: Long
+val MediaMetadataCompat.fullArtworkUri: String
     get() {
-        return this.getLong(MediaMetadata.METADATA_KEY_DURATION)
+        return this.getString(MediaMetadataCompat.METADATA_KEY_ART_URI)
+    }
+
+
+val MediaMetadataCompat.durationMillis: Long
+    get() {
+        return this.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
     }

@@ -1,8 +1,8 @@
 package dev.bmcreations.musickit.networking.api.models
 
-import android.media.MediaMetadata
-import android.media.MediaMetadata.*
 import android.os.Parcelable
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.MediaMetadataCompat.*
 import dev.bmcreations.musickit.networking.extensions.*
 import kotlinx.android.parcel.Parcelize
 
@@ -14,8 +14,8 @@ data class Song(
     val artworkUrl: String, val fullArtworkUrl: String,
     val durationInMillis: Long): Parcelable {
 
-    fun toMetadata(): MediaMetadata {
-        return Builder().apply {
+    fun toMetadata(): MediaMetadataCompat {
+        return MediaMetadataCompat.Builder().apply {
             this.putString(METADATA_KEY_MEDIA_ID, id)
             this.putString(METADATA_KEY_ALBUM, albumName)
             this.putString(METADATA_KEY_ALBUM_ARTIST, artistName)
@@ -28,7 +28,7 @@ data class Song(
     }
 
     companion object Factory {
-        fun fromMetadata(metadata: MediaMetadata): Song {
+        fun fromMetadata(metadata: MediaMetadataCompat): Song {
             return Song(
                 metadata.mediaId,
                 metadata.songName,
