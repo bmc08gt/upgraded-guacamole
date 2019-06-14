@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/mini_player"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mini_player"
         android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,13 +44,20 @@
             app:layout_constraintStart_toEndOf="@id/track_name"
             app:layout_constraintTop_toTopOf="@id/track_name"
             app:layout_constraintBottom_toBottomOf="@id/track_name"
-            app:layout_constraintEnd_toStartOf="@id/play_pause"
+            app:layout_constraintEnd_toStartOf="@id/play_pause_barrier"
             app:layout_constrainedWidth="true"
             android:layout_marginStart="4dp"
             app:tint="@color/explicit_rating_tint"
             tools:visibility="visible"
             android:visibility="gone"
             android:src="@drawable/ic_baseline_explicit_black_24dp"/>
+
+    <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/play_pause_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="play_pause,loading" />
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/play_pause"
@@ -65,7 +72,19 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:tint="@color/explicit_rating_tint"
             android:tint="@android:color/black"
+            tools:visibility="invisible"
             android:src="@drawable/ic_play_arrow_gray_32dp"/>
+
+    <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintStart_toStartOf="@id/play_pause_barrier"
+            app:layout_constraintTop_toTopOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="@id/track_name"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:indeterminate="true"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
