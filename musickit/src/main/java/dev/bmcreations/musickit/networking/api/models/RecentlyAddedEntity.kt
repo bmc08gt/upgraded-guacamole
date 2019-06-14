@@ -8,6 +8,18 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class RecentlyAddedResult(val data: List<RecentlyAddedEntity>) : Parcelable
 
+val RecentlyAddedEntity.Attributes.Artwork.urlWithDimensions: String?
+    get() {
+        return url?.let { url ->
+            val w = width ?: 600
+            val h = height ?: 600
+            return url.replace(
+                "{w}", w.toString(), ignoreCase = false).replace(
+                "{h}", h.toString(), ignoreCase = false)
+        }
+
+    }
+
 @Parcelize
 data class RecentlyAddedEntity(
     @SerializedName("attributes")
@@ -40,19 +52,7 @@ data class RecentlyAddedEntity(
             val url: String?,
             @SerializedName("width")
             val width: Int?
-        ) : Parcelable {
-            val urlWithDimensions: String?
-                get() {
-                    return url?.let { url ->
-                        val w = width ?: 600
-                        val h = height ?: 600
-                        return url.replace(
-                            "{w}", w.toString(), ignoreCase = false).replace(
-                            "{h}", h.toString(), ignoreCase = false)
-                    }
-
-                }
-        }
+        ) : Parcelable
 
         @Parcelize
         data class PlayParams(

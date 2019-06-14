@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.networking.api
+package dev.bmcreations.musickit.networking.extensions
 
 import android.media.MediaMetadata
 
@@ -10,6 +10,11 @@ val MediaMetadata.mediaId: String
 val MediaMetadata.songName: String
     get() {
         return this.getString(MediaMetadata.METADATA_KEY_TITLE)
+    }
+
+val MediaMetadata.trackNumber: Long
+    get() {
+        return this.getLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER)
     }
 
 

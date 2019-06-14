@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.networking
+package dev.bmcreations.musickit.networking.extensions
 
 /**
  * Returns the sum of all values produced by [selector] function applied to each element in the collection.

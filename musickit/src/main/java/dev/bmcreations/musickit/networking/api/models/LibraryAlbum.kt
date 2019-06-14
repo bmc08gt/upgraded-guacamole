@@ -3,12 +3,52 @@ package dev.bmcreations.musickit.networking.api.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import dev.bmcreations.musickit.networking.sumByLong
+import dev.bmcreations.musickit.networking.extensions.sumByLong
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class LibraryAlbumResult(val data: List<LibraryAlbum>) : Parcelable
+
+val LibraryAlbum.Relationships.Tracks.durationInMillis: Long
+    get() {
+        return this.data?.sumByLong { it?.attributes?.durationInMillis ?: 0L } ?: 0
+    }
+val LibraryAlbum.Relationships.Tracks.durationInMinutes: Long
+    get() {
+        return TimeUnit.MILLISECONDS.toMinutes(durationInMillis)
+    }
+
+val LibraryAlbum.Attributes.Artwork.urlWithDimensions: String?
+    get() {
+        return url?.let { url ->
+            val w = width ?: 600
+            val h = height ?: 600
+            return url.replace(
+                "{w}", w.toString(), ignoreCase = false
+            ).replace(
+                "{h}", h.toString(), ignoreCase = false
+            )
+        }
+    }
+
+val LibraryAlbum.Relationships.Tracks.Data.Attributes.Artwork.urlWithDimensions: String?
+    get() {
+        return url?.let { url ->
+            val w = width ?: 600
+            val h = height ?: 600
+            return url.replace(
+                "{w}", w.toString(), ignoreCase = false
+            ).replace(
+                "{h}", h.toString(), ignoreCase = false
+            )
+        }
+    }
+
+val LibraryAlbum.Relationships.Tracks.Data.Attributes.isExplicit: Boolean
+    get() {
+        return contentRating?.equals("explicit", ignoreCase = true) ?: false
+    }
 
 @Parcelize
 data class LibraryAlbum(
@@ -64,11 +104,6 @@ data class LibraryAlbum(
                     val durationInMillis: Long
                 ) : Parcelable {
 
-                    val isExplicit: Boolean
-                        get() {
-                            return contentRating?.equals("explicit", ignoreCase = true) ?: false
-                        }
-
                     @Parcelize
                     data class Artwork(
                         @SerializedName("height")
@@ -90,15 +125,6 @@ data class LibraryAlbum(
                     ) : Parcelable
                 }
             }
-
-            val durationInMillis: Long
-                get() {
-                    return this.data?.sumByLong { it?.attributes?.durationInMillis ?: 0L } ?: 0
-                }
-            val durationInMinutes: Long
-                get() {
-                    return TimeUnit.MILLISECONDS.toMinutes(durationInMillis)
-                }
         }
     }
 
@@ -133,20 +159,6 @@ data class LibraryAlbum(
             val url: String?,
             @SerializedName("width")
             val width: Int?
-        ) : Parcelable {
-            val urlWithDimensions: String?
-                get() {
-                    return url?.let { url ->
-                        val w = width ?: 600
-                        val h = height ?: 600
-                        return url.replace(
-                            "{w}", w.toString(), ignoreCase = false
-                        ).replace(
-                            "{h}", h.toString(), ignoreCase = false
-                        )
-                    }
-
-                }
-        }
+        ) : Parcelable
     }
 }

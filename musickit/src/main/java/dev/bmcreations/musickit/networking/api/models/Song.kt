@@ -3,12 +3,13 @@ package dev.bmcreations.musickit.networking.api.models
 import android.media.MediaMetadata
 import android.media.MediaMetadata.*
 import android.os.Parcelable
-import dev.bmcreations.musickit.networking.api.*
+import dev.bmcreations.musickit.networking.extensions.*
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Song(
     val id: String, val name: String,
+    val trackNumber: Long,
     val artistName: String, val albumName: String,
     val artworkUrl: String, val fullArtworkUrl: String,
     val durationInMillis: Long): Parcelable {
@@ -22,6 +23,7 @@ data class Song(
             this.putLong(METADATA_KEY_DURATION, durationInMillis)
             this.putString(METADATA_KEY_ALBUM_ART_URI, artworkUrl)
             this.putString(METADATA_KEY_ART_URI, fullArtworkUrl)
+            this.putLong(METADATA_KEY_TRACK_NUMBER, trackNumber)
         }.build()
     }
 
@@ -30,6 +32,7 @@ data class Song(
             return Song(
                 metadata.mediaId,
                 metadata.songName,
+                metadata.trackNumber,
                 metadata.artistName,
                 metadata.albumName,
                 metadata.albumArtworkUrl,

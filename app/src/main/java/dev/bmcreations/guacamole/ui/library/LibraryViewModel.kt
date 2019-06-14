@@ -6,8 +6,7 @@ import androidx.lifecycle.ViewModel
 import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.guacamole.extensions.uiScope
 import dev.bmcreations.musickit.networking.Outcome
-import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
-import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
+import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,11 +21,11 @@ class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
 
     val recentlyAdded: MutableLiveData<List<RecentlyAddedEntity>> = MutableLiveData()
 
-    val selectedAlbum: MutableLiveData<LibraryAlbum?> = MutableLiveData()
+    val selected: MutableLiveData<LibraryResult?> = MutableLiveData()
 
     init {
         recentlyAdded.value = emptyList()
-        selectedAlbum.value = null
+        selected.value = null
     }
 
     fun refresh() {
@@ -56,8 +55,39 @@ class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
                 val outcome = repo.getLibraryAlbumById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        info { "album track count: ${outcome.data.relationships?.tracks?.data?.size}" }
-                        uiScope.launch { selectedAlbum.value = outcome.data }
+                        uiScope.launch { selected.value = Album(outcome.data) }
+                    }
+                    is Outcome.Failure -> {
+                        info { outcome.e.localizedMessage }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getLibraryPlaylistById(id: String) {
+        musicRepo.let { repo ->
+            uiScope.launch(Dispatchers.IO) {
+                val outcome = repo.getLibraryPlaylistById(id)
+                when (outcome) {
+                    is Outcome.Success -> {
+                        uiScope.launch { selected.value = Playlist(outcome.data) }
+                    }
+                    is Outcome.Failure -> {
+                        info { outcome.e.localizedMessage }
+                    }
+                }
+            }
+        }
+    }
+
+    fun getLibraryPlaylistWithTracksById(id: String) {
+        musicRepo.let { repo ->
+            uiScope.launch(Dispatchers.IO) {
+                val outcome = repo.getLibraryPlaylistWithTracksById(id)
+                when (outcome) {
+                    is Outcome.Success -> {
+                        uiScope.launch { selected.value = Playlist(outcome.data) }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }

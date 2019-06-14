@@ -14,6 +14,7 @@ import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
+import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library.view.*
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
 import org.jetbrains.anko.AnkoLogger
@@ -33,6 +34,7 @@ class LibraryFragment: Fragment(), AnkoLogger {
                     this.putString("album.name", it.entity?.attributes?.name)
                     this.putString("album.artistName", it.entity?.attributes?.artistName)
                     this.putString("album.url", it.entity?.attributes?.artwork?.urlWithDimensions)
+                    this.putBoolean("album.playlist", it.entity?.type.equals("library-playlists"))
                     this.putString("transition_name", it.itemView.ra_image.transitionName)
                 }
                 findNavController().navigate(R.id.show_details_for_album, args, null, extras)
