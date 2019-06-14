@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/mini_player"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="10dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/track_art"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintDimensionRatio="1:1"
+            tools:src="@drawable/ic_music_fail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/track_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            style="@style/AppTheme.NowPlayingMini.Song"
+            android:id="@+id/track_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/track_art"
+            app:layout_constraintEnd_toStartOf="@id/explicit"
+            android:layout_marginStart="16dp"
+            tools:text="Confessions of A Dangerous Mind"
+    />
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/explicit"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:layout_constraintStart_toEndOf="@id/track_name"
+            app:layout_constraintTop_toTopOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="@id/track_name"
+            app:layout_constraintEnd_toStartOf="@id/play_pause"
+            app:layout_constrainedWidth="true"
+            android:layout_marginStart="4dp"
+            app:tint="@color/explicit_rating_tint"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:src="@drawable/ic_baseline_explicit_black_24dp"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/play_pause"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintTop_toTopOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="@id/track_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            app:layout_constrainedWidth="true"
+            android:layout_marginStart="4dp"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:tint="@color/explicit_rating_tint"
+            android:tint="@android:color/black"
+            android:src="@drawable/ic_play_arrow_gray_32dp"/>
+
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

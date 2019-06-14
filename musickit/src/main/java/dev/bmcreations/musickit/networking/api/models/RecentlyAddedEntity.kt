@@ -17,7 +17,6 @@ val RecentlyAddedEntity.Attributes.Artwork.urlWithDimensions: String?
                 "{w}", w.toString(), ignoreCase = false).replace(
                 "{h}", h.toString(), ignoreCase = false)
         }
-
     }
 
 @Parcelize

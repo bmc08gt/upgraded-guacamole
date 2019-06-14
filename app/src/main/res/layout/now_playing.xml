@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/mini_player"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:elevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mini_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/windowBackground"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/track_art"
+            android:layout_width="wrap_content"
+            android:layout_height="256dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintDimensionRatio="1:1"
+            android:src="@drawable/ic_music_fail"
+            app:layout_constraintStart_toStartOf="@id/mini_container"
+            app:layout_constraintEnd_toEndOf="@id/mini_container"
+            app:layout_constraintTop_toTopOf="@id/mini_container"
+            android:layout_marginTop="16dp"/>
+
+    <!-- TODO: Create custom seekbar w/ track times-->
+    <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/track_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/track_art"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            style="@style/AppTheme.NowPlaying.Song"
+            android:id="@+id/track_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toBottomOf="@id/track_progress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/explicit"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginTop="16dp"
+            android:text="Confessions of A Dangerous Mind"
+            app:layout_constraintHorizontal_chainStyle="packed"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/explicit"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:layout_constraintStart_toEndOf="@id/track_name"
+            app:layout_constraintTop_toTopOf="@id/track_name"
+            app:layout_constraintBottom_toBottomOf="@id/track_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginStart="4dp"
+            app:tint="@color/explicit_rating_tint"
+            tools:visibility="visible"
+            android:visibility="visible"
+            android:src="@drawable/ic_baseline_explicit_black_24dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            style="@style/AppTheme.NowPlaying.Artist"
+            android:id="@+id/track_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toBottomOf="@id/track_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_marginTop="4dp"
+            android:text="Logic"/>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>
