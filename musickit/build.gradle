@@ -26,6 +26,7 @@ android {
 
 dependencies {
     api project(':musickit-sdk')
+    implementation project(':mediaplayback')
 
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.coroutinesCore
@@ -33,6 +34,7 @@ dependencies {
 
     implementation deps.jetpack.appcompat
     implementation deps.jetpack.corektx
+    implementation deps.jetpack.media
 
     implementation deps.anko.commons
 
