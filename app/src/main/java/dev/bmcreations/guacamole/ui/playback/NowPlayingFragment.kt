@@ -58,6 +58,7 @@ class NowPlayingFragment: Fragment() {
                             root.play_pause.setImageResource(R.drawable.ic_baseline_pause_black_24dp)
                         }
                     }
+                    is State.InitializationFailed,
                     is State.Paused -> {
                         root.loading.gone()
                         root.play_pause.visible().also {
