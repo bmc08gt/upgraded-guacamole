@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
+import dev.bmcreations.guacamole.ui.details.populateMiniPlayer
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel.State
-import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.now_playing_mini.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
 
@@ -39,7 +39,7 @@ class NowPlayingFragment: Fragment() {
 
     private fun observe() {
         viewModel?.playState?.observe(viewLifecycleOwner, Observer { handlePlayState(it) })
-        viewModel?.selectedTrack?.observe(viewLifecycleOwner, Observer { handleTrackSelection(it) })
+        viewModel?.selectedTrack?.observe(viewLifecycleOwner, Observer { it?.populateMiniPlayer(root) })
     }
 
     private fun handlePlayState(state: State) {
@@ -63,48 +63,6 @@ class NowPlayingFragment: Fragment() {
                         root.play_pause.visible().also {
                             root.play_pause.setImageResource(R.drawable.ic_play_arrow_gray_32dp)
                         }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun handleTrackSelection(entity: TrackEntity?) {
-        if (entity != null) {
-            when (entity) {
-                is PlaylistTrackEntity -> {
-                    root.track_name.text = entity.track.attributes?.name
-//                                    track_artist.text = entity.track.attributes?.artistName
-                    if (entity.track.attributes?.isExplicit == true) {
-                        root.explicit.visible()
-                    } else {
-                        root.explicit.gone()
-                    }
-                    picasso {
-                        root.track_art.visible()
-                        it.cancelRequest(root.track_art)
-                        it.load(entity.track.attributes?.artwork?.urlWithDimensions)
-                            .resize(72, 72)
-                            .placeholder(R.drawable.ic_music_fail)
-                            .error(R.drawable.ic_music_fail)
-                            .into(root.track_art)
-                    }
-                }
-                is AlbumTrackEntity -> {
-                    root.track_name?.text = entity.track.attributes?.name
-                    if (entity.track.attributes?.isExplicit == true) {
-                        root.explicit.visible()
-                    } else {
-                        root.explicit.gone()
-                    }
-                    picasso {
-                        root.track_art.visible()
-                        it.cancelRequest(root.track_art)
-                        it.load(entity.track.attributes?.artwork?.urlWithDimensions)
-                            .resize(72, 72)
-                            .placeholder(R.drawable.ic_music_fail)
-                            .error(R.drawable.ic_music_fail)
-                            .into(root.track_art)
                     }
                 }
             }
