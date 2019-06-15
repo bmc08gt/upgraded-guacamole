@@ -19,7 +19,7 @@ class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
 
 
     private val musicRepo by lazy {
-        MusicRepository(context, TokenProvider.with(context).devToken, TokenProvider.with(context).userToken)
+        MusicRepository(context, TokenProvider.with(context).developerToken, TokenProvider.with(context).userToken)
     }
 
     val recentlyAdded: MutableLiveData<List<RecentlyAddedEntity>> = MutableLiveData()

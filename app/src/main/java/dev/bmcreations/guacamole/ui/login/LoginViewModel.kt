@@ -52,7 +52,7 @@ class LoginViewModel private constructor(val context: Context): ViewModel() {
     fun authenticate() {
         // TODO: Support webview callbacks for non-installed app
         startActivityForResultEvent.sendEvent {
-            val intent = authManager.createIntentBuilder(tokenProvider.devToken)
+            val intent = authManager.createIntentBuilder(tokenProvider.developerToken)
                 .setHideStartScreen(true)
                 .setStartScreenMessage("Connect with Apple Music!")
                 .build()

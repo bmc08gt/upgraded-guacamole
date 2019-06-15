@@ -5,18 +5,25 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.musicUserToken
 import dev.bmcreations.guacamole.extensions.strings
 
-class TokenProvider private constructor() {
+class TokenProvider private constructor(): com.apple.android.sdk.authentication.TokenProvider {
+    override fun getDeveloperToken(): String {
+        return devToken
+    }
 
-    var devToken: String = ""
-    var userToken: String? = null
+    override fun getUserToken(): String {
+        return _userToken
+    }
+
+    private var devToken: String = ""
+    private var _userToken: String = ""
 
     companion object Factory {
-        var INSTANCE: TokenProvider? = null
+        private var INSTANCE: TokenProvider? = null
         fun with(context: Context?): TokenProvider {
             val tmp = INSTANCE
             if (tmp != null) {
-                if (tmp.userToken == null) {
-                    tmp.userToken = musicUserToken(context)
+                if (tmp._userToken.isEmpty()) {
+                    tmp._userToken = musicUserToken(context) ?: ""
                 }
                 return tmp
             }
@@ -25,7 +32,7 @@ class TokenProvider private constructor() {
                     INSTANCE = instance
                     context?.let { ctx ->
                         instance.devToken = ctx.strings[R.string.musickit_token]
-                        instance.userToken = musicUserToken(ctx)
+                        instance._userToken = musicUserToken(ctx) ?: ""
                     }
                 }
             }
