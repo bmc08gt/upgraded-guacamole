@@ -36,7 +36,7 @@ class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(item
                             itemView.playlist_track_art.visible()
                             it.cancelRequest(itemView.playlist_track_art)
                             it.load(entity.track.attributes?.artwork?.urlWithDimensions)
-                                .resize(40, 40)
+                                .resize(600, 600)
                                 .placeholder(R.drawable.ic_music_fail)
                                 .error(R.drawable.ic_music_fail)
                                 .into(itemView.playlist_track_art)

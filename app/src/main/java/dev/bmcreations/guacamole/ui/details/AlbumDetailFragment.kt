@@ -95,7 +95,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
     private fun loadAlbumArt(url: String?) {
         picasso {
             it.cancelRequest(ra_image)
-            it.load(url).error(R.drawable.ic_music_fail).resize(200, 200).into(ra_image)
+            it.load(url).error(R.drawable.ic_music_fail).resize(600, 600).into(ra_image)
         }
     }
 

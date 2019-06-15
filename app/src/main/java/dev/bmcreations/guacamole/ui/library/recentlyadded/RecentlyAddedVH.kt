@@ -27,7 +27,7 @@ class RecentlyAddedVH private constructor(itemView: View) : RecyclerView.ViewHol
                         picasso.cancelRequest(itemView.ra_image)
                         picasso.load(artwork.urlWithDimensions)
                             .error(R.drawable.ic_music_fail)
-                            .resize(156, 156)
+                            .resize(600, 600)
                             .into(itemView.ra_image)
                     }
                 }
