@@ -1,39 +1,7 @@
 package dev.bmcreations.guacamole.ui.details
 
 import androidx.recyclerview.widget.DiffUtil
-import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
-import dev.bmcreations.musickit.networking.api.models.PlaylistTrack
-
-sealed class TrackEntity {
-    override fun equals(other: Any?): Boolean {
-        return if (other is TrackEntity) {
-            when (this) {
-                is AlbumTrackEntity -> {
-                    if (other is AlbumTrackEntity) {
-                        this === other
-                    } else {
-                        false
-                    }
-                }
-                is PlaylistTrackEntity -> {
-                    if (other is PlaylistTrackEntity) {
-                        this === other
-                    } else {
-                        false
-                    }
-                }
-            }
-        } else {
-            false
-        }
-    }
-
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
-}
-data class PlaylistTrackEntity(val track: PlaylistTrack): TrackEntity()
-data class AlbumTrackEntity(val track: LibraryAlbum.Relationships.Tracks.Data): TrackEntity()
+import dev.bmcreations.musickit.networking.api.models.*
 
 val TRACK_DATA_DIFF_CALLBACK
         = object : DiffUtil.ItemCallback<TrackEntity>() {

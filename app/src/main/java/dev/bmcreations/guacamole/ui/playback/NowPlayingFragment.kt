@@ -8,12 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
-import dev.bmcreations.guacamole.ui.details.AlbumTrackEntity
-import dev.bmcreations.guacamole.ui.details.PlaylistTrackEntity
-import dev.bmcreations.guacamole.ui.details.TrackEntity
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel.State
-import dev.bmcreations.musickit.networking.api.models.isExplicit
-import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
+import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.now_playing_mini.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
 

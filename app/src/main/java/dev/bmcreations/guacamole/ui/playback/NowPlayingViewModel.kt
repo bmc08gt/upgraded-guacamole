@@ -3,12 +3,8 @@ package dev.bmcreations.guacamole.ui.playback
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dev.bmcreations.guacamole.ui.details.TrackEntity
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dev.bmcreations.musickit.networking.api.models.TrackEntity
 
 class NowPlayingViewModel private constructor(context: Context): ViewModel() {
 

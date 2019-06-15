@@ -8,8 +8,7 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.guacamole.extensions.visible
-import dev.bmcreations.musickit.networking.api.models.isExplicit
-import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
+import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.explicit

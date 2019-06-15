@@ -4,6 +4,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import dev.bmcreations.guacamole.ui.details.TrackVH.Factory.ALBUM
 import dev.bmcreations.guacamole.ui.details.TrackVH.Factory.PLAYLIST
+import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
+import dev.bmcreations.musickit.networking.api.models.TrackEntity
 
 class TrackListAdapter : ListAdapter<TrackEntity, TrackVH>(TRACK_DATA_DIFF_CALLBACK) {
 
