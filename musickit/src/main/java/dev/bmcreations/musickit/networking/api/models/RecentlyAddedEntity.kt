@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class RecentlyAddedResult(val data: List<RecentlyAddedEntity>) : Parcelable
+data class RecentlyAddedResult(val next: String, val data: List<RecentlyAddedEntity>) : Parcelable
 
 val RecentlyAddedEntity.Attributes.Artwork.urlWithDimensions: String?
     get() {
