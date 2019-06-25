@@ -48,17 +48,13 @@ class RecentlyAddedDataSource: PageKeyedDataSource<Int, RecentlyAddedEntity>() {
         uiScope.launch(Dispatchers.IO) {
             when (val ret = musicRepository?.getUserRecentlyAdded(limit = params.requestedLoadSize)) {
                 is Outcome.Success -> {
-                    uiScope.launch {
-                        callback.onResult(ret.data.data, null, ret.data.next.substringAfter("offset=").toInt())
-                        initialLoading.postValue(NetworkState.LOADED)
-                        networkState.postValue(NetworkState.LOADED)
-                    }
+                    callback.onResult(ret.data.data, null, ret.data.nextOffset())
+                    initialLoading.postValue(NetworkState.LOADED)
+                    networkState.postValue(NetworkState.LOADED)
                 }
                 is Outcome.Failure -> {
-                    uiScope.launch {
-                        initialLoading.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
-                        networkState.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
-                    }
+                    initialLoading.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
+                    networkState.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
                 }
             }
         }
@@ -69,19 +65,13 @@ class RecentlyAddedDataSource: PageKeyedDataSource<Int, RecentlyAddedEntity>() {
         uiScope.launch(Dispatchers.IO) {
             when (val ret = musicRepository?.getUserRecentlyAdded(limit = params.requestedLoadSize, offset = params.key)) {
                 is Outcome.Success -> {
-                    val nextKey = (if (params.key == ret.data.next.substringAfter("offset=").toInt()) null else params.key + 1)
+                    val next = ret.data.nextOffset()
 
-                    uiScope.launch {
-                        callback.onResult(ret.data.data, nextKey)
-                        networkState.postValue(NetworkState.LOADED)
-                    }
+                    callback.onResult(ret.data.data, next)
+                    networkState.postValue(NetworkState.LOADED)
 
                 }
-                is Outcome.Failure -> {
-                    uiScope.launch {
-                        networkState.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
-                    }
-                }
+                is Outcome.Failure -> networkState.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
             }
         }
     }

@@ -3,10 +3,17 @@ package dev.bmcreations.musickit.networking.api.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import okhttp3.HttpUrl
 
 @Parcelize
-data class RecentlyAddedResult(val next: String, val data: List<RecentlyAddedEntity>) : Parcelable
+data class RecentlyAddedResult(private val next: String? = null, val data: List<RecentlyAddedEntity>) : Parcelable {
+
+    fun nextOffset(): Int? {
+        return next?.let { HttpUrl.parse("http://foobar.com$it")?.queryParameter("offset")?.toInt() }
+    }
+}
 
 val RecentlyAddedEntity.Attributes.Artwork.urlWithDimensions: String?
     get() {
