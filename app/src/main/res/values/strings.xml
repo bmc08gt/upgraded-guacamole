@@ -7,4 +7,10 @@
     <string name="title_details">Details</string>
 
     <string name="album_length">%1$s songs, %2$s minutes</string>
+
+    <string name="media_play">Play</string>
+    <string name="media_pause">Pause</string>
+    <string name="media_stop">Stop</string>
+    <string name="media_skip_back">Previous track</string>
+    <string name="media_skip_next">Next track</string>
 </resources>
