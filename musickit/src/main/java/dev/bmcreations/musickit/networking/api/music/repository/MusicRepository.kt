@@ -17,9 +17,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 
-private val job = Job()
-private val uiScope  = CoroutineScope(Dispatchers.Main + job)
-
 class MusicRepository private constructor() : AnkoLogger {
 
     var devToken: String = ""
@@ -60,16 +57,16 @@ class MusicRepository private constructor() : AnkoLogger {
         provideLibraryService(retrofit)
     }
 
-    private var tracks: List<TrackEntity>?  = listOf()
+    private var tracks: MutableList<TrackEntity>?  = mutableListOf()
 
-    suspend fun getUserRecentlyAdded(): Outcome<List<RecentlyAddedEntity>> {
-        var ret: Outcome<List<RecentlyAddedEntity>> = Outcome.failure(Throwable("Auth token is null"))
+    suspend fun getUserRecentlyAdded(limit: Int? = null, offset: Int? = null): Outcome<RecentlyAddedResult> {
+        var ret: Outcome<RecentlyAddedResult> = Outcome.failure(Throwable("Auth token is null"))
         userToken?.let { token ->
             val bearer = "Bearer $devToken"
-            val req = library.getUserRecentlyAddedAsync(bearer, token)
+            val req = library.getUserRecentlyAddedAsync(bearer, token, limit, offset)
             try {
                 req.await().run {
-                    ret = Outcome.success(this.data)
+                    ret = Outcome.success(this)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -88,7 +85,11 @@ class MusicRepository private constructor() : AnkoLogger {
                 req.await().run {
                     val album = this.data.first()
                     ret = Outcome.success(album)
-                    uiScope.launch { tracks = this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) } }
+                    uiScope.launch {
+                        this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) }?.let {
+                            tracks?.addAll(it)
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -128,7 +129,7 @@ class MusicRepository private constructor() : AnkoLogger {
                         val tracks = this.data
                         ret = Outcome.success(playlist.apply {
                             this.tracks = tracks.also { ret ->
-                                uiScope.launch { this@MusicRepository.tracks = ret.map { PlaylistTrackEntity(it)} }
+                                uiScope.launch { this@MusicRepository.tracks?.addAll(ret.map { PlaylistTrackEntity(it) }) }
                             }
                         })
                     }

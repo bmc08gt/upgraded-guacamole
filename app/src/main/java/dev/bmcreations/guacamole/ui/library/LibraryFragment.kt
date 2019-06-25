@@ -78,12 +78,8 @@ class LibraryFragment: Fragment(), AnkoLogger {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        vm?.refresh()
-    }
-
     private fun observe() {
         vm?.recentlyAdded?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.submitList(it) })
+        vm?.networkState?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.networkState = it })
     }
 }

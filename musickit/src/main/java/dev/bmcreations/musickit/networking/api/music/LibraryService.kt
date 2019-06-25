@@ -6,11 +6,12 @@ import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface LibraryService {
     @GET("me/library/recently-added")
     fun getUserRecentlyAddedAsync(@Header("Authorization") devToken: String,
-                              @Header("Music-User-Token") token: String): Deferred<RecentlyAddedResult>
+                              @Header("Music-User-Token") token: String, @Query("limit") limit: Int?, @Query("offset") offset: Int?): Deferred<RecentlyAddedResult>
 
     @GET("me/library/albums/{id}")
     fun getLibraryAlbumByIdAsync(@Header("Authorization") devToken: String,

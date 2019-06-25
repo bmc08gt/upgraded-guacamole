@@ -35,6 +35,7 @@ dependencies {
     implementation deps.jetpack.appcompat
     implementation deps.jetpack.corektx
     implementation deps.jetpack.media
+    api deps.jetpack.paging_runtime
 
     implementation deps.anko.commons
 
