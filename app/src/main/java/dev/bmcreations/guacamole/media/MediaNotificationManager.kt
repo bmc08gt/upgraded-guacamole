@@ -15,38 +15,53 @@ import androidx.media.session.MediaButtonReceiver
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
 import dev.bmcreations.guacamole.extensions.picasso
-import dev.bmcreations.musickit.networking.extensions.uiScope
+import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.ui.MainActivity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
-import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
-import dev.bmcreations.musickit.networking.extensions.artistName
-import dev.bmcreations.musickit.networking.extensions.songName
+import dev.bmcreations.musickit.networking.extensions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackService) {
 
-    var notificationManager: NotificationManager
-        private set
-    private var playAction: NotificationCompat.Action
-    private var pauseAction: NotificationCompat.Action
+    val notificationManager: NotificationManager by lazy {
+        (mediaPlaybackService.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).also {
+            it.cancelAll()
+        }
+    }
 
-    init {
-        notificationManager = mediaPlaybackService.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancelAll()
-
-        playAction = NotificationCompat.Action(
+    private val playAction: NotificationCompat.Action by lazy {
+        NotificationCompat.Action(
             R.drawable.ic_play_arrow_gray_32dp,
-            "Play",
+            mediaPlaybackService.strings[R.string.media_play],
             MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_PLAY)
         )
+    }
 
-        pauseAction = NotificationCompat.Action(
+    private val pauseAction: NotificationCompat.Action by lazy {
+        NotificationCompat.Action(
             R.drawable.ic_baseline_pause_black_24dp,
-            "Pause",
+            mediaPlaybackService.strings[R.string.media_pause],
             MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_PAUSE)
         )
     }
+
+    private val skipPrevious: NotificationCompat.Action by lazy {
+        NotificationCompat.Action(
+            R.drawable.ic_baseline_skip_previous_black_24dp,
+            mediaPlaybackService.strings[R.string.media_skip_back],
+            MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+        )
+    }
+
+    private val skipNext: NotificationCompat.Action by lazy {
+        NotificationCompat.Action(
+            R.drawable.ic_baseline_skip_next_black_24dp,
+            mediaPlaybackService.strings[R.string.media_skip_next],
+            MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+        )
+    }
+
 
     fun getNotification(song: TrackEntity, token: MediaSessionCompat.Token, state: Int, currentPosition: Long): Notification {
         val builder = buildNotification(song, token, state, currentPosition)
@@ -61,15 +76,6 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
         val isPlaying = (state == PlaybackStateCompat.STATE_PLAYING) or (state == PlaybackStateCompat.STATE_BUFFERING)
 
         val builder = NotificationCompat.Builder(mediaPlaybackService, CHANNEL_ID)
-        builder.setStyle(
-            androidx.media.app.NotificationCompat.MediaStyle()
-                .setMediaSession(token)
-                .setShowActionsInCompactView(0)
-                .setShowCancelButton(true)
-                .setCancelButtonIntent(
-                    MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_STOP)
-                )
-        )
             .setColor(mediaPlaybackService.colors[R.color.colorAccent])
             .setSmallIcon(R.drawable.ic_music_note)
             .setContentIntent(createContentIntent())
@@ -93,11 +99,26 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
             builder.setUsesChronometer(false)
         }
 
-        //builder.addAction(previousAction)
+        val controller = mediaPlaybackService.mediaSessionManager.mediaSession.controller
+        val posInQueue = controller.queue.indexOfFirst { it.description.mediaId == song.toMetadata().description.mediaId }
 
+        if (controller.repeatMode != PlaybackStateCompat.REPEAT_MODE_NONE || posInQueue > 0) {
+            builder.addAction(skipPrevious)
+        }
         builder.addAction(if (isPlaying) pauseAction else playAction)
+        if (controller.repeatMode != PlaybackStateCompat.REPEAT_MODE_NONE || posInQueue < controller.queue.lastIndex) {
+            builder.addAction(skipNext)
+        }
 
-        //builder.addAction(nextAction)
+        builder.setStyle(
+            androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(token)
+                .setShowActionsInCompactView(*IntArray(builder.mActions.size) { it })
+                .setShowCancelButton(true)
+                .setCancelButtonIntent(
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_STOP)
+                )
+        )
 
         uiScope.launch(Dispatchers.IO) {
             picasso {

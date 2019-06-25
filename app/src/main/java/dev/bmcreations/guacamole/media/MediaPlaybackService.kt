@@ -24,7 +24,7 @@ import org.jetbrains.anko.info
 
 class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.Listener {
 
-    private lateinit var mediaSessionManager: MediaSessionManager
+    lateinit var mediaSessionManager: MediaSessionManager
     private lateinit var player: MediaPlayerController
     private lateinit var musicRepository: MusicRepository
     private lateinit var mediaNotificationManager: MediaNotificationManager

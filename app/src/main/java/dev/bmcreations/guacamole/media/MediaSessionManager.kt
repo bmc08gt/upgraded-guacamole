@@ -14,6 +14,7 @@ import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
 import dev.bmcreations.musickit.networking.api.models.PlaylistTrackEntity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
+import dev.bmcreations.musickit.networking.extensions.mediaId
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,7 +27,7 @@ class MediaSessionManager(val context: Context,
     private var queueItems: ArrayList<MediaSessionCompat.QueueItem> = ArrayList()
     private var queueIndex = -1
     private var song: TrackEntity? = null
-    private val mediaSession: MediaSessionCompat
+    val mediaSession: MediaSessionCompat
     private val playbackStateBuilder: PlaybackStateCompat.Builder
     private var shuffle = false
     val sessionToken: MediaSessionCompat.Token
@@ -78,14 +79,14 @@ class MediaSessionManager(val context: Context,
         entity?.let { e ->
             when (e) {
                 is PlaylistTrackEntity -> {
-                    e.track.id?.let {
+                    e.toMetadata().mediaId.let {
                         queueIndex = queueItems.indexOfFirst { item -> item.description.mediaId == it }
                         this.song = e
                             updateQueue()
                     }
                 }
                 is AlbumTrackEntity -> {
-                    e.track.id?.let {
+                    e.toMetadata().mediaId.let {
                         queueIndex = queueItems.indexOfFirst { item -> item.description.mediaId == it }
                         this.song = e
                         updateQueue()
@@ -100,9 +101,7 @@ class MediaSessionManager(val context: Context,
             mediaSession.setQueue(queueItems.subList(queueIndex, queueIndex))
         }
         else {
-            val minIndex = max(0, queueIndex - 5)
-            val maxIndex = min(queueItems.size - 1, queueIndex + 5)
-            mediaSession.setQueue(queueItems.subList(minIndex, maxIndex))
+            mediaSession.setQueue(queueItems)
         }
     }
 
