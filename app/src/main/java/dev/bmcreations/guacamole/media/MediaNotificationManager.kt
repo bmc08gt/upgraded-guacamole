@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -16,11 +15,10 @@ import androidx.media.session.MediaButtonReceiver
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
 import dev.bmcreations.guacamole.extensions.picasso
-import dev.bmcreations.guacamole.extensions.uiScope
+import dev.bmcreations.musickit.networking.extensions.uiScope
 import dev.bmcreations.guacamole.ui.MainActivity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
-import dev.bmcreations.musickit.networking.extensions.albumName
 import dev.bmcreations.musickit.networking.extensions.artistName
 import dev.bmcreations.musickit.networking.extensions.songName
 import kotlinx.coroutines.Dispatchers

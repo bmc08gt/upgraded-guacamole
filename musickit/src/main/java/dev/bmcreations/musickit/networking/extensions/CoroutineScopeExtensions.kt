@@ -1,10 +1,10 @@
-package dev.bmcreations.guacamole.extensions
+package dev.bmcreations.musickit.networking.extensions
 
 import kotlinx.coroutines.*
 import java.util.*
 
 private val job = Job()
-internal val uiScope  = CoroutineScope(Dispatchers.Main + job)
+val uiScope  = CoroutineScope(Dispatchers.Main + job)
 
 fun at(date: Date, callback: (() -> Unit)): Job {
     return at(date.time, callback)

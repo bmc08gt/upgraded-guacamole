@@ -14,7 +14,7 @@ import com.apple.android.music.playback.model.MediaPlayerException
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.model.PlayerQueueItem
 import dev.bmcreations.guacamole.auth.TokenProvider
-import dev.bmcreations.guacamole.extensions.uiScope
+import dev.bmcreations.musickit.networking.extensions.uiScope
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import kotlinx.coroutines.Dispatchers

@@ -6,8 +6,7 @@ import android.os.ResultReceiver
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import dev.bmcreations.guacamole.extensions.inTime
-import dev.bmcreations.guacamole.extensions.uiScope
+import dev.bmcreations.musickit.networking.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
@@ -123,7 +122,8 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
     }
 
     private fun waitForMusicPlayback() {
-        initializationFailedJob = inTime(4000) { playState.value = State.InitializationFailed }
+        initializationFailedJob =
+            inTime(4000) { playState.value = State.InitializationFailed }
         initializationFailedJob?.start()
     }
 
