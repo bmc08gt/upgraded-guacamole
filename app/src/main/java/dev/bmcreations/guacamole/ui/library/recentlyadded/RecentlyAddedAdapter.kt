@@ -27,6 +27,10 @@ class RecentlyAddedAdapter : PagedListAdapter<RecentlyAddedEntity, RecentlyAdded
             }
         }
 
+    override fun getItemCount(): Int {
+        return Math.min(super.getItemCount(), 60)
+    }
+
     private fun hasExtraRow(): Boolean = networkState != null && networkState !== NetworkState.LOADED
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentlyAddedVH {
