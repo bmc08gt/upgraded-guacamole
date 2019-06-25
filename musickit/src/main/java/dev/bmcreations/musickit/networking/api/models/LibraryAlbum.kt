@@ -121,7 +121,11 @@ data class LibraryAlbum(
                         @SerializedName("isLibrary")
                         val isLibrary: Boolean?,
                         @SerializedName("kind")
-                        val kind: String?
+                        val kind: String?,
+                        @SerializedName("reporting")
+                        val reporting: Boolean?,
+                        @SerializedName("catalogId")
+                        val catalogId: String?
                     ) : Parcelable
                 }
             }

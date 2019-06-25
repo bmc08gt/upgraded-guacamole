@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -129,25 +127,24 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         }
         info { "track three=${album.relationships?.tracks?.data?.find { d -> d?.attributes?.trackNumber == 3 }?.attributes?.durationInMillis}" }
         album.relationships?.tracks?.data?.let {
-            adapter.submitList(it.filterNotNull().map { t -> AlbumTrackEntity(t) })
+            adapter.submitList(it.filterNotNull().map { t -> AlbumTrackEntity(t, album) })
         }
     }
 
     private fun loadPlaylist(container: LibraryPlaylist) {
-        val album = container
         if (ra_image.drawable == null) {
-            val url = albumUrl ?: album.attributes?.artwork?.urlWithDimensions
+            val url = albumUrl ?: container.attributes?.artwork?.urlWithDimensions
             loadAlbumArt(url)
         }
-        album_name.text = album.attributes?.name
+        album_name.text = container.attributes?.name
         artist_name.invisible()
         context?.let { ctx ->
             album_duration.text = ctx.formattedStrings[R.string.album_length](
-                album.tracks.lastIndex.toString(),
-                album.durationInMinutes.toString()
+                container.tracks.lastIndex.toString(),
+                container.durationInMinutes.toString()
             )
         }
 
-        adapter.submitList(album.tracks.map { t -> PlaylistTrackEntity(t) })
+        adapter.submitList(container.tracks.map { t -> PlaylistTrackEntity(t) })
     }
 }
