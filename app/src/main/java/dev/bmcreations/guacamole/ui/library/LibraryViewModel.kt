@@ -16,10 +16,8 @@ import org.jetbrains.anko.info
 
 class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
 
-
-
     private val musicRepo by lazy {
-        MusicRepository(context, TokenProvider.with(context).developerToken, TokenProvider.with(context).userToken)
+        MusicRepository.getInstance(TokenProvider.with(context))
     }
 
     val recentlyAdded: MutableLiveData<List<RecentlyAddedEntity>> = MutableLiveData()

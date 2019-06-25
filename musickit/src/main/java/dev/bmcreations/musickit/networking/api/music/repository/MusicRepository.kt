@@ -1,22 +1,56 @@
 package dev.bmcreations.musickit.networking.api.music.repository
 
 import android.content.Context
+import android.net.Uri
+import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaDescriptionCompat
+import androidx.lifecycle.MutableLiveData
+import androidx.media.MediaBrowserServiceCompat
+import com.apple.android.sdk.authentication.TokenProvider
 import dev.bmcreations.musickit.networking.Outcome
-import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
-import dev.bmcreations.musickit.networking.api.models.LibraryPlaylist
-import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
-import dev.bmcreations.musickit.networking.api.models.tracks
+import dev.bmcreations.musickit.networking.api.models.*
+import dev.bmcreations.musickit.networking.extensions.*
 import dev.bmcreations.musickit.networking.provideLibraryService
 import dev.bmcreations.musickit.networking.provideRetrofit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 
-class MusicRepository(val context: Context,
-                      val devToken: String,
-                      val userToken: String?): AnkoLogger {
+private val job = Job()
+private val uiScope  = CoroutineScope(Dispatchers.Main + job)
+
+class MusicRepository private constructor() : AnkoLogger {
+
+    var devToken: String = ""
+    var userToken: String? = null
 
     companion object {
         const val API_VERSION = 1
         const val BASE_URL = "https://api.music.apple.com"
+
+        @Volatile
+        private var INSTANCE: MusicRepository? = null
+
+        fun getInstance(provider: TokenProvider): MusicRepository {
+            val tmp = INSTANCE
+            if (tmp != null) {
+                tmp.userToken = provider.userToken
+                return tmp
+            }
+
+            return synchronized(this) {
+                val instance: MusicRepository = MusicRepository().apply {
+                    this.devToken = provider.developerToken
+                    this.userToken = provider.userToken
+                }
+
+                INSTANCE = instance
+                instance
+            }
+
+        }
     }
 
     private val retrofit by lazy {
@@ -25,6 +59,12 @@ class MusicRepository(val context: Context,
 
     private val library by lazy {
         provideLibraryService(retrofit)
+    }
+
+    var songs: MutableLiveData<List<TrackEntity>> = MutableLiveData()
+
+    init {
+        songs.value = mutableListOf()
     }
 
     suspend fun getUserRecentlyAdded(): Outcome<List<RecentlyAddedEntity>> {
@@ -51,7 +91,9 @@ class MusicRepository(val context: Context,
             val req = library.getLibraryAlbumByIdAsync(bearer, token, id)
             try {
                 req.await().run {
-                    ret = Outcome.success(this.data.first())
+                    val album = this.data.first()
+                    ret = Outcome.success(album)
+                    uiScope.launch { songs.value = this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) } }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -90,7 +132,9 @@ class MusicRepository(val context: Context,
                     tracksReq.await().run {
                         val tracks = this.data
                         ret = Outcome.success(playlist.apply {
-                            this.tracks = tracks
+                            this.tracks = tracks.also { ret ->
+                                uiScope.launch { songs.value = ret.map { PlaylistTrackEntity(it)} }
+                            }
                         })
                     }
 
@@ -101,5 +145,29 @@ class MusicRepository(val context: Context,
             }
         }
         return ret
+    }
+
+    fun getSong(id: String): TrackEntity? {
+        return songs.value?.find {
+            when (it) {
+                is PlaylistTrackEntity -> it.track.attributes?.playParams?.catalogId == id
+                is AlbumTrackEntity -> it.track.attributes?.playParams?.catalogId == id
+            }
+        }
+    }
+
+    fun loadMediaItems(parentId: String, result: MediaBrowserServiceCompat.Result<MutableList<MediaBrowserCompat.MediaItem>>) {
+        result.detach()
+        result.sendResult(songs.value?.map {
+            val metadata = it.toMetadata()
+            val item = MediaDescriptionCompat.Builder()
+                .setMediaId(metadata.mediaId)
+                .setTitle(metadata.songName)
+                .setSubtitle(metadata.artistName)
+                .setIconUri(Uri.parse(metadata.albumArtworkUrl))
+                .setExtras(metadata.bundle)
+                .setMediaUri(Uri.parse(metadata.fullArtworkUri)).build()
+
+            MediaBrowserCompat.MediaItem(item, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE) }?.toMutableList())
     }
 }
