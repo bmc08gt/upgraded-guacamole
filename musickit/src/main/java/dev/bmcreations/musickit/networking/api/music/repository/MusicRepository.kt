@@ -143,7 +143,25 @@ class MusicRepository private constructor() : AnkoLogger {
         return ret
     }
 
-    fun getTrack(id: String): TrackEntity? {
+    fun getTrackByMetadataMediaId(id: String): TrackEntity? {
+        return tracks?.find {
+            when (it) {
+                is PlaylistTrackEntity -> it.toMetadata().mediaId == id
+                is AlbumTrackEntity -> it.toMetadata().mediaId == id
+            }
+        }
+    }
+
+    fun getTrackByMediaId(id: String): TrackEntity? {
+        return tracks?.find {
+            when (it) {
+                is PlaylistTrackEntity -> it.track.id == id
+                is AlbumTrackEntity -> it.track.id == id
+            }
+        }
+    }
+
+    fun getTrackByCatalogId(id: String): TrackEntity? {
         return tracks?.find {
             when (it) {
                 is PlaylistTrackEntity -> it.track.attributes?.playParams?.catalogId == id

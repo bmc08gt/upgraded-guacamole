@@ -127,7 +127,7 @@ class MediaSessionManager(val context: Context,
 
         val mediaId = queueItems[queueIndex].description.mediaId
         mediaId?.let {
-            song = musicRepository.getTrack(mediaId)
+            song = musicRepository.getTrackByMetadataMediaId(mediaId)
             mediaSession.setMetadata(song?.toMetadata())
             if (!mediaSession.isActive) mediaSession.isActive = true
         }
@@ -230,7 +230,7 @@ class MediaSessionManager(val context: Context,
                     val mediaId: String? = it.getString(EXTRA_TRACK_ID, null)
                     if (null != mediaId) {
                         val bundle = Bundle()
-                        val song = musicRepository.getTrack(mediaId)
+                        val song = musicRepository.getTrackByMetadataMediaId(mediaId)
                         bundle.putParcelable(EXTRA_TRACK, song)
                         cb?.send(RESULT_TRACK, bundle)
                     }

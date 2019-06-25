@@ -21,8 +21,10 @@ import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.extensions.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
-class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackService) {
+class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackService): AnkoLogger {
 
     val notificationManager: NotificationManager by lazy {
         (mediaPlaybackService.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).also {
@@ -70,7 +72,7 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
 
     private fun buildNotification(song: TrackEntity, token: MediaSessionCompat.Token, state: Int,
                                   currentPosition: Long): NotificationCompat.Builder {
-
+        info { "buildNotification(song=${song.toMetadata().songName}, state=$state, position=$currentPosition)" }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createChannel()
 
         val isPlaying = (state == PlaybackStateCompat.STATE_PLAYING) or (state == PlaybackStateCompat.STATE_BUFFERING)

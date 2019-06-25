@@ -59,7 +59,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
 
     private fun updateNotificationForItemChanged(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrack(it) }
+        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
         uiScope.launch(Dispatchers.IO) {
             while (player.currentPosition == PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN) {}
             uiScope.launch {
@@ -75,7 +75,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
 
     private fun updateNotificationForPause() {
         var track: TrackEntity? = null
-        mediaSessionManager.currentTrackMediaId?.let { track = musicRepository.getTrack(it) }
+        mediaSessionManager.currentTrackMediaId?.let { track = musicRepository.getTrackByMediaId(it) }
         track?.let {
             stopForeground(false)
             val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
@@ -94,13 +94,13 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
 
     private fun updateQueue(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrack(it) }
+        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
         mediaSessionManager.updateQueue(track)
     }
 
     private fun moveServiceToStartedState() {
         var track: TrackEntity? = null
-        mediaSessionManager.currentTrackMediaId?.let { track = musicRepository.getTrack(it) }
+        mediaSessionManager.currentTrackMediaId?.let { track = musicRepository.getTrackByMediaId(it) }
         track?.let {
             val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
                 PlaybackStateCompat.STATE_PLAYING, player.currentPosition)
@@ -189,7 +189,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
 
     private fun sendItemChangedBroadcast(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrack(it) }
+        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         val intent = Intent(ACTION_CURRENT_ITEM_CHANGED)
         intent.putExtra(EXTRA_CURRENT_ITEM, track)
