@@ -7,7 +7,7 @@ val MediaMetadataCompat.mediaId: String
         return this.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
     }
 
-val MediaMetadataCompat.songName: String
+val MediaMetadataCompat.songName: String?
     get() {
         return this.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
     }
@@ -18,24 +18,23 @@ val MediaMetadataCompat.trackNumber: Long
     }
 
 
-val MediaMetadataCompat.artistName: String
+val MediaMetadataCompat.artistName: String?
     get() {
-        return this.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+        return this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST)
     }
 
-val MediaMetadataCompat.albumName: String
+val MediaMetadataCompat.albumName: String?
     get() {
         return this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)
     }
 
-
-val MediaMetadataCompat.albumArtworkUrl: String
+val MediaMetadataCompat.albumArtworkUrl: String?
     get() {
         return this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)
     }
 
 
-val MediaMetadataCompat.fullArtworkUri: String
+val MediaMetadataCompat.fullArtworkUri: String?
     get() {
         return this.getString(MediaMetadataCompat.METADATA_KEY_ART_URI)
     }

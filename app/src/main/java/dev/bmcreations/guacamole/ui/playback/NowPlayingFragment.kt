@@ -1,5 +1,6 @@
 package dev.bmcreations.guacamole.ui.playback
 
+import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,9 @@ class NowPlayingFragment: Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         play_pause.setOnClickListener { viewModel?.playPause() }
+
+        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
+
         observe()
     }
 

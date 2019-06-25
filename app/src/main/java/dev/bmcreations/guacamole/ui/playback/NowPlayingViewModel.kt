@@ -1,22 +1,48 @@
 package dev.bmcreations.guacamole.ui.playback
 
 import android.content.Context
+import android.os.Bundle
+import android.os.ResultReceiver
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dev.bmcreations.guacamole.extensions.inTime
+import dev.bmcreations.guacamole.extensions.uiScope
+import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
+import dev.bmcreations.musickit.networking.extensions.mediaId
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
-class NowPlayingViewModel private constructor(context: Context): ViewModel() {
+class NowPlayingViewModel private constructor(val context: Context): ViewModel(), AnkoLogger {
 
-    val selectedTrack:  MutableLiveData<TrackEntity?> = MutableLiveData()
+    val selectedTrack = MutableLiveData<TrackEntity?>()
     val playState: MutableLiveData<State> = SingleLiveEvent()
 
     var initializationFailedJob : Job? = null
+
+    private val mediaBrowserConnection: MediaBrowserConnection? by lazy {
+        MediaBrowserConnection(context,
+            { data, i ->
+                info { "conn:: data=$data, playbackState=$i" }
+            },
+            { items ->
+                info { "conn:: items=$items" }
+            })
+    }
+    private val mediaBrowserCallback by lazy {
+        MediaBrowserCallback(mediaBrowserConnection) { data, i ->
+            info { "cb:: $data, $i" }
+            when (i) {
+                PlaybackStateCompat.STATE_BUFFERING -> onTrackBuffering()
+                PlaybackStateCompat.STATE_PLAYING -> onMusicStarted()
+                PlaybackStateCompat.STATE_PAUSED -> onMusicPaused()
+                PlaybackStateCompat.STATE_STOPPED -> onMusicStopped()
+            }
+        }
+    }
 
     sealed class State {
         object Playing: State()
@@ -29,6 +55,15 @@ class NowPlayingViewModel private constructor(context: Context): ViewModel() {
     init {
         selectedTrack.value = null
         playState.value = State.Uninitialized
+
+        mediaBrowserConnection?.onStart()
+        mediaBrowserConnection?.registerCallback(mediaBrowserCallback)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mediaBrowserConnection?.unregisterCallback(mediaBrowserCallback)
+        mediaBrowserConnection?.onStop()
     }
 
     companion object Factory {
@@ -38,25 +73,50 @@ class NowPlayingViewModel private constructor(context: Context): ViewModel() {
     }
 
     fun updatePlayingTrack(track: TrackEntity?) {
-        playState.postValue(State.Initializing)
-        waitForMusicPlayback()
+        play(track)
         selectedTrack.postValue(track)
+    }
+
+    private fun play(track: TrackEntity?) {
+        playState.postValue(State.Initializing)
+        mediaBrowserConnection?.mediaController?.let { mc ->
+            val extras = Bundle().apply {
+                this.putString(MediaSessionManager.EXTRA_QUEUE_IDENTIFIER, track?.toMetadata()?.mediaId)
+            }
+            mc.sendCommand(MediaSessionManager.COMMAND_SWAP_QUEUE, extras, object : ResultReceiver(null) {
+                override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
+                    if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
+                        mc.addQueueItem(track?.toMetadata()?.description)
+                        mc.transportControls?.prepare()
+                    }
+
+                    track?.let {
+                        mc.transportControls?.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE)
+                        mc.transportControls?.playFromMediaId(it.toMetadata().mediaId, null)
+                        waitForMusicPlayback()
+                    }
+                }
+            })
+        }
     }
 
     fun playPause() {
         playState.value?.let {
             when (it) {
                 is State.Playing -> {
+                    mediaBrowserConnection?.mediaController?.transportControls?.pause()
                     playState.value = State.Paused
-                    // TODO: Fire off pause
                 }
                 is State.Paused -> {
+                    mediaBrowserConnection?.mediaController?.transportControls?.play()
+                    waitForMusicPlayback()
                     playState.value = State.Playing
-                    // TODO: Fire off play
                 }
-                is State.Uninitialized -> {
+                is State.Uninitialized,
+                is State.InitializationFailed -> {
+                    mediaBrowserConnection?.mediaController?.transportControls?.play()
+                    waitForMusicPlayback()
                     playState.value = State.Initializing
-                    // TODO: Fire off play
                 }
             }
         }
@@ -68,7 +128,19 @@ class NowPlayingViewModel private constructor(context: Context): ViewModel() {
     }
 
     fun onMusicStarted() {
-        // TODO: actually wire up to mediaplayer from musickit
         initializationFailedJob?.cancel()
+        playState.value = State.Playing
+    }
+
+    fun onTrackBuffering() {
+        initializationFailedJob?.cancel()
+    }
+
+    fun onMusicPaused() {
+        playState.value = State.Paused
+    }
+
+    fun onMusicStopped() {
+        playState.value = State.Paused
     }
 }

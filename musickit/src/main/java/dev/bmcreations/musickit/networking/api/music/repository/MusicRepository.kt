@@ -1,6 +1,5 @@
 package dev.bmcreations.musickit.networking.api.music.repository
 
-import android.content.Context
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -61,11 +60,7 @@ class MusicRepository private constructor() : AnkoLogger {
         provideLibraryService(retrofit)
     }
 
-    var songs: MutableLiveData<List<TrackEntity>> = MutableLiveData()
-
-    init {
-        songs.value = mutableListOf()
-    }
+    private var tracks: List<TrackEntity>?  = listOf()
 
     suspend fun getUserRecentlyAdded(): Outcome<List<RecentlyAddedEntity>> {
         var ret: Outcome<List<RecentlyAddedEntity>> = Outcome.failure(Throwable("Auth token is null"))
@@ -93,7 +88,7 @@ class MusicRepository private constructor() : AnkoLogger {
                 req.await().run {
                     val album = this.data.first()
                     ret = Outcome.success(album)
-                    uiScope.launch { songs.value = this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) } }
+                    uiScope.launch { tracks = this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) } }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -133,7 +128,7 @@ class MusicRepository private constructor() : AnkoLogger {
                         val tracks = this.data
                         ret = Outcome.success(playlist.apply {
                             this.tracks = tracks.also { ret ->
-                                uiScope.launch { songs.value = ret.map { PlaylistTrackEntity(it)} }
+                                uiScope.launch { this@MusicRepository.tracks = ret.map { PlaylistTrackEntity(it)} }
                             }
                         })
                     }
@@ -147,8 +142,8 @@ class MusicRepository private constructor() : AnkoLogger {
         return ret
     }
 
-    fun getSong(id: String): TrackEntity? {
-        return songs.value?.find {
+    fun getTrack(id: String): TrackEntity? {
+        return tracks?.find {
             when (it) {
                 is PlaylistTrackEntity -> it.track.attributes?.playParams?.catalogId == id
                 is AlbumTrackEntity -> it.track.attributes?.playParams?.catalogId == id
@@ -158,7 +153,7 @@ class MusicRepository private constructor() : AnkoLogger {
 
     fun loadMediaItems(parentId: String, result: MediaBrowserServiceCompat.Result<MutableList<MediaBrowserCompat.MediaItem>>) {
         result.detach()
-        result.sendResult(songs.value?.map {
+        result.sendResult(tracks?.map {
             val metadata = it.toMetadata()
             val item = MediaDescriptionCompat.Builder()
                 .setMediaId(metadata.mediaId)
