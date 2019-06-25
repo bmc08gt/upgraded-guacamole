@@ -41,6 +41,7 @@ data class PlaylistTrackEntity(val track: PlaylistTrack): TrackEntity(), Parcela
             this@PlaylistTrackEntity.track.also { track ->
                 this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.attributes?.albumName)
+                this.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.attributes?.artistName)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, track.attributes?.artistName)
                 this.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.attributes?.name)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.attributes?.durationInMillis ?: 0)
@@ -59,6 +60,7 @@ data class AlbumTrackEntity(val track: LibraryAlbum.Relationships.Tracks.Data, v
             this@AlbumTrackEntity.track.also { track ->
                 this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album.attributes?.name)
+                this.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.attributes?.artistName)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, album.attributes?.artistName)
                 this.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.attributes?.name)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.attributes?.durationInMillis ?: 0)
