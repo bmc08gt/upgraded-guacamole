@@ -6,10 +6,12 @@ import android.os.ResultReceiver
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.musickit.networking.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
+import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.mediaId
 import kotlinx.coroutines.Job
 import org.jetbrains.anko.AnkoLogger
@@ -21,6 +23,10 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
     val playState: MutableLiveData<State> = SingleLiveEvent()
 
     var initializationFailedJob : Job? = null
+
+    val music by lazy {
+        MusicRepository.getInstance(TokenProvider.with(context))
+    }
 
     private val mediaBrowserConnection: MediaBrowserConnection? by lazy {
         MediaBrowserConnection(context,
@@ -39,6 +45,16 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
                 PlaybackStateCompat.STATE_PLAYING -> onMusicStarted()
                 PlaybackStateCompat.STATE_PAUSED -> onMusicPaused()
                 PlaybackStateCompat.STATE_STOPPED -> onMusicStopped()
+            }
+
+            updateCurrentTrackFromCallback(data?.get(MediaSessionManager.EXTRA_CURRENT_TRACK) as? TrackEntity)
+        }
+    }
+
+    private fun updateCurrentTrackFromCallback(track: TrackEntity?) {
+        track?.let {
+            if (selectedTrack.value != it) {
+                selectedTrack.value = it
             }
         }
     }
@@ -85,7 +101,7 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
             mc.sendCommand(MediaSessionManager.COMMAND_SWAP_QUEUE, extras, object : ResultReceiver(null) {
                 override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
                     if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
-                        mc.addQueueItem(track?.toMetadata()?.description)
+                        music.tracks?.forEach { track -> mc.addQueueItem(track.toMetadata().description) }
                         mc.transportControls?.prepare()
                     }
 

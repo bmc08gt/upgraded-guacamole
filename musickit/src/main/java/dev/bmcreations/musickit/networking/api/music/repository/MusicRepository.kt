@@ -57,7 +57,7 @@ class MusicRepository private constructor() : AnkoLogger {
         provideLibraryService(retrofit)
     }
 
-    private var tracks: MutableList<TrackEntity>?  = mutableListOf()
+    var tracks: MutableList<TrackEntity>?  = mutableListOf()
 
     suspend fun getUserRecentlyAdded(limit: Int? = null, offset: Int? = null): Outcome<RecentlyAddedResult> {
         var ret: Outcome<RecentlyAddedResult> = Outcome.failure(Throwable("Auth token is null"))
