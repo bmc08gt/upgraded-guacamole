@@ -21,7 +21,11 @@ interface LibraryService {
     fun getLibraryPlaylistByIdAsync(@Header("Authorization") devToken: String,
                                     @Header("Music-User-Token") token: String, @Path("id") id: String): Deferred<LibraryPlaylistResult>
 
+    @GET("me/library/playlists/")
+    fun getAllLibraryPlaylistsAsync(@Header("Authorization") devToken: String,
+                                    @Header("Music-User-Token") token: String): Deferred<LibraryPlaylistResult>
+
     @GET("me/library/playlists/{id}/tracks")
     fun getLibraryPlaylistTracksByIdAsync(@Header("Authorization") devToken: String,
-                                    @Header("Music-User-Token") token: String, @Path("id") id: String): Deferred<PlaylistTrackResult>
+                                    @Header("Music-User-Token") token: String, @Path("id") id: String?): Deferred<PlaylistTrackResult>
 }

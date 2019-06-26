@@ -8,12 +8,17 @@
               android:name="dev.bmcreations.guacamole.ui.library.LibraryFragment"
               android:label="@string/title_library">
         <action android:id="@+id/show_details_for_album" app:destination="@id/fragment_details" />
+        <action android:id="@+id/show_library_playlists" app:destination="@id/fragment_playlists" />
+    </fragment>
+
+    <fragment android:id="@+id/fragment_playlists"
+              android:name="dev.bmcreations.guacamole.ui.library.playlists.LibraryPlaylistFragment"
+              android:label="@string/title_playlists">
+        <action android:id="@+id/show_details_for_playlist" app:destination="@id/fragment_details" />
     </fragment>
 
     <fragment android:id="@+id/fragment_details"
               android:name="dev.bmcreations.guacamole.ui.details.AlbumDetailFragment"
-              android:label="@string/title_details">
-
-    </fragment>
+              android:label="@string/title_details" />
 
 </navigation>

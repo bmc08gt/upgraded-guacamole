@@ -27,16 +27,43 @@ class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
         MusicRepository.getInstance(TokenProvider.with(context))
     }
 
-    var networkState: LiveData<NetworkState>? = null
+    var recentsNetworkState: LiveData<NetworkState>? = null
     var recentlyAdded: LiveData<PagedList<RecentlyAddedEntity>>? = null
+
+    private var _playlists: List<LibraryPlaylist> = listOf()
+    set(value) {
+        field = value
+        playlists.value = value
+    }
+    val playlists = MutableLiveData<List<LibraryPlaylist>>()
 
     val selected: MutableLiveData<LibraryResult?> = MutableLiveData()
 
     init {
+        initializePlaylists()
+        initializeRecents()
+
+        selected.value = null
+    }
+
+    private fun initializePlaylists() {
+        uiScope.launch(Dispatchers.IO) {
+            musicRepo.getAllLibraryPlaylists().let {
+                when (it) {
+                    is Outcome.Success -> {
+                        uiScope.launch { _playlists = it.data }
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun initializeRecents() {
         val recentFactory = RecentlyAddedDataFactory().apply {
             this.provideMusicRepository(musicRepo)
         }
-        networkState = Transformations.switchMap(recentFactory.mutableLiveData) { source -> source.networkState }
+        recentsNetworkState = Transformations.switchMap(recentFactory.mutableLiveData) { source -> source.networkState }
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setInitialLoadSizeHint(10)
@@ -45,8 +72,6 @@ class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
         recentlyAdded = LivePagedListBuilder(recentFactory, pagedListConfig)
             .setFetchExecutor(Executors.newFixedThreadPool(5))
             .build()
-
-        selected.value = null
     }
 
     fun getLibraryAlbumById(id: String) {
@@ -63,6 +88,10 @@ class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
                 }
             }
         }
+    }
+
+    fun refreshLibraryPlaylists() {
+        initializePlaylists()
     }
 
     fun getLibraryPlaylistById(id: String) {

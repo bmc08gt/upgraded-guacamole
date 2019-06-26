@@ -3,17 +3,12 @@ package dev.bmcreations.musickit.networking.api.music.repository
 import android.net.Uri
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
 import com.apple.android.sdk.authentication.TokenProvider
-import dev.bmcreations.musickit.networking.Outcome
+import dev.bmcreations.musickit.networking.*
 import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.extensions.*
-import dev.bmcreations.musickit.networking.provideLibraryService
-import dev.bmcreations.musickit.networking.provideRetrofit
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 
@@ -21,6 +16,8 @@ class MusicRepository private constructor() : AnkoLogger {
 
     var devToken: String = ""
     var userToken: String? = null
+
+    var userStore: UserStoreFront? = null
 
     companion object {
         const val API_VERSION = 1
@@ -33,6 +30,9 @@ class MusicRepository private constructor() : AnkoLogger {
             val tmp = INSTANCE
             if (tmp != null) {
                 tmp.userToken = provider.userToken
+                if (tmp.userStore == null) {
+                    tmp.updateUserStoreFront()
+                }
                 return tmp
             }
 
@@ -40,6 +40,7 @@ class MusicRepository private constructor() : AnkoLogger {
                 val instance: MusicRepository = MusicRepository().apply {
                     this.devToken = provider.developerToken
                     this.userToken = provider.userToken
+                    updateUserStoreFront()
                 }
 
                 INSTANCE = instance
@@ -53,11 +54,35 @@ class MusicRepository private constructor() : AnkoLogger {
         provideRetrofit(baseUrl = "$BASE_URL/v$API_VERSION/")
     }
 
+    private val storeFront by lazy {
+        provideStoreFrontService(retrofit)
+    }
+
     private val library by lazy {
         provideLibraryService(retrofit)
     }
 
+    private val catalog by lazy {
+        provideCatalogService(retrofit)
+    }
+
     var tracks: MutableList<TrackEntity>?  = mutableListOf()
+
+    private fun updateUserStoreFront() {
+        userToken?.let { token ->
+            val bearer = "Bearer $devToken"
+            uiScope.launch(Dispatchers.IO) {
+                val req = storeFront.getUserStoreFrontAsync(bearer, token)
+                try {
+                    req.await().run {
+                        userStore = this.data.first()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 
     suspend fun getUserRecentlyAdded(limit: Int? = null, offset: Int? = null): Outcome<RecentlyAddedResult> {
         var ret: Outcome<RecentlyAddedResult> = Outcome.failure(Throwable("Auth token is null"))
@@ -94,6 +119,42 @@ class MusicRepository private constructor() : AnkoLogger {
             } catch (e: Exception) {
                 e.printStackTrace()
                 ret = Outcome.failure(e)
+            }
+        }
+        return ret
+    }
+
+    suspend fun getAllLibraryPlaylists(): Outcome<List<LibraryPlaylist>> {
+        var ret: Outcome<List<LibraryPlaylist>> = Outcome.failure(Throwable("Auth token is null"))
+        userToken?.let { token ->
+            val bearer = "Bearer $devToken"
+            userStore?.id?.let { store ->
+                val req = library.getAllLibraryPlaylistsAsync(bearer, token)
+                try {
+                    req.await().run {
+                        val res = this.data
+                        uiScope.launch(Dispatchers.Unconfined) {
+                            res.forEach {
+                                val playlist = it
+                                playlist.attributes?.playParams?.globalId?.let { id ->
+                                    val tracksReq = catalog.getPlaylistByIdAsync(bearer, token, store, id)
+                                    tracksReq.await().run {
+                                        val catalogEntry = this.data.first()
+                                        playlist.apply {
+                                            this.attributes?.curator = catalogEntry.attributes?.curatorName
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        ret = Outcome.success(this.data)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    ret = Outcome.failure(e)
+                }
+            } ?: run {
+                ret = Outcome.failure(Throwable("storefront is null"))
             }
         }
         return ret

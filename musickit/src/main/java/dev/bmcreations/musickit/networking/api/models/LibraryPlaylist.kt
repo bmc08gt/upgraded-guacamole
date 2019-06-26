@@ -5,6 +5,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import dev.bmcreations.musickit.networking.extensions.sumByLong
 import dev.bmcreations.musickit.networking.operator.FieldProperty
+import dev.bmcreations.musickit.networking.operator.NullableFieldProperty
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
@@ -31,8 +32,9 @@ val LibraryPlaylist.Attributes.Artwork.urlWithDimensions: String?
                 "{h}", h.toString(), ignoreCase = false
             )
         }
-
     }
+
+var LibraryPlaylist.Attributes.curator by NullableFieldProperty<LibraryPlaylist.Attributes, String>()
 
 @Parcelize
 data class LibraryPlaylist(

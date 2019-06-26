@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/playlist_art"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_music_fail"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+            style="@style/AppTheme.Library.Playlist.Row.Title"
+            android:id="@+id/playlist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@id/gl"
+            app:layout_constraintStart_toEndOf="@id/playlist_art"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="16dp"
+            tools:text="Friday Feeling"
+    />
+
+    <androidx.appcompat.widget.AppCompatTextView
+            style="@style/AppTheme.Library.Playlist.Row.Artists"
+            android:id="@+id/playlist_artists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toBottomOf="@id/gl"
+            app:layout_constraintStart_toEndOf="@id/playlist_art"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="16dp"
+            tools:text="Apple Music Pop"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

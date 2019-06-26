@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
             navView.setupWithNavController(it)
         }
 
-        navController?.let { setupActionBarWithNavController(it) }
+       navController?.let { setupActionBarWithNavController(it) }
     }
 
     override fun onResume() {

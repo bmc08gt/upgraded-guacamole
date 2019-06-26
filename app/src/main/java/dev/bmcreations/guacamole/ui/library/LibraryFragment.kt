@@ -5,13 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
+import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
+import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
@@ -19,11 +21,25 @@ import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library.view.*
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 class LibraryFragment: Fragment(), AnkoLogger {
 
     val vm by lazy {
-        context?.let { ctx -> LibraryViewModel(ctx) }
+        activity?.let { ctx -> LibraryViewModel(ctx) }
+    }
+
+    val libraryGroupings by lazy {
+        LibraryGroupingAdapter().apply {
+            this.onGroupingClicked = {
+                when (it.entity) {
+                    LibraryGrouping.Playlists -> {
+                        findNavController().navigate(R.id.show_library_playlists)
+                    }
+                }
+
+            }
+        }
     }
 
     val recentlyAddedItems by lazy {
@@ -55,6 +71,23 @@ class LibraryFragment: Fragment(), AnkoLogger {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_library, container, false)
 
+        root.groups.apply {
+            val endcaps = SpacesItemDecoration(8.dp(context), OrientationHelper.VERTICAL).apply {
+                this.endCaps = true
+            }
+            val header = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+                this.header = true
+                this.topBottomOnly = true
+            }
+            val footer = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+                this.bottomOnly = true
+            }
+            this.addItemDecorations(endcaps, header, footer)
+        }
+        root.groups.adapter = libraryGroupings
+        // list is static so submit it now
+        libraryGroupings.submitList(LibraryGrouping.values().toMutableList())
+
         root.recently_added.apply {
             val endcaps = SpacesItemDecoration(8.dp(context), OrientationHelper.HORIZONTAL).apply {
                 this.endCaps = true
@@ -80,6 +113,6 @@ class LibraryFragment: Fragment(), AnkoLogger {
 
     private fun observe() {
         vm?.recentlyAdded?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.submitList(it) })
-        vm?.networkState?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.networkState = it })
+        vm?.recentsNetworkState?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.networkState = it })
     }
 }

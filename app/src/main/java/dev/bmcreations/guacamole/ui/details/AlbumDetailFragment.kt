@@ -137,7 +137,14 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
             loadAlbumArt(url)
         }
         album_name.text = container.attributes?.name
-        artist_name.invisible()
+        description.text = container.attributes?.description?.standard
+        if (artist_name.text.isEmpty()) {
+            if (container.attributes?.curator == null) {
+                artist_name.invisible()
+            } else {
+                artist_name.text = container.attributes?.curator
+            }
+        }
         context?.let { ctx ->
             album_duration.text = ctx.formattedStrings[R.string.album_length](
                 container.tracks.lastIndex.toString(),

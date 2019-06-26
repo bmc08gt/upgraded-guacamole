@@ -1,5 +1,41 @@
 <resources>
 
+    <style name="AppTheme.PageHeader" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="AppTheme.Library.Grouping" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/colorAccent</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AppTheme.Library.RecentHeader" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif-black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AppTheme.Library.Playlist.Row.Title" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AppTheme.Library.Playlist.Row.Artists" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <style name="AppTheme.Recents.AlbumTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="fontFamily">sans-serif</item>
@@ -40,6 +76,13 @@
         <item name="autoSizeMaxTextSize">14sp</item>
         <item name="autoSizeMinTextSize">10sp</item>
         <item name="autoSizeStepGranularity">0.1sp</item>
+    </style>
+
+    <style name="AppTheme.Details.Description" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="AppTheme.TrackList.Number" parent="TextAppearance.MaterialComponents.Subtitle1">

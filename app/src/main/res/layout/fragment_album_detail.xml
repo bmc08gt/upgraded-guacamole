@@ -50,6 +50,19 @@
                 app:layout_constrainedWidth="true"
                 tools:text="Logic"/>
 
+        <androidx.appcompat.widget.AppCompatTextView
+                style="@style/AppTheme.Details.Description"
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/ra_image"
+                app:layout_constraintTop_toBottomOf="@id/artist_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                app:layout_constrainedWidth="true"
+                tools:text="dsfiuhsdfjkhsdfjkhsfjkhfkjshfdskjfhsfkhsdfkshksfhkhfskhskhdskhdksfkhsdfhjs"/>
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tracks"
                 android:layout_width="match_parent"
