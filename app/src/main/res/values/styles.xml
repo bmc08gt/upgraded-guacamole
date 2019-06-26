@@ -81,8 +81,7 @@
     <style name="AppTheme.Details.Description" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="fontFamily">sans-serif</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AppTheme.TrackList.Number" parent="TextAppearance.MaterialComponents.Subtitle1">

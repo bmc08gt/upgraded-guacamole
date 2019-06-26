@@ -41,6 +41,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
     }
 
     private var playlist: Boolean = false
+    private var descriptionSummary: String? = null
     private var albumName: String? = null
     private var albumArtist: String? = null
     private var albumId: String? = null
@@ -53,6 +54,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         albumId = arguments?.getString("album.id")
         albumUrl = arguments?.getString("album.url")
         playlist = arguments?.getBoolean("album.playlist") ?: false
+        descriptionSummary = arguments?.getString("album.description")
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
@@ -87,6 +89,14 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
                 vm?.getLibraryAlbumById(it)
             }
         }
+        descriptionSummary?.let {
+            description.text = it
+            description_group.visible()
+        }
+
+        play.setOnClickListener { nowPlaying?.playAlbum() }
+        shuffle.setOnClickListener { nowPlaying?.playAlbum(shuffle = true) }
+
         observe()
     }
 
@@ -137,7 +147,6 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
             loadAlbumArt(url)
         }
         album_name.text = container.attributes?.name
-        description.text = container.attributes?.description?.standard
         if (artist_name.text.isEmpty()) {
             if (container.attributes?.curator == null) {
                 artist_name.invisible()

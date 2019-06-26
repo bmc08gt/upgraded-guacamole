@@ -10,6 +10,7 @@ import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.musickit.networking.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
+import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.mediaId
@@ -87,13 +88,17 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
         }
     }
 
-    fun updatePlayingTrack(track: TrackEntity?) {
-        play(track)
-        selectedTrack.postValue(track)
+    fun playAlbum(shuffle: Boolean = false) {
+        updatePlayingTrack(if (shuffle) null else music.tracks?.first(), shuffle)
     }
 
-    private fun play(track: TrackEntity?) {
+    fun updatePlayingTrack(track: TrackEntity?, shuffle: Boolean = false) {
+        play(track, shuffle)
+    }
+
+    private fun play(track: TrackEntity?, shuffle: Boolean = false) {
         playState.postValue(State.Initializing)
+        val next = if (shuffle) { music.tracks?.random() } else { track }
         mediaBrowserConnection?.mediaController?.let { mc ->
             val extras = Bundle().apply {
                 this.putString(MediaSessionManager.EXTRA_QUEUE_IDENTIFIER, track?.toMetadata()?.mediaId)
@@ -106,8 +111,8 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
                         mc.transportControls?.prepare()
                     }
 
-                    track?.let {
-                        mc.transportControls?.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE)
+                    next?.let {
+                        mc.transportControls?.setShuffleMode(if (shuffle) PlaybackStateCompat.SHUFFLE_MODE_ALL else PlaybackStateCompat.SHUFFLE_MODE_NONE)
                         mc.transportControls?.playFromMediaId(it.toMetadata().mediaId, null)
                         waitForMusicPlayback()
                     }

@@ -38,6 +38,7 @@ class LibraryPlaylistFragment: Fragment(), AnkoLogger {
                     this.putString("album.artistName", it.entity?.attributes?.curator)
                     this.putString("album.url", it.entity?.attributes?.artwork?.urlWithDimensions)
                     this.putBoolean("album.playlist", it.entity?.type.equals("library-playlists"))
+                    this.putString("album.description",it.entity?.attributes?.description?.standard)
                     this.putString("transition_name", it.itemView.playlist_art.transitionName)
                 }
                 findNavController().navigate(R.id.show_details_for_playlist, args, null, extras)
