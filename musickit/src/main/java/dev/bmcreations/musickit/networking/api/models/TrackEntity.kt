@@ -32,11 +32,12 @@ sealed class TrackEntity : Parcelable {
         return javaClass.hashCode()
     }
 
+    abstract fun toMetadataBuilder(): MediaMetadataCompat.Builder
     abstract fun toMetadata(): MediaMetadataCompat
 }
 @Parcelize
 data class PlaylistTrackEntity(val track: PlaylistTrack): TrackEntity(), Parcelable {
-    override fun toMetadata(): MediaMetadataCompat {
+    override fun toMetadataBuilder(): MediaMetadataCompat.Builder {
         return MediaMetadataCompat.Builder().apply {
             this@PlaylistTrackEntity.track.also { track ->
                 this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
@@ -49,13 +50,16 @@ data class PlaylistTrackEntity(val track: PlaylistTrack): TrackEntity(), Parcela
                 this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
             }
-        }.build()
+        }
+    }
+    override fun toMetadata(): MediaMetadataCompat {
+        return toMetadataBuilder().build()
     }
 }
 
 @Parcelize
 data class AlbumTrackEntity(val track: LibraryAlbum.Relationships.Tracks.Data, val album: LibraryAlbum): TrackEntity(), Parcelable {
-    override fun toMetadata(): MediaMetadataCompat {
+    override fun toMetadataBuilder(): MediaMetadataCompat.Builder {
         return MediaMetadataCompat.Builder().apply {
             this@AlbumTrackEntity.track.also { track ->
                 this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
@@ -68,7 +72,11 @@ data class AlbumTrackEntity(val track: LibraryAlbum.Relationships.Tracks.Data, v
                 this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
             }
-        }.build()
+        }
+    }
+
+    override fun toMetadata(): MediaMetadataCompat {
+        return toMetadataBuilder().build()
     }
 }
 

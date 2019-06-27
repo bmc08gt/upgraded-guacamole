@@ -1,20 +1,29 @@
 package dev.bmcreations.guacamole.media
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
+import dev.bmcreations.guacamole.extensions.SimpleTarget
+import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
 import dev.bmcreations.musickit.networking.api.models.PlaylistTrackEntity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
+import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
 import dev.bmcreations.musickit.networking.extensions.mediaId
+import java.lang.Exception
 import kotlin.math.max
 import kotlin.math.min
 
@@ -128,7 +137,24 @@ class MediaSessionManager(val context: Context,
         val mediaId = queueItems[queueIndex].description.mediaId
         mediaId?.let {
             song = musicRepository.getTrackByMetadataMediaId(mediaId)
-            mediaSession.setMetadata(song?.toMetadata())
+            val mBuilder = song?.toMetadataBuilder()
+            val metadata = mBuilder?.build()
+
+            picasso {
+                it.load(metadata?.albumArtworkUrl).into(object : SimpleTarget() {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        super.onBitmapLoaded(bitmap, from)
+                        mBuilder?.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
+                        mediaSession.setMetadata(mBuilder?.build())
+                    }
+
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                        super.onBitmapFailed(e, errorDrawable)
+                        mediaSession.setMetadata(metadata)
+                    }
+
+                })
+            }
             if (!mediaSession.isActive) mediaSession.isActive = true
         }
     }
