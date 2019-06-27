@@ -98,7 +98,9 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
 
     private fun play(track: TrackEntity?, shuffle: Boolean = false) {
         playState.postValue(State.Initializing)
-        val next = if (shuffle) { music.tracks?.random() } else { track }
+        val next = if (shuffle && track == null) { music.tracks?.random() } else { track }
+        selectedTrack.postValue(next)
+        music.onTrackSelected()
         mediaBrowserConnection?.mediaController?.let { mc ->
             val extras = Bundle().apply {
                 this.putString(MediaSessionManager.EXTRA_QUEUE_IDENTIFIER, track?.toMetadata()?.mediaId)

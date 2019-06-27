@@ -66,7 +66,13 @@ class MusicRepository private constructor() : AnkoLogger {
         provideCatalogService(retrofit)
     }
 
-    var tracks: MutableList<TrackEntity>?  = mutableListOf()
+    var _tracks: MutableList<TrackEntity>? = mutableListOf()
+    var tracks: MutableList<TrackEntity>? = mutableListOf()
+
+    fun onTrackSelected() {
+        tracks = _tracks
+        _tracks = null
+    }
 
     private fun updateUserStoreFront() {
         userToken?.let { token ->
@@ -112,7 +118,7 @@ class MusicRepository private constructor() : AnkoLogger {
                     ret = Outcome.success(album)
                     uiScope.launch {
                         this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) }?.let {
-                            tracks?.addAll(it)
+                            _tracks = it.toMutableList()
                         }
                     }
                 }
@@ -190,7 +196,8 @@ class MusicRepository private constructor() : AnkoLogger {
                         val tracks = this.data
                         ret = Outcome.success(playlist.apply {
                             this.tracks = tracks.also { ret ->
-                                uiScope.launch { this@MusicRepository.tracks?.addAll(ret.map { PlaylistTrackEntity(it) }) }
+                                uiScope.launch {
+                                    this@MusicRepository._tracks = ret.map { PlaylistTrackEntity(it) }.toMutableList() }
                             }
                         })
                     }
