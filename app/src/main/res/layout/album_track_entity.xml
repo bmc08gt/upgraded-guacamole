@@ -7,37 +7,16 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/playlist_track_art"
-            android:layout_width="wrap_content"
-            android:layout_height="33dp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintEnd_toStartOf="@id/track_name"
-            tools:src="@drawable/ic_music_fail"
-            app:elevation="6dp"
-            android:layout_marginEnd="16dp"
-            android:visibility="gone"
-            app:layout_constraintHorizontal_chainStyle="packed"/>
-
     <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.TrackList.Number"
             android:id="@+id/track_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/track_name"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             android:visibility="visible"
-            android:layout_marginEnd="16dp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintHorizontal_chainStyle="packed"
             tools:text="1"/>
 
     <androidx.constraintlayout.widget.Barrier
@@ -45,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="end"
-            app:constraint_referenced_ids="track_number,playlist_track_art" />
+            app:constraint_referenced_ids="track_number" />
 
     <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.TrackList.Song"
@@ -58,8 +37,9 @@
             app:layout_constraintEnd_toStartOf="@id/explicit"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constrainedWidth="true"
+            android:layout_marginStart="16dp"
             app:layout_constraintHorizontal_bias="0.0"
-            tools:text="Confessions of a Dangerous Mind"/>
+            tools:text="Confessions of a Dangerous Minddddddddddddddddddddddddddddddddddddddddddddddd"/>
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/explicit"

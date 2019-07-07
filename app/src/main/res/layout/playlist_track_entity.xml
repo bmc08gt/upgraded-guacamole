@@ -43,7 +43,7 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0.0"
-            tools:text="Confessions of a Dangerous Mind"/>
+            tools:text="Confessions of a Dangerous Minddddddddddddddddddddddddddddddddddddddddddddddd"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.TrackList.Playlist.Artist"
