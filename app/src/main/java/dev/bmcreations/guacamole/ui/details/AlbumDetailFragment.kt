@@ -35,7 +35,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
     val adapter by lazy {
         TrackListAdapter().apply {
             this.onTrackSelected = {
-                nowPlaying?.updatePlayingTrack(it.entity)
+                nowPlaying?.play(it.entity)
             }
         }
     }
@@ -95,7 +95,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         }
 
         play.setOnClickListener { nowPlaying?.playAlbum() }
-        shuffle.setOnClickListener { nowPlaying?.playAlbum(shuffle = true) }
+        shuffle.setOnClickListener { nowPlaying?.shuffleAlbum() }
 
         observe()
     }
@@ -161,6 +161,6 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
             )
         }
 
-        adapter.submitList(container.tracks.map { t -> PlaylistTrackEntity(t) })
+        adapter.submitList(container.tracks.map { t -> PlaylistTrackEntity(t, container) })
     }
 }

@@ -2,7 +2,7 @@ package dev.bmcreations.musickit.networking.extensions
 
 import android.support.v4.media.MediaMetadataCompat
 
-val MediaMetadataCompat.mediaId: String
+val MediaMetadataCompat.mediaId: String?
     get() {
         return this.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
     }
@@ -15,6 +15,11 @@ val MediaMetadataCompat.songName: String?
 val MediaMetadataCompat.trackNumber: Long
     get() {
         return this.getLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER)
+    }
+
+val MediaMetadataCompat.numOfTracks: Long
+    get() {
+        return this.getLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS)
     }
 
 

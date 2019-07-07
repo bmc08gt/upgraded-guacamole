@@ -14,6 +14,7 @@ import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.mediaId
+import dev.bmcreations.musickit.networking.extensions.randomOrNull
 import kotlinx.coroutines.Job
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -88,19 +89,28 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
         }
     }
 
-    fun playAlbum(shuffle: Boolean = false) {
-        updatePlayingTrack(if (shuffle) null else music.tracks?.first(), shuffle)
-    }
-
-    fun updatePlayingTrack(track: TrackEntity?, shuffle: Boolean = false) {
-        play(track, shuffle)
-    }
-
-    private fun play(track: TrackEntity?, shuffle: Boolean = false) {
-        playState.postValue(State.Initializing)
-        val next = if (shuffle && track == null) { music.tracks?.random() } else { track }
-        selectedTrack.postValue(next)
+    fun playAlbum() {
+        setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE)
         music.onTrackSelected()
+        play(music.tracks?.firstOrNull())
+    }
+
+    fun play(track: TrackEntity?) {
+        music.onTrackSelected()
+        track?.let { playInternal(it) }
+    }
+
+    fun shuffleAlbum() {
+        setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL)
+        music.onTrackSelected()
+        play(music.tracks?.randomOrNull())
+    }
+
+    fun setShuffleMode(mode: Int) = mediaBrowserConnection?.mediaController?.transportControls?.setShuffleMode(mode)
+
+    private fun playInternal(track: TrackEntity) {
+        playState.postValue(State.Initializing)
+        selectedTrack.postValue(track)
         mediaBrowserConnection?.mediaController?.let { mc ->
             val extras = Bundle().apply {
                 this.putString(MediaSessionManager.EXTRA_QUEUE_IDENTIFIER, track?.toMetadata()?.mediaId)
@@ -108,13 +118,11 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
             mc.sendCommand(MediaSessionManager.COMMAND_SWAP_QUEUE, extras, object : ResultReceiver(null) {
                 override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
                     if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
-                        mc.queue.clear()
                         music.tracks?.forEach { track -> mc.addQueueItem(track.toMetadata().description) }
                         mc.transportControls?.prepare()
                     }
 
-                    next?.let {
-                        mc.transportControls?.setShuffleMode(if (shuffle) PlaybackStateCompat.SHUFFLE_MODE_ALL else PlaybackStateCompat.SHUFFLE_MODE_NONE)
+                    track.let {
                         mc.transportControls?.playFromMediaId(it.toMetadata().mediaId, null)
                         waitForMusicPlayback()
                     }

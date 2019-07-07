@@ -36,7 +36,7 @@ sealed class TrackEntity : Parcelable {
     abstract fun toMetadata(): MediaMetadataCompat
 }
 @Parcelize
-data class PlaylistTrackEntity(val track: PlaylistTrack): TrackEntity(), Parcelable {
+data class PlaylistTrackEntity(val track: PlaylistTrack, val playlist: LibraryPlaylist): TrackEntity(), Parcelable {
     override fun toMetadataBuilder(): MediaMetadataCompat.Builder {
         return MediaMetadataCompat.Builder().apply {
             this@PlaylistTrackEntity.track.also { track ->
@@ -49,6 +49,7 @@ data class PlaylistTrackEntity(val track: PlaylistTrack): TrackEntity(), Parcela
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
+                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playlist.attributes?.trackCount?.toLong() ?: 0)
             }
         }
     }
@@ -71,6 +72,7 @@ data class AlbumTrackEntity(val track: LibraryAlbum.Relationships.Tracks.Data, v
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
+                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, album.relationships?.tracks?.data?.size?.toLong() ?: 0)
             }
         }
     }

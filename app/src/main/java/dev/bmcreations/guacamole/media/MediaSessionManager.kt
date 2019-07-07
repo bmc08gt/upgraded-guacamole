@@ -55,9 +55,7 @@ class MediaSessionManager(val context: Context,
 
     init {
         mediaSession = MediaSessionCompat(context, TAG).apply {
-            setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
-                    MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS or
-                    MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS)
+            setFlags(MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS)
 
             playbackStateBuilder = PlaybackStateCompat.Builder().setActions(
                 PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PLAY_PAUSE)
@@ -140,6 +138,7 @@ class MediaSessionManager(val context: Context,
             val mBuilder = song?.toMetadataBuilder()
             val metadata = mBuilder?.build()
 
+            mediaSession.setMetadata(metadata)
             picasso {
                 it.load(metadata?.albumArtworkUrl).into(object : SimpleTarget() {
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
@@ -227,7 +226,6 @@ class MediaSessionManager(val context: Context,
                 val queueIdentifierExtra = extras?.getString(EXTRA_QUEUE_IDENTIFIER, "") ?: ""
 
                 if (queueIdentifierExtra.isEmpty() or (queueIdentifierExtra != queueIdentifier)) {
-                    queueItems.clear()
                     mediaSession.setQueue(queueItems)
                     queueIndex = -1
                     song = null

@@ -35,6 +35,7 @@ val LibraryPlaylist.Attributes.Artwork.urlWithDimensions: String?
     }
 
 var LibraryPlaylist.Attributes.curator by NullableFieldProperty<LibraryPlaylist.Attributes, String>()
+var LibraryPlaylist.Attributes.trackCount by NullableFieldProperty<LibraryPlaylist.Attributes, Int>()
 
 @Parcelize
 data class LibraryPlaylist(

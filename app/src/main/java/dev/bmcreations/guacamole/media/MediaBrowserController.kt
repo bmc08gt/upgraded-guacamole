@@ -129,10 +129,10 @@ open class MediaBrowserController(val context: Context) {
             intent?.let {
                 if (it.action == MediaPlaybackService.ACTION_CURRENT_ITEM_CHANGED) {
                     it.extras?.let { extras ->
-                        val song = extras.getParcelable(MediaPlaybackService.EXTRA_CURRENT_ITEM) as TrackEntity
+                        val song = extras.getParcelable(MediaPlaybackService.EXTRA_CURRENT_ITEM) as? TrackEntity
                         performOnAllCallbacks(object : CallbackCommand {
                             override fun perform(callback: MediaControllerCompat.Callback) {
-                                callback.onMetadataChanged(song.toMetadata())
+                                callback.onMetadataChanged(song?.toMetadata())
                             }
                         })
                     }
