@@ -9,6 +9,7 @@ import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.guacamole.extensions.visible
 import dev.bmcreations.musickit.networking.api.models.*
+import dev.bmcreations.musickit.networking.extensions.mediaId
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.explicit
@@ -22,38 +23,11 @@ class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(item
     var entity: TrackEntity? = null
         set(value) {
             field = value
-            value?.let { entity ->
-                when (entity) {
-                    is PlaylistTrackEntity -> {
-                        itemView.track_name.text = entity.track.attributes?.name
-                        itemView.track_artist.text = entity.track.attributes?.artistName
-                        if (entity.track.attributes?.isExplicit == true) {
-                            itemView.explicit.visible()
-                        } else {
-                            itemView.explicit.gone()
-                        }
-                        picasso {
-                            itemView.playlist_track_art.visible()
-                            it.cancelRequest(itemView.playlist_track_art)
-                            it.load(entity.track.attributes?.artwork?.urlWithDimensions)
-                                .resize(600, 600)
-                                .placeholder(R.drawable.ic_music_fail)
-                                .error(R.drawable.ic_music_fail)
-                                .into(itemView.playlist_track_art)
-                        }
-                    }
-                    is AlbumTrackEntity -> {
-                        itemView.track_number.text = entity.track.attributes?.trackNumber?.toString()
-                        itemView.track_name.text = entity.track.attributes?.name
-                        if (entity.track.attributes?.isExplicit == true) {
-                            itemView.explicit.visible()
-                        } else {
-                            itemView.explicit.gone()
-                        }
-                    }
+            value?.let {
+                it.populate(itemView)
+                it.toMetadata().mediaId?.let {
+                    itemView.setOnClickListener { onClick?.invoke(this) }
                 }
-
-                itemView.setOnClickListener { onClick?.invoke(this) }
             }
         }
 

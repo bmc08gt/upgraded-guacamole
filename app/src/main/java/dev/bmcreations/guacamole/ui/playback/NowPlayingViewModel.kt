@@ -118,7 +118,12 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
             mc.sendCommand(MediaSessionManager.COMMAND_SWAP_QUEUE, extras, object : ResultReceiver(null) {
                 override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
                     if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
-                        music.tracks?.forEach { track -> mc.addQueueItem(track.toMetadata().description) }
+                        mc.queue.clear()
+                        music.tracks?.forEach { track ->
+                            track.toMetadata().mediaId?.let {
+                                mc.addQueueItem(track.toMetadata().description)
+                            }
+                        }
                         mc.transportControls?.prepare()
                     }
 
