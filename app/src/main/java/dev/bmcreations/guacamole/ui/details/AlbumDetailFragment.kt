@@ -34,8 +34,10 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
 
     val adapter by lazy {
         TrackListAdapter().apply {
-            this.onTrackSelected = {
+            nowPlaying = this@AlbumDetailFragment.nowPlaying
+            onTrackSelected = {
                 nowPlaying?.play(it.entity)
+                this.notifyDataSetChanged()
             }
         }
     }
@@ -114,6 +116,12 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
                     is Playlist -> loadPlaylist(ret.playlist)
                     is Album -> loadAlbum(ret.album)
                 }
+            }
+        })
+        nowPlaying?.playState?.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                NowPlayingViewModel.State.Playing,
+                NowPlayingViewModel.State.Paused -> adapter.notifyDataSetChanged()
             }
         })
     }
