@@ -5,7 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:clipToPadding="false">
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/playlist_track_art"
@@ -17,6 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0"
             app:layout_constraintEnd_toStartOf="@id/track_name"
             tools:src="@drawable/ic_music_fail"
             app:elevation="6dp"
@@ -24,13 +26,29 @@
             android:visibility="visible"
             app:layout_constraintHorizontal_chainStyle="packed"/>
 
+    <dev.bmcreations.guacamole.ui.widgets.EqualizerView
+            android:id="@+id/equalizer"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintStart_toStartOf="@id/playlist_track_art"
+            app:layout_constraintEnd_toEndOf="@id/playlist_track_art"
+            app:layout_constraintTop_toTopOf="@id/playlist_track_art"
+            app:layout_constraintBottom_toBottomOf="@id/playlist_track_art"
+            app:layout_constrainedWidth="true"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            app:color="@android:color/white"
+            android:visibility="visible"/>
 
     <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="end"
-            app:constraint_referenced_ids="playlist_track_art" />
+            app:constraint_referenced_ids="playlist_track_art"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.TrackList.Song"
