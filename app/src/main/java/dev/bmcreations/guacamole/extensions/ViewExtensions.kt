@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 
@@ -143,6 +144,14 @@ fun View.tintBackground(colorResId: Int) {
     val wrapDrawable = DrawableCompat.wrap(background).mutate()
     DrawableCompat.setTint(wrapDrawable, colorResId)
     background = wrapDrawable
+}
+
+fun AppCompatImageView.tint(colorResId: Int) {
+    this.setColorFilter(colorResId)
+}
+
+fun AppCompatImageView.removeTint() {
+    this.clearColorFilter()
 }
 
 fun View.handleLayout(onLayout: (() -> Unit)? = null) {
