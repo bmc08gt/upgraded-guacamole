@@ -37,7 +37,6 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
             nowPlaying = this@AlbumDetailFragment.nowPlaying
             onTrackSelected = {
                 nowPlaying?.play(it.entity)
-                this.notifyDataSetChanged()
             }
         }
     }
@@ -121,7 +120,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         nowPlaying?.playState?.observe(viewLifecycleOwner, Observer {
             when (it) {
                 NowPlayingViewModel.State.Playing,
-                NowPlayingViewModel.State.Paused -> adapter.notifyDataSetChanged()
+                NowPlayingViewModel.State.Paused -> tracks.swapAdapter(adapter, true)
             }
         })
     }

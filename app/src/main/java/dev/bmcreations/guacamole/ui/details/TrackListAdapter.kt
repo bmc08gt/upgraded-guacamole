@@ -21,24 +21,15 @@ class TrackListAdapter : ListAdapter<TrackEntity, TrackVH>(TRACK_DATA_DIFF_CALLB
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackVH {
-        return TrackVH.create(parent, viewType).apply { this.onClick = onTrackSelected }
+        return TrackVH.create(parent, viewType).apply {
+            nowPlaying = this@TrackListAdapter.nowPlaying
+            onClick = onTrackSelected
+        }
     }
 
     override fun onBindViewHolder(holder: TrackVH, position: Int) {
         getItem(position).let { track ->
             holder.entity = track
-            holder.hideVisualization()
-            nowPlaying?.selectedTrack?.value?.let {
-                if (track == it) {
-                    nowPlaying?.playState?.value?.let { state ->
-                        when (state) {
-                            NowPlayingViewModel.State.Playing -> holder.visualizePlayback()
-                            NowPlayingViewModel.State.Paused,
-                            NowPlayingViewModel.State.Initializing -> holder.pauseVisualization()
-                        }
-                    }
-                }
-            }
         }
     }
 }

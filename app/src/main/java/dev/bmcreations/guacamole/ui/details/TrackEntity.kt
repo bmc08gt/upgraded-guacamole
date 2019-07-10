@@ -6,6 +6,7 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.guacamole.extensions.visible
+import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.extensions.mediaId
 import kotlinx.android.synthetic.main.album_track_entity.view.*
@@ -36,37 +37,48 @@ val TRACK_DATA_DIFF_CALLBACK
     }
 }
 
-fun TrackEntity.populate(view: View) {
+fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
+    holder.hideVisualization()
+    val selected = nowPlaying?.selectedTrack?.value
+    if (selected == this) {
+        nowPlaying.playState.value?.let { state ->
+            when (state) {
+                NowPlayingViewModel.State.Playing -> holder.visualizePlayback()
+                NowPlayingViewModel.State.Paused,
+                NowPlayingViewModel.State.Initializing -> holder.pauseVisualization()
+            }
+        }
+    }
     when (this) {
         is PlaylistTrackEntity -> {
-            view.track_name.text = this.track.attributes?.name
-            view.track_artist.text = this.track.attributes?.artistName
+            holder.itemView.track_name.text = this.track.attributes?.name
+            holder.itemView.track_artist.text = this.track.attributes?.artistName
             if (this.track.attributes?.isExplicit == true) {
-                view.explicit.visible()
+                holder.itemView.explicit.visible()
             } else {
-                view.explicit.gone()
+                holder.itemView.explicit.gone()
             }
             picasso {
-                view.playlist_track_art.visible()
-                it.cancelRequest(view.playlist_track_art)
+                holder.itemView.playlist_track_art.visible()
+                it.cancelRequest(holder.itemView.playlist_track_art)
                 it.load(this.track.attributes?.artwork?.urlWithDimensions)
                     .resize(600, 600)
                     .placeholder(R.drawable.ic_music_fail)
                     .error(R.drawable.ic_music_fail)
-                    .into(view.playlist_track_art)
+                    .into(holder.itemView.playlist_track_art)
             }
         }
         is AlbumTrackEntity -> {
-            view.track_number.text = this.track.attributes?.trackNumber?.toString()
-            view.track_name.text = this.track.attributes?.name
+            holder.itemView.track_number.text = this.track.attributes?.trackNumber?.toString()
+            holder.itemView.track_name.text = this.track.attributes?.name
             if (this.track.attributes?.isExplicit == true) {
-                view.explicit.visible()
+                holder.itemView.explicit.visible()
             } else {
-                view.explicit.gone()
+                holder.itemView.explicit.gone()
             }
             if (this.toMetadata().mediaId == null) {
-                view.track_number.alpha = 0.5f
-                view.track_name.alpha = 0.5f
+                holder.itemView.track_number.alpha = 0.5f
+                holder.itemView.track_name.alpha = 0.5f
             }
         }
     }
