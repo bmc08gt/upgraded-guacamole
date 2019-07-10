@@ -69,6 +69,8 @@ fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
             }
         }
         is AlbumTrackEntity -> {
+            holder.itemView.track_number.alpha = 1.0f
+            holder.itemView.track_name.alpha = 1.0f
             holder.itemView.track_number.text = this.track.attributes?.trackNumber?.toString()
             holder.itemView.track_name.text = this.track.attributes?.name
             if (this.track.attributes?.isExplicit == true) {
@@ -76,7 +78,7 @@ fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
             } else {
                 holder.itemView.explicit.gone()
             }
-            if (this.toMetadata().mediaId == null) {
+            if (this.track.attributes?.playParams == null) {
                 holder.itemView.track_number.alpha = 0.5f
                 holder.itemView.track_name.alpha = 0.5f
             }
