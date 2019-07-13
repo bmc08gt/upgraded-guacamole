@@ -19,7 +19,7 @@
             android:visibility="invisible"
             tools:text="1"/>
 
-    <dev.bmcreations.guacamole.ui.widgets.EqualizerView
+    <dev.bmcreations.guacamole.ui.widgets.visualization.EqualizerView
             android:id="@+id/equalizer"
             android:layout_width="24dp"
             android:layout_height="16dp"
