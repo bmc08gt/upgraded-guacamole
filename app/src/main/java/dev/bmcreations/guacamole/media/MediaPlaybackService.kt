@@ -126,7 +126,11 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
-        return BrowserRoot("Guacamole.root", null)
+        val extras = Bundle()
+        extras.putBoolean("android.media.browse.CONTENT_STYLE_SUPPORTED", true)
+        extras.putInt("android.media.browse.CONTENT_STYLE_BROWSABLE_HINT", 2)
+        extras.putInt("android.media.browse.CONTENT_STYLE_PLAYABLE_HINT", 1)
+        return BrowserRoot("Guacamole.root", extras)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
