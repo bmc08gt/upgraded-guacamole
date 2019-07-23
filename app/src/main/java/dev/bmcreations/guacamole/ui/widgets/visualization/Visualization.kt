@@ -3,18 +3,12 @@ package dev.bmcreations.guacamole.ui.widgets.visualization
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.use
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
-import dev.bmcreations.guacamole.extensions.handleLayout
 
 abstract class Visualization(context: Context, val attrs: AttributeSet? = null): View(context, attrs) {
-
-    companion object {
-        const val BAR_COUNT = 3
-    }
-
-    val bars = mutableListOf<View>()
 
     var color: Int = context.colors[R.color.colorAccent]
     var duration: Long = 3000L
@@ -35,23 +29,11 @@ abstract class Visualization(context: Context, val attrs: AttributeSet? = null):
         }
     }
 
-    fun setupBars() {
-        bars.clear()
-        for (i in 0 until BAR_COUNT) {
-            val b = View(context, attrs)
-            bars.add(b)
-        }
-    }
+    abstract fun setup()
+    abstract fun updateBars(onBar: (View, Int) -> Unit)
 
-    fun updateBars(onBar: (View, Int) -> Unit) {
-        bars.forEachIndexed { index, bar ->
-            bar.id = generateViewId()
-            bar.setBackgroundColor(color)
-            bar.handleLayout {
-                bar.pivotY = this.height.toFloat() - this.paddingBottom - this.paddingTop
-            }
-            onBar.invoke(bar, index)
-        }
+    open fun setConstraints(parent: ConstraintLayout) {
+        // stub
     }
 
     open fun visualize() {
