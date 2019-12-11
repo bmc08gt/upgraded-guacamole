@@ -6,12 +6,13 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 @Parcelize
 data class RecentlyAddedResult(private val next: String? = null, val data: List<RecentlyAddedEntity>) : Parcelable {
 
     fun nextOffset(): Int? {
-        return next?.let { HttpUrl.parse("http://foobar.com$it")?.queryParameter("offset")?.toInt() }
+        return next?.let { "http://foobar.com$it".toHttpUrlOrNull()?.queryParameter("offset")?.toInt() }
     }
 }
 

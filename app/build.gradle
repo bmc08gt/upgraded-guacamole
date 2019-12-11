@@ -26,6 +26,9 @@ android {
         targetCompatibility = "8"
         sourceCompatibility = "8"
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 
     ndkVersion "20.0.5594570"
 
@@ -46,6 +49,7 @@ dependencies {
     implementation deps.jetpack.navigation_fragment
     implementation deps.jetpack.navigation_ui
     implementation deps.jetpack.lifecycle_extensions
+    implementation deps.jetpack.localbroadcast
     implementation deps.jetpack.navigation_fragment_ktx
     implementation deps.jetpack.navigation_ui_ktx
     implementation deps.jetpack.media
