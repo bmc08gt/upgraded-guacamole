@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.RequiresApi
@@ -15,6 +16,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.media.session.MediaButtonReceiver
 import coil.Coil
 import coil.api.get
+import coil.api.load
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
 import dev.bmcreations.guacamole.extensions.strings
@@ -124,13 +126,10 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
                 )
         )
 
-        uiScope.launch(Dispatchers.IO) {
-            song.toMetadata().albumArtworkUrl?.let { url ->
-                val drawable = Coil.get(url)
-                uiScope.launch {
-                    builder.setLargeIcon(drawable.toBitmap())
-                    notificationManager.notify(NOTIFICATION_ID, builder.build())
-                }
+        Coil.load(mediaPlaybackService, song.toMetadata().albumArtworkUrl) {
+            target { drawable ->
+                builder.setLargeIcon(drawable.toBitmap())
+                notificationManager.notify(NOTIFICATION_ID, builder.build())
             }
         }
 

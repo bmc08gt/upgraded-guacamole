@@ -11,6 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.api.get
+import coil.api.load
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
@@ -138,11 +139,10 @@ class MediaSessionManager(val context: Context,
 
             mediaSession.setMetadata(metadata)
 
-            uiScope.launch(Dispatchers.IO) {
-                metadata?.albumArtworkUrl?.let {
-                    val drawable = Coil.get(it)
-                    mBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, drawable.toBitmap())
-                    mediaSession.setMetadata(mBuilder.build())
+            Coil.load(context, metadata?.albumArtworkUrl) {
+                target { drawable ->
+                    mBuilder?.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, drawable.toBitmap())
+                    mediaSession.setMetadata(mBuilder?.build())
                 }
             }
             if (!mediaSession.isActive) mediaSession.isActive = true
