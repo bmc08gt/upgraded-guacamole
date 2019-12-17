@@ -21,11 +21,7 @@ import dev.bmcreations.musickit.networking.api.music.sources.RecentlyAddedDataFa
 import java.util.concurrent.Executors
 
 
-class LibraryViewModel(context: Context): ViewModel(), AnkoLogger {
-
-    private val musicRepo by lazy {
-        MusicRepository.getInstance(TokenProvider.with(context))
-    }
+class LibraryViewModel(context: Context, val musicRepo: MusicRepository): ViewModel(), AnkoLogger {
 
     var recentsNetworkState: LiveData<NetworkState>? = null
     var recentlyAdded: LiveData<PagedList<RecentlyAddedEntity>>? = null

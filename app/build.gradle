@@ -58,6 +58,8 @@ dependencies {
 
     implementation deps.anko.commons
 
+    implementation deps.retrofit.gson
+
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junit
     androidTestImplementation deps.test.espresso

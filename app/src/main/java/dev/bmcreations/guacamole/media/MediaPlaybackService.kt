@@ -14,6 +14,7 @@ import com.apple.android.music.playback.model.MediaPlayerException
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.model.PlayerQueueItem
 import dev.bmcreations.guacamole.auth.TokenProvider
+import dev.bmcreations.guacamole.graph
 import dev.bmcreations.musickit.networking.extensions.uiScope
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
@@ -40,7 +41,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
     }
 
     private fun initPlayer() {
-        player = MediaPlayerControllerFactory.createLocalController(this.applicationContext, TokenProvider.with(this))
+        player = MediaPlayerControllerFactory.createLocalController(this.applicationContext, graph().sessionGraph.tokenProvider)
         player.addListener(this)
     }
 
@@ -50,7 +51,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
     }
 
     private fun initMusicRepository() {
-        musicRepository = MusicRepository.getInstance(TokenProvider.with(this))
+        musicRepository = graph().networkGraph.musicRepository
     }
 
     private fun initMediaNotificationManager() {
@@ -171,7 +172,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
         }
     }
 
-    override fun onPlaybackError(p0: MediaPlayerController, p1: MediaPlayerException) = Unit
+    override fun onPlaybackError(p0: MediaPlayerController, p1: MediaPlayerException) {
+        info { p1 }
+    }
 
     override fun onPlaybackRepeatModeChanged(p0: MediaPlayerController, p1: Int) = Unit
 

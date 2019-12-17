@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
+import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
@@ -24,8 +25,12 @@ import org.jetbrains.anko.toast
 
 class LibraryPlaylistFragment: Fragment(), AnkoLogger {
 
+    val graph by lazy { context?.graph() }
+
     val vm by lazy {
-        activity?.let { ctx -> LibraryViewModel(ctx) }
+        graph?.let {
+            activity?.let { ctx -> LibraryViewModel(ctx, it.networkGraph.musicRepository) }
+        }
     }
 
     val playlists by lazy {

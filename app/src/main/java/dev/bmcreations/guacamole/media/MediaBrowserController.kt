@@ -77,7 +77,7 @@ open class MediaBrowserController(val context: Context) {
 
     protected open fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) = Unit
 
-    protected fun onDisconnected() = Unit
+    protected open fun onDisconnected() = Unit
 
     private inner class MediaBrowserConnectionCallback: MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {

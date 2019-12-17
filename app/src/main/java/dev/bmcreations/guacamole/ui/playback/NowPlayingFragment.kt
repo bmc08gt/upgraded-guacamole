@@ -8,19 +8,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.guacamole.extensions.*
+import dev.bmcreations.guacamole.extensions.getViewModel
+import dev.bmcreations.guacamole.extensions.gone
+import dev.bmcreations.guacamole.extensions.visible
+import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.details.populateMiniPlayer
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel.State
 import kotlinx.android.synthetic.main.now_playing_mini.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
 
-class NowPlayingFragment: Fragment() {
+class NowPlayingFragment : Fragment() {
 
-    val viewModel by lazy {
-        activity?.let { a -> a.getViewModel { NowPlayingViewModel.create(a) } }
+    private val graph by lazy { context?.graph() }
+
+    private val viewModel by lazy {
+        activity?.let { a ->
+            graph?.let {
+                a.getViewModel { NowPlayingViewModel.create(a, it.networkGraph.musicRepository) }
+            }
+        }
     }
 
-    lateinit var root: View
+    private lateinit var root: View
 
     override fun onCreateView(
         inflater: LayoutInflater,

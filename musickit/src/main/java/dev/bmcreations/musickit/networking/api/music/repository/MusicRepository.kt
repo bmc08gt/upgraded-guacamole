@@ -12,12 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 
-class MusicRepository private constructor() : AnkoLogger {
+class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenExpiredCallback) : AnkoLogger {
 
-    var devToken: String = ""
-    var userToken: String? = null
-
-    var userStore: UserStoreFront? = null
+    private var userStore: UserStoreFront? = null
 
     companion object {
         const val API_VERSION = 1
@@ -25,33 +22,10 @@ class MusicRepository private constructor() : AnkoLogger {
 
         @Volatile
         private var INSTANCE: MusicRepository? = null
-
-        fun getInstance(provider: TokenProvider): MusicRepository {
-            val tmp = INSTANCE
-            if (tmp != null) {
-                tmp.userToken = provider.userToken
-                if (tmp.userStore == null) {
-                    tmp.updateUserStoreFront()
-                }
-                return tmp
-            }
-
-            return synchronized(this) {
-                val instance: MusicRepository = MusicRepository().apply {
-                    this.devToken = provider.developerToken
-                    this.userToken = provider.userToken
-                    updateUserStoreFront()
-                }
-
-                INSTANCE = instance
-                instance
-            }
-
-        }
     }
 
     private val retrofit by lazy {
-        provideRetrofit(baseUrl = "$BASE_URL/v$API_VERSION/")
+        provideRetrofit(baseUrl = "$BASE_URL/v$API_VERSION/", expiredTokenCallback = expiredCallback)
     }
 
     private val storeFront by lazy {
@@ -66,7 +40,7 @@ class MusicRepository private constructor() : AnkoLogger {
         provideCatalogService(retrofit)
     }
 
-    var _tracks: MutableList<TrackEntity>? = mutableListOf()
+    private var _tracks: MutableList<TrackEntity>? = mutableListOf()
     var tracks: MutableList<TrackEntity>? = mutableListOf()
 
     fun onTrackSelected() {
@@ -77,8 +51,8 @@ class MusicRepository private constructor() : AnkoLogger {
     }
 
     private fun updateUserStoreFront() {
-        userToken?.let { token ->
-            val bearer = "Bearer $devToken"
+        tokenProvider.userToken?.let { token ->
+            val bearer = "Bearer ${tokenProvider.developerToken}"
             uiScope.launch(Dispatchers.IO) {
                 val req = storeFront.getUserStoreFrontAsync(bearer, token)
                 try {
@@ -94,8 +68,8 @@ class MusicRepository private constructor() : AnkoLogger {
 
     suspend fun getUserRecentlyAdded(limit: Int? = null, offset: Int? = null): Outcome<RecentlyAddedResult> {
         var ret: Outcome<RecentlyAddedResult> = Outcome.failure(Throwable("Auth token is null"))
-        userToken?.let { token ->
-            val bearer = "Bearer $devToken"
+        tokenProvider.userToken?.let { token ->
+            val bearer = "Bearer ${tokenProvider.developerToken}"
             val req = library.getUserRecentlyAddedAsync(bearer, token, limit, offset)
             try {
                 req.await().run {
@@ -111,8 +85,8 @@ class MusicRepository private constructor() : AnkoLogger {
 
     suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum> {
         var ret: Outcome<LibraryAlbum> = Outcome.failure(Throwable("Auth token is null"))
-        userToken?.let { token ->
-            val bearer = "Bearer $devToken"
+        tokenProvider.userToken?.let { token ->
+            val bearer = "Bearer ${tokenProvider.developerToken}"
             val req = library.getLibraryAlbumByIdAsync(bearer, token, id)
             try {
                 req.await().run {
@@ -134,8 +108,8 @@ class MusicRepository private constructor() : AnkoLogger {
 
     suspend fun getAllLibraryPlaylists(): Outcome<List<LibraryPlaylist>> {
         var ret: Outcome<List<LibraryPlaylist>> = Outcome.failure(Throwable("Auth token is null"))
-        userToken?.let { token ->
-            val bearer = "Bearer $devToken"
+        tokenProvider.userToken?.let { token ->
+            val bearer = "Bearer ${tokenProvider.developerToken}"
             userStore?.id?.let { store ->
                 val req = library.getAllLibraryPlaylistsAsync(bearer, token)
                 try {
@@ -171,8 +145,8 @@ class MusicRepository private constructor() : AnkoLogger {
 
     suspend fun getLibraryPlaylistById(id: String): Outcome<LibraryPlaylist> {
         var ret: Outcome<LibraryPlaylist> = Outcome.failure(Throwable("Auth token is null"))
-        userToken?.let { token ->
-            val bearer = "Bearer $devToken"
+        tokenProvider.userToken?.let { token ->
+            val bearer = "Bearer ${tokenProvider.developerToken}"
             val req = library.getLibraryPlaylistByIdAsync(bearer, token, id)
             try {
                 req.await().run {
@@ -188,8 +162,8 @@ class MusicRepository private constructor() : AnkoLogger {
 
     suspend fun getLibraryPlaylistWithTracksById(id: String): Outcome<LibraryPlaylist> {
         var ret: Outcome<LibraryPlaylist> = Outcome.failure(Throwable("Auth token is null"))
-        userToken?.let { token ->
-            val bearer = "Bearer $devToken"
+        tokenProvider.userToken?.let { token ->
+            val bearer = "Bearer ${tokenProvider.developerToken}"
             val playlistReq = library.getLibraryPlaylistByIdAsync(bearer, token, id)
             try {
                 playlistReq.await().run {

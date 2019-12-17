@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.OrientationHelper
 import androidx.transition.TransitionInflater
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
+import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
@@ -24,15 +25,25 @@ import org.jetbrains.anko.info
 
 class AlbumDetailFragment : Fragment(), AnkoLogger {
 
-    val vm by lazy {
-        context?.let { ctx -> LibraryViewModel(ctx) }
+    private val graph by lazy { context?.graph() }
+
+    private val vm by lazy {
+        context?.let { ctx ->
+            graph?.let {
+                getViewModel { LibraryViewModel(ctx, it.networkGraph.musicRepository) } }
+            }
     }
 
-    val nowPlaying by lazy {
-        activity?.let { a -> a.getViewModel { NowPlayingViewModel.create(a) } }
+
+    private val nowPlaying by lazy {
+        activity?.let { a ->
+            graph?.let {
+                a.getViewModel { NowPlayingViewModel.create(a, it.networkGraph.musicRepository) }
+            }
+        }
     }
 
-    val adapter by lazy {
+    private val adapter by lazy {
         TrackListAdapter().apply {
             nowPlaying = this@AlbumDetailFragment.nowPlaying
             onTrackSelected = {
@@ -142,7 +153,6 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
                 }
             }
         }
-        info { "track three=${album.relationships?.tracks?.data?.find { d -> d?.attributes?.trackNumber == 3 }?.attributes?.durationInMillis}" }
         album.relationships?.tracks?.data?.let {
             adapter.submitList(it.filterNotNull().map { t -> AlbumTrackEntity(t, album) })
         }

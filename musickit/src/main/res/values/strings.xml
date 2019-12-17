@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">musickit</string>
+
+    <string name="musickit_web_auth">https://authorize.music.apple.com/woa?a=%1$s&amp;app=music&amp;p=subscribe</string>
 </resources>

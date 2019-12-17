@@ -7,18 +7,21 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import dev.bmcreations.guacamole.media.MediaBrowserController
 import dev.bmcreations.guacamole.media.MediaSessionManager
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
 class MediaBrowserConnection(context: Context,
-                             private val cb: (Bundle?, Int) -> Unit,
-                             private val itemsCb: (List<MediaBrowserCompat.MediaItem>) -> Unit) : MediaBrowserController(context) {
+                             private val cb: ((Bundle?, Int) -> Unit)? = null,
+                             private val itemsCb: ((List<MediaBrowserCompat.MediaItem>) -> Unit)? = null) : MediaBrowserController(context), AnkoLogger {
 
     override fun onConnected(mediaController: MediaControllerCompat) {
+        info { "connected" }
         mediaController.let { mc ->
             mc.sendCommand(MediaSessionManager.COMMAND_GET_CURRENT_TRACK, null, object: ResultReceiver(null) {
                 override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
                     if (resultCode == MediaSessionManager.RESULT_CURRENT_TRACK) {
                         resultData?.let { bundle ->
-                            cb.invoke(bundle, mc.playbackState.state)
+                            cb?.invoke(bundle, mc.playbackState.state)
                         }
                     }
                 }
@@ -26,8 +29,12 @@ class MediaBrowserConnection(context: Context,
         }
     }
 
+    override fun onDisconnected() {
+        info { "disconnected" }
+    }
+
     override fun onChildrenLoaded(parentId: String, children: List<MediaBrowserCompat.MediaItem>) {
         subscribe(parentId)
-        itemsCb.invoke(children)
+        itemsCb?.invoke(children)
     }
 }

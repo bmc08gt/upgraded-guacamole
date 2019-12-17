@@ -1,6 +1,6 @@
 def appInfo = [:]
 
-appInfo.applicationId = "dev.bmcreations.guacomole"
+appInfo.applicationId = "dev.bmcreations.guacamole"
 appInfo.versionCode = 1
 appInfo.versionName = "1.0"
 ext.appInfo = appInfo

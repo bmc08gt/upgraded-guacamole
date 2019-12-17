@@ -5,19 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ImageButton
-            android:id="@+id/closeButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_close_white_36dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="48dp"
-            android:tint="@color/colorAccent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-    />
-
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

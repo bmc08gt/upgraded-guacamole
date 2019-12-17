@@ -24,21 +24,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.LoginActivity">
+
+        <activity android:name="dev.bmcreations.guacamole.ui.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
-        <service android:name=".ui.login.authy.AuthenticatorService">
+        <activity android:name=".ui.login.LoginActivity">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-
-            <meta-data
-                    android:name="android.accounts.AccountAuthenticator"
-                    android:resource="@xml/authenticator" />
-        </service>
+        </activity>
 
         <service
                 android:name=".media.MediaPlaybackService">

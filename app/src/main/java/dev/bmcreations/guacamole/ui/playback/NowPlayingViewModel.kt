@@ -10,7 +10,6 @@ import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.musickit.networking.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
-import dev.bmcreations.musickit.networking.api.models.LibraryAlbum
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.mediaId
@@ -19,29 +18,18 @@ import kotlinx.coroutines.Job
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class NowPlayingViewModel private constructor(val context: Context): ViewModel(), AnkoLogger {
+class NowPlayingViewModel private constructor(val context: Context, val music: MusicRepository): ViewModel(), AnkoLogger {
 
     val selectedTrack = MutableLiveData<TrackEntity?>()
     val playState: MutableLiveData<State> = SingleLiveEvent()
 
-    var initializationFailedJob : Job? = null
+    private var initializationFailedJob : Job? = null
 
-    val music by lazy {
-        MusicRepository.getInstance(TokenProvider.with(context))
-    }
+    private val mediaBrowserConnection: MediaBrowserConnection? by lazy { MediaBrowserConnection(context) }
 
-    private val mediaBrowserConnection: MediaBrowserConnection? by lazy {
-        MediaBrowserConnection(context,
-            { data, i ->
-                info { "conn:: data=$data, playbackState=$i" }
-            },
-            { items ->
-                info { "conn:: items=$items" }
-            })
-    }
     private val mediaBrowserCallback by lazy {
-        MediaBrowserCallback(mediaBrowserConnection) { data, i ->
-            info { "cb:: $data, $i" }
+        MediaBrowserCallback(mediaBrowserConnection) { extras, i ->
+            info { "playback state change -- state=${i.playbackStateString}" }
             when (i) {
                 PlaybackStateCompat.STATE_BUFFERING -> onTrackBuffering()
                 PlaybackStateCompat.STATE_PLAYING -> onMusicStarted()
@@ -49,7 +37,7 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
                 PlaybackStateCompat.STATE_STOPPED -> onMusicStopped()
             }
 
-            updateCurrentTrackFromCallback(data?.get(MediaSessionManager.EXTRA_CURRENT_TRACK) as? TrackEntity)
+            updateCurrentTrackFromCallback(extras?.get(MediaSessionManager.EXTRA_CURRENT_TRACK) as? TrackEntity)
         }
     }
 
@@ -84,8 +72,8 @@ class NowPlayingViewModel private constructor(val context: Context): ViewModel()
     }
 
     companion object Factory {
-        fun create(context: Context): NowPlayingViewModel {
-            return NowPlayingViewModel(context)
+        fun create(context: Context, music: MusicRepository): NowPlayingViewModel {
+            return NowPlayingViewModel(context, music)
         }
     }
 

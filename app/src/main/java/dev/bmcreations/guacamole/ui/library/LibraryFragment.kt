@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
+import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
@@ -25,11 +26,15 @@ import org.jetbrains.anko.info
 
 class LibraryFragment: Fragment(), AnkoLogger {
 
-    val vm by lazy {
-        activity?.let { ctx -> LibraryViewModel(ctx) }
+    private val graph by lazy { context?.graph() }
+
+    private val vm by lazy {
+        graph?.let {
+            activity?.let { ctx -> LibraryViewModel(ctx, it.networkGraph.musicRepository) }
+        }
     }
 
-    val libraryGroupings by lazy {
+    private val libraryGroupings by lazy {
         LibraryGroupingAdapter().apply {
             this.onGroupingClicked = {
                 when (it.entity) {
@@ -42,7 +47,7 @@ class LibraryFragment: Fragment(), AnkoLogger {
         }
     }
 
-    val recentlyAddedItems by lazy {
+    private val recentlyAddedItems by lazy {
         RecentlyAddedAdapter().apply {
             this.onRecentClicked = {
                 val extras = FragmentNavigatorExtras(it.itemView.ra_image to it.itemView.ra_image.transitionName)

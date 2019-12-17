@@ -14,7 +14,6 @@ import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import dev.bmcreations.guacamole.extensions.SimpleTarget
 import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
@@ -23,9 +22,6 @@ import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
 import dev.bmcreations.musickit.networking.extensions.mediaId
-import java.lang.Exception
-import kotlin.math.max
-import kotlin.math.min
 
 class MediaSessionManager(val context: Context,
                           private val player: MediaPlayerController,
@@ -273,23 +269,23 @@ class MediaSessionManager(val context: Context,
     override fun onSetShuffleMode(shuffleMode: Int) {
         shuffle = shuffleMode != PlaybackStateCompat.SHUFFLE_MODE_NONE
     }
+
     companion object {
         private val TAG = MediaSessionManager::class.java.simpleName
-        private val CANONICAL_NAME = MediaSessionManager::class.java.canonicalName
         const val FIVE_SECONDS_IN_MILLIS = 5 * 1000
 
-        val COMMAND_SWAP_QUEUE = "$CANONICAL_NAME.command_swap_queue"
-        val COMMAND_GET_TRACK = "$CANONICAL_NAME.command_get_track"
-        val COMMAND_GET_CURRENT_TRACK = "$CANONICAL_NAME.command_current_track"
-        val COMMAND_GET_CURRENT_TRACK_ELAPSED_TIME = "$CANONICAL_NAME.command_current_track_elapsed_time"
-        val COMMAND_STOP = "$CANONICAL_NAME.command_stop"
+        const val COMMAND_SWAP_QUEUE = "command_swap_queue"
+        const val COMMAND_GET_TRACK = "command_get_track"
+        const val COMMAND_GET_CURRENT_TRACK = "command_current_track"
+        const val COMMAND_GET_CURRENT_TRACK_ELAPSED_TIME = "command_current_track_elapsed_time"
+        const val COMMAND_STOP = "command_stop"
 
-        val EXTRA_QUEUE_IDENTIFIER = "$CANONICAL_NAME.extra_queue_identifier"
-        val EXTRA_CURRENT_TRACK_ELAPSED_TIME = "$CANONICAL_NAME.extra_current_track_elapsed_time"
-        val EXTRA_CURRENT_TRACK = "$CANONICAL_NAME.extra_current_track"
-        val EXTRA_TRACK_ID = "$CANONICAL_NAME.extra_track_id"
-        val EXTRA_CURRENT_PLAYLIST_ID = "$CANONICAL_NAME.extra_current_playlist_id"
-        val EXTRA_TRACK = "$CANONICAL_NAME.extra_track"
+        const val EXTRA_QUEUE_IDENTIFIER = "extra_queue_identifier"
+        const val EXTRA_CURRENT_TRACK_ELAPSED_TIME = "extra_current_track_elapsed_time"
+        const val EXTRA_CURRENT_TRACK = "extra_current_track"
+        const val EXTRA_TRACK_ID = "extra_track_id"
+        const val EXTRA_CURRENT_PLAYLIST_ID = ".extra_current_playlist_id"
+        const val EXTRA_TRACK = "extra_track"
 
         const val RESULT_ERROR = 0
         const val RESULT_ADD_QUEUE_ITEMS = 1

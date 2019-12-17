@@ -12,6 +12,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+interface TokenExpiredCallback {
+    fun onTokenExpired()
+}
+
 fun provideGson(): Gson {
     return GsonBuilder().create()
 }
@@ -28,7 +32,7 @@ fun provideStoreFrontService(retrofit: Retrofit): StoreFrontService {
     return retrofit.create(StoreFrontService::class.java)
 }
 
-fun provideOkHttpClientBuilder(): OkHttpClient.Builder {
+fun provideOkHttpClientBuilder(expiredTokenCallback: TokenExpiredCallback? = null): OkHttpClient.Builder {
     return OkHttpClient.Builder().apply {
         if (BuildConfig.DEBUG) {
             val logging = HttpLoggingInterceptor().also {
@@ -36,14 +40,28 @@ fun provideOkHttpClientBuilder(): OkHttpClient.Builder {
             }
             this.addInterceptor(logging)
         }
+
+        this.addInterceptor {
+            val request = it.request()
+            val response = it.proceed(request)
+            if (response.code == 403 || response.code == 401) {
+                expiredTokenCallback?.onTokenExpired()
+            }
+            response
+        }
     }
 }
 
-fun provideOkHttpClient(): OkHttpClient {
-    return provideOkHttpClientBuilder().build()
+fun provideOkHttpClient(expiredTokenCallback: TokenExpiredCallback? = null): OkHttpClient {
+    return provideOkHttpClientBuilder(expiredTokenCallback).build()
 }
 
-fun provideRetrofit(gson: Gson = provideGson(), httpClient: OkHttpClient = provideOkHttpClient(), baseUrl: String): Retrofit {
+fun provideRetrofit(
+    gson: Gson = provideGson(),
+    expiredTokenCallback: TokenExpiredCallback? = null,
+    httpClient: OkHttpClient = provideOkHttpClient(expiredTokenCallback),
+    baseUrl: String
+): Retrofit {
     return Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create(gson))

@@ -7,13 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.getViewModel
+import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
 import kotlinx.android.synthetic.main.fragment_login.*
 
-class LoginFragment: Fragment(), ActivityNavigation {
+class LoginFragment : Fragment(), ActivityNavigation {
+
+    val graph by lazy { context?.graph() }
 
     private val loginVm by lazy {
-        activity?.let { a -> getViewModel { LoginViewModel.create(a) } }
+        graph?.let {
+            activity?.let { a ->
+                getViewModel { LoginViewModel.create(a, it.sessionGraph.sessionManager) }
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +44,6 @@ class LoginFragment: Fragment(), ActivityNavigation {
         super.onViewCreated(view, savedInstanceState)
 
         signInButton.setOnClickListener { signIn() }
-        closeButton.setOnClickListener { activity?.finish() }
     }
 
     private fun signIn() {
