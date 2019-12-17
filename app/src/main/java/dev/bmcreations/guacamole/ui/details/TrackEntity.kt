@@ -2,9 +2,9 @@ package dev.bmcreations.guacamole.ui.details
 
 import android.view.View
 import androidx.recyclerview.widget.DiffUtil
+import coil.api.load
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.gone
-import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.guacamole.extensions.visible
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
@@ -58,14 +58,14 @@ fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
             } else {
                 holder.itemView.explicit.gone()
             }
-            picasso {
-                holder.itemView.playlist_track_art.visible()
-                it.cancelRequest(holder.itemView.playlist_track_art)
-                it.load(this.track.attributes?.artwork?.urlWithDimensions)
-                    .resize(600, 600)
-                    .placeholder(R.drawable.ic_music_fail)
-                    .error(R.drawable.ic_music_fail)
-                    .into(holder.itemView.playlist_track_art)
+            holder.itemView.playlist_track_art.apply {
+                visible()
+                load(this@populate.track.attributes?.artwork?.urlWithDimensions) {
+                    size(600, 600)
+                    crossfade(true)
+                    error(R.drawable.ic_music_fail)
+                    placeholder(R.drawable.ic_music_fail)
+                }
             }
         }
         is AlbumTrackEntity -> {
@@ -95,14 +95,14 @@ fun TrackEntity.populateMiniPlayer(view: View) {
             } else {
                 view.explicit.gone()
             }
-            picasso {
-                view.track_art.visible()
-                it.cancelRequest(view.track_art)
-                it.load(this.track.attributes?.artwork?.urlWithDimensions)
-                    .resize(600, 600)
-                    .placeholder(R.drawable.ic_music_fail)
-                    .error(R.drawable.ic_music_fail)
-                    .into(view.track_art)
+            view.track_art.apply {
+                visible()
+                load(this@populateMiniPlayer.track.attributes?.artwork?.urlWithDimensions) {
+                    size(600, 600)
+                    crossfade(true)
+                    error(R.drawable.ic_music_fail)
+                    placeholder(R.drawable.ic_music_fail)
+                }
             }
         }
         is AlbumTrackEntity -> {
@@ -112,14 +112,14 @@ fun TrackEntity.populateMiniPlayer(view: View) {
             } else {
                 view.explicit.gone()
             }
-            picasso {
-                view.track_art.visible()
-                it.cancelRequest(view.track_art)
-                it.load(this.track.attributes?.artwork?.urlWithDimensions)
-                    .resize(600, 600)
-                    .placeholder(R.drawable.ic_music_fail)
-                    .error(R.drawable.ic_music_fail)
-                    .into(view.track_art)
+            view.track_art.apply {
+                visible()
+                load(this@populateMiniPlayer.track.attributes?.artwork?.urlWithDimensions) {
+                    size(600, 600)
+                    crossfade(true)
+                    error(R.drawable.ic_music_fail)
+                    placeholder(R.drawable.ic_music_fail)
+                }
             }
         }
     }

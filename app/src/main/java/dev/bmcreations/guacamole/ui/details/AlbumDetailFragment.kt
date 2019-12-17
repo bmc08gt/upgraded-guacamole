@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.transition.TransitionInflater
+import coil.api.load
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.graph
@@ -113,9 +114,10 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
     }
 
     private fun loadAlbumArt(url: String?) {
-        picasso {
-            it.cancelRequest(ra_image)
-            it.load(url).error(R.drawable.ic_music_fail).resize(600, 600).into(ra_image)
+        ra_image.load(url) {
+            crossfade(true)
+            error(R.drawable.ic_music_fail)
+            size(600, 600)
         }
     }
 

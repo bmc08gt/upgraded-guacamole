@@ -11,10 +11,12 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.media.session.MediaButtonReceiver
+import coil.Coil
+import coil.api.get
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
-import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.ui.MainActivity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
@@ -123,10 +125,10 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
         )
 
         uiScope.launch(Dispatchers.IO) {
-            picasso {
-                val bitmap = it.load(song.toMetadata().albumArtworkUrl).get()
+            song.toMetadata().albumArtworkUrl?.let { url ->
+                val drawable = Coil.get(url)
                 uiScope.launch {
-                    builder.setLargeIcon(bitmap)
+                    builder.setLargeIcon(drawable.toBitmap())
                     notificationManager.notify(NOTIFICATION_ID, builder.build())
                 }
             }

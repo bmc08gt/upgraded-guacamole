@@ -9,19 +9,24 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.core.graphics.drawable.toBitmap
+import coil.Coil
+import coil.api.get
+import coil.api.load
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
-import com.squareup.picasso.Picasso
-import dev.bmcreations.guacamole.extensions.SimpleTarget
-import dev.bmcreations.guacamole.extensions.picasso
+
 import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
 import dev.bmcreations.musickit.networking.api.models.PlaylistTrackEntity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
 import dev.bmcreations.musickit.networking.extensions.mediaId
+import dev.bmcreations.musickit.networking.extensions.uiScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MediaSessionManager(val context: Context,
                           private val player: MediaPlayerController,
@@ -135,20 +140,13 @@ class MediaSessionManager(val context: Context,
             val metadata = mBuilder?.build()
 
             mediaSession.setMetadata(metadata)
-            picasso {
-                it.load(metadata?.albumArtworkUrl).into(object : SimpleTarget() {
-                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        super.onBitmapLoaded(bitmap, from)
-                        mBuilder?.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
-                        mediaSession.setMetadata(mBuilder?.build())
-                    }
 
-                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                        super.onBitmapFailed(e, errorDrawable)
-                        mediaSession.setMetadata(metadata)
-                    }
-
-                })
+            uiScope.launch(Dispatchers.IO) {
+                metadata?.albumArtworkUrl?.let {
+                    val drawable = Coil.get(it)
+                    mBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, drawable.toBitmap())
+                    mediaSession.setMetadata(mBuilder.build())
+                }
             }
             if (!mediaSession.isActive) mediaSession.isActive = true
         }

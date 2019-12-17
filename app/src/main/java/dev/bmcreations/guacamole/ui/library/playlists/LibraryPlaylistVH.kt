@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.musickit.networking.api.models.LibraryPlaylist
 import dev.bmcreations.musickit.networking.api.models.curator
 import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
@@ -25,12 +25,10 @@ class LibraryPlaylistVH private constructor(itemView: View) : RecyclerView.ViewH
                 itemView.playlist_name.text = playlist.attributes?.name
                 itemView.playlist_artists.text = playlist.attributes?.curator
                 playlist.attributes?.let {
-                    picasso { picasso ->
-                        picasso.cancelRequest(itemView.playlist_art)
-                        picasso.load(it.artwork?.urlWithDimensions)
-                            .error(R.drawable.ic_music_fail)
-                            .resize(600, 600)
-                            .into(itemView.playlist_art)
+                    itemView.playlist_art.load(it.artwork?.urlWithDimensions) {
+                        crossfade(true)
+                        error(R.drawable.ic_music_fail)
+                        size(600, 600)
                     }
                 }
                 ViewCompat.setTransitionName(itemView.playlist_art, "imageView-$adapterPosition")

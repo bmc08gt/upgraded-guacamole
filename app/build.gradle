@@ -54,7 +54,7 @@ dependencies {
     implementation deps.jetpack.navigation_ui_ktx
     implementation deps.jetpack.media
 
-    implementation deps.picasso
+    implementation deps.coil
 
     implementation deps.anko.commons
 

@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.guacamole.extensions.picasso
 import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
 import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
@@ -23,12 +23,10 @@ class RecentlyAddedVH private constructor(itemView: View) : RecyclerView.ViewHol
                 itemView.ra_name.text = entity.attributes?.name
                 itemView.ra_name_artist.text = entity.attributes?.artistName
                 entity.attributes?.artwork?.also { artwork ->
-                    picasso { picasso ->
-                        picasso.cancelRequest(itemView.ra_image)
-                        picasso.load(artwork.urlWithDimensions)
-                            .error(R.drawable.ic_music_fail)
-                            .resize(600, 600)
-                            .into(itemView.ra_image)
+                    itemView.ra_image.load(artwork.urlWithDimensions) {
+                        crossfade(true)
+                        error(R.drawable.ic_music_fail)
+                        size(600, 600)
                     }
                 }
                 ViewCompat.setTransitionName(itemView.ra_image, "imageView-$adapterPosition")

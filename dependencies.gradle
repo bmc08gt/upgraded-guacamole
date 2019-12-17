@@ -40,7 +40,7 @@ versions.slidinguppanel = "3.4.0"
 versions.support = "29.0.0"
 versions.retrofit = "2.7.0"
 versions.anko = '0.10.8'
-versions.picasso = '2.71828'
+versions.coil = '0.8.0'
 
 versions.firebase_auth = "17.0.0"
 versions.firebase_auth_ui = "4.3.1"
@@ -137,7 +137,7 @@ deps.gson = "com.google.code.gson:gson:$versions.gson"
 deps.junit = "junit:junit:$versions.junit"
 deps.expiringmap = "net.jodah:expiringmap:$versions.expiringmap"
 deps.slidinguppanel = "com.sothree.slidinguppanel:library:$versions.slidinguppanel"
-deps.picasso = "com.squareup.picasso:picasso:$versions.picasso"
+deps.coil = "io.coil-kt:coil:$versions.coil"
 deps.db_debug = "com.amitshekhar.android:debug-db:1.0.6"
 deps.html_recycler = "com.github.m7mdra:HtmlRecycler:0.1.11"
 

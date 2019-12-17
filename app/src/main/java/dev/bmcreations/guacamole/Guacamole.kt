@@ -3,8 +3,6 @@ package dev.bmcreations.guacamole
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
 import dev.bmcreations.guacamole.graphs.AppGraph
 import dev.bmcreations.guacamole.graphs.NetworkGraphImpl
 import dev.bmcreations.guacamole.graphs.SessionGraphImpl
@@ -38,15 +36,6 @@ class Guacamole: Application() {
     override fun onCreate() {
         super.onCreate()
         appGraph // touch the app graph
-        OkHttpClient.Builder()
-            .protocols(singletonList(Protocol.HTTP_1_1))
-            .build().apply {
-                Picasso.Builder(this@Guacamole)
-                    .downloader(OkHttp3Downloader(this))
-                    .build().apply {
-                        Picasso.setSingletonInstance(this)
-                    }
-            }
     }
 }
 
