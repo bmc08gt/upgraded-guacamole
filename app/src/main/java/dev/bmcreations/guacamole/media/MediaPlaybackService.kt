@@ -10,9 +10,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.media.MediaBrowserServiceCompat
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.controller.MediaPlayerControllerFactory
-import com.apple.android.music.playback.model.MediaPlayerException
-import com.apple.android.music.playback.model.PlaybackState
-import com.apple.android.music.playback.model.PlayerQueueItem
+import com.apple.android.music.playback.model.*
 import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.musickit.networking.extensions.uiScope
@@ -152,7 +150,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
         }
     }
 
-    override fun onPlaybackShuffleModeChanged(p0: MediaPlayerController, p1: Int) = Unit
+    override fun onPlaybackShuffleModeChanged(p0: MediaPlayerController, p1: Int) {
+        mediaSessionManager.mediaSession.setShuffleMode(convertShuffleMode(p1))
+    }
 
     override fun onPlaybackStateUpdated(p0: MediaPlayerController) = Unit
 
@@ -176,7 +176,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
         info { p1 }
     }
 
-    override fun onPlaybackRepeatModeChanged(p0: MediaPlayerController, p1: Int) = Unit
+    override fun onPlaybackRepeatModeChanged(p0: MediaPlayerController, p1: Int) {
+        mediaSessionManager.mediaSession.setRepeatMode(convertRepeatMode(p1))
+    }
 
     override fun onPlaybackQueueChanged(p0: MediaPlayerController, p1: MutableList<PlayerQueueItem>) = Unit
 
@@ -221,6 +223,24 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
                 PlaybackState.PLAYING -> if (buffering) PlaybackStateCompat.STATE_BUFFERING else PlaybackStateCompat.STATE_PLAYING
                 else -> PlaybackStateCompat.STATE_NONE
             }
+        }
+
+        private fun convertRepeatMode(@PlaybackRepeatMode repeatMode: Int): Int {
+            return when (repeatMode) {
+                PlaybackRepeatMode.REPEAT_MODE_ALL -> PlaybackStateCompat.REPEAT_MODE_ALL
+                PlaybackRepeatMode.REPEAT_MODE_ONE -> PlaybackStateCompat.REPEAT_MODE_ONE
+                PlaybackRepeatMode.REPEAT_MODE_OFF -> PlaybackStateCompat.REPEAT_MODE_NONE
+                else -> PlaybackStateCompat.REPEAT_MODE_NONE
+            }
+        }
+
+
+        private fun convertShuffleMode(@PlaybackShuffleMode shuffleMode: Int): Int {
+            when (shuffleMode) {
+                PlaybackShuffleMode.SHUFFLE_MODE_OFF -> return PlaybackStateCompat.SHUFFLE_MODE_NONE
+                PlaybackShuffleMode.SHUFFLE_MODE_SONGS -> return PlaybackStateCompat.SHUFFLE_MODE_ALL
+            }
+            return PlaybackStateCompat.SHUFFLE_MODE_NONE
         }
     }
 }
