@@ -1,23 +1,20 @@
 package dev.bmcreations.guacamole.media
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.api.get
-import coil.api.load
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
-
 import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
 import dev.bmcreations.musickit.networking.api.models.PlaylistTrackEntity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
@@ -295,7 +292,7 @@ class MediaSessionManager(val context: Context,
         private fun allowedActions(playerController: MediaPlayerController): Long {
             var result = PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
             when (playerController.playbackState) {
-                PlaybackState.PLAYING -> result = result or PlaybackStateCompat.ACTION_PAUSE
+                PlaybackState.PLAYING -> result = result or PlaybackStateCompat.ACTION_PAUSE or ACTION_SEEK_TO
                 PlaybackState.PAUSED -> result =
                     result or (PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_STOP)
                 PlaybackState.STOPPED -> result = result or PlaybackStateCompat.ACTION_PLAY
