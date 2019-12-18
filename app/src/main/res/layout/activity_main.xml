@@ -9,16 +9,18 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="0dp"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:minHeight="?android:attr/actionBarSize"
         app:elevation="8dp">
 
         <dev.bmcreations.guacamole.ui.widgets.TranslatingToolbar
             android:id="@+id/mainToolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            app:buttonGravity="center_vertical"
+            android:layout_height="?android:attr/actionBarSize"
             android:theme="@style/AppTheme.ActionBarTheme" />
 
     </com.google.android.material.appbar.AppBarLayout>

@@ -132,7 +132,6 @@ class LibraryFragment: Fragment(), AnkoLogger {
 
             override fun onScrollChanged(scrollY: Int, firstScroll: Boolean, dragging: Boolean) {
                 val dy = fragmentScrollCallback?.onScrollChange(scrollY, firstScroll, dragging)
-                info { "dy=$dy" }
                 fragmentScrollCallback?.showElevation(show = (dy ?: 0f) >= 0)
             }
 

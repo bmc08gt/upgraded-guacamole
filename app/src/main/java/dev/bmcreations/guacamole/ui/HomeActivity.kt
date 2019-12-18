@@ -75,4 +75,8 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
         info { "show=$show" }
         ViewCompat.setElevation(appbar, if (show) 8f else 0f)
     }
+
+    override fun setTitle(title: String) {
+        supportActionBar?.title = title
+    }
 }

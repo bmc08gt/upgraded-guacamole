@@ -34,10 +34,12 @@ class TranslatingToolbar @JvmOverloads constructor(
 
     override fun setTitle(resId: Int) {
         view.title.setText(resId)
+        view.title.animate().translationY(-view.height.toFloat()).alpha(0f).start()
     }
 
     override fun setTitle(title: CharSequence?) {
         view.title.text = title
+        view.title.animate().translationY(-view.height.toFloat()).alpha(0f).start()
     }
 
     fun getYTranslation(): Float = view.title.translationY

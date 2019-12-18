@@ -1,5 +1,6 @@
 package dev.bmcreations.guacamole.ui.details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +14,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.transition.TransitionInflater
 import coil.api.load
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks
+import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.graph
+import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.fragment_album_detail.*
 import kotlinx.android.synthetic.main.fragment_album_detail.view.*
+import kotlinx.android.synthetic.main.fragment_library.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
@@ -59,6 +64,15 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
     private var albumArtist: String? = null
     private var albumId: String? = null
     private var albumUrl: String? = null
+
+    private var fragmentScrollCallback: FragmentScrollChangeCallback? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentScrollChangeCallback) {
+            fragmentScrollCallback = context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,6 +123,21 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
 
         play.setOnClickListener { nowPlaying?.playAlbum() }
         shuffle.setOnClickListener { nowPlaying?.shuffleAlbum() }
+
+        albumName?.let { fragmentScrollCallback?.setTitle(it) }
+        fragmentScrollCallback?.showElevation(false)
+
+        root.setScrollViewCallbacks(object : ObservableScrollViewCallbacks {
+            override fun onUpOrCancelMotionEvent(scrollState: ScrollState?) = Unit
+
+            override fun onScrollChanged(scrollY: Int, firstScroll: Boolean, dragging: Boolean) {
+                val dy = fragmentScrollCallback?.onScrollChange(scrollY, firstScroll, dragging)
+                fragmentScrollCallback?.showElevation(show = (dy ?: 0f) >= 0)
+            }
+
+            override fun onDownMotionEvent() = Unit
+
+        })
 
         observe()
     }

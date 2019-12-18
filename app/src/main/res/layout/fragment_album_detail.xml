@@ -1,166 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="16dp"
-        android:fillViewport="true"
-        android:clipToPadding="false">
+<dev.bmcreations.guacamole.ui.widgets.ObservableNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:padding="16dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ra_image"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_music_fail"/>
+            android:id="@+id/ra_image"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_music_fail" />
 
         <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AppTheme.Details.AlbumTitle"
-                android:id="@+id/album_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/ra_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="16dp"
-                app:layout_constrainedWidth="true"
-                tools:text="Confessions of A Dangerous Mind"/>
+            android:id="@+id/album_name"
+            style="@style/AppTheme.Details.AlbumTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ra_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Confessions of A Dangerous Mind" />
 
         <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AppTheme.Details.AlbumArtist"
-                android:id="@+id/artist_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/ra_image"
-                app:layout_constraintTop_toBottomOf="@id/album_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="16dp"
-                app:layout_constrainedWidth="true"
-                tools:text="Logic"/>
+            android:id="@+id/artist_name"
+            style="@style/AppTheme.Details.AlbumArtist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ra_image"
+            app:layout_constraintTop_toBottomOf="@id/album_name"
+            tools:text="Logic" />
 
         <View
-                android:id="@+id/description_divider_top"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#80000000"
-                app:layout_constraintTop_toBottomOf="@id/ra_image"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="8dp" />
+            android:id="@+id/description_divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="8dp"
+            android:background="#80000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ra_image" />
 
         <androidx.appcompat.widget.AppCompatTextView
-                style="@style/AppTheme.Details.Description"
-                android:id="@+id/description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/description_divider_top"
-                app:layout_constraintTop_toBottomOf="@id/description_divider_top"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center_vertical"
-                app:layout_constrainedWidth="true"
-                android:layout_marginTop="8dp"
-                tools:text="dsfiuhsdfjkhsdfjkhsfjkhfkjshfdskjfhsfkhsdfkshksfhkhfskhskhdskhdksfkhsdfhjs"/>
+            android:id="@+id/description"
+            style="@style/AppTheme.Details.Description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/description_divider_top"
+            app:layout_constraintTop_toBottomOf="@id/description_divider_top"
+            tools:text="dsfiuhsdfjkhsdfjkhsfjkhfkjshfdskjfhsfkhsdfkshksfhkhfskhskhdskhdksfkhsdfhjs" />
 
         <View
-                android:id="@+id/description_divider_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#80000000"
-                app:layout_constraintTop_toBottomOf="@id/description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="8dp" />
+            android:id="@+id/description_divider_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="8dp"
+            android:background="#80000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/description" />
 
         <androidx.constraintlayout.widget.Group
-                android:id="@+id/description_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:visibility="visible"
-                app:constraint_referenced_ids="description_divider_top,description,description_divider_bottom" />
+            android:id="@+id/description_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="description_divider_top,description,description_divider_bottom"
+            tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/buttons_gl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+            android:id="@+id/buttons_gl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
         <androidx.appcompat.widget.AppCompatButton
-                style="?android:borderlessButtonStyle"
-                android:id="@+id/play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/description_divider_bottom"
-                app:layout_constraintEnd_toStartOf="@id/buttons_gl"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/button_color"
-                android:textAllCaps="false"
-                android:paddingStart="8dp"
-                android:paddingEnd="20dp"
-                android:drawablePadding="8dp"
-                android:text="Play"
-                app:drawableTint="@color/button_color"
-                android:drawableStart="@drawable/ic_play_arrow_white_32dp"
-                android:background="@drawable/rounded_button_inverse"
-        />
+            android:id="@+id/play"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_button_inverse"
+            android:drawableStart="@drawable/ic_play_arrow_white_32dp"
+            android:drawablePadding="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="20dp"
+            android:text="Play"
+            android:textAllCaps="false"
+            android:textColor="@color/button_color"
+            app:drawableTint="@color/button_color"
+            app:layout_constraintEnd_toStartOf="@id/buttons_gl"
+            app:layout_constraintTop_toBottomOf="@id/description_divider_bottom" />
 
         <androidx.appcompat.widget.AppCompatButton
-                style="?android:borderlessButtonStyle"
-                android:id="@+id/shuffle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/description_divider_bottom"
-                app:layout_constraintStart_toEndOf="@id/buttons_gl"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="12dp"
-                android:textColor="@color/button_color"
-                android:textAllCaps="false"
-                android:text="Shuffle"
-                app:drawableTint="@color/button_color"
-                android:drawableStart="@drawable/ic_baseline_shuffle_white_24dp"
-                android:background="@drawable/rounded_button_inverse"
-        />
+            android:id="@+id/shuffle"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_button_inverse"
+            android:drawableStart="@drawable/ic_baseline_shuffle_white_24dp"
+            android:drawablePadding="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="12dp"
+            android:text="Shuffle"
+            android:textAllCaps="false"
+            android:textColor="@color/button_color"
+            app:drawableTint="@color/button_color"
+            app:layout_constraintStart_toEndOf="@id/buttons_gl"
+            app:layout_constraintTop_toBottomOf="@id/description_divider_bottom" />
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tracks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/play"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        />
+            android:id="@+id/tracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/play" />
 
         <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/album_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/tracks"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/tracks"/>
+            android:id="@+id/album_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@id/tracks"
+            app:layout_constraintTop_toBottomOf="@id/tracks" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+</dev.bmcreations.guacamole.ui.widgets.ObservableNestedScrollView>
