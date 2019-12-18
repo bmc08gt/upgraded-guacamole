@@ -1,12 +1,4 @@
 <resources>
-
-    <style name="AppTheme.PageHeader" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="fontFamily">sans-serif</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">32sp</item>
-    </style>
-
     <style name="AppTheme.Library.Grouping" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">?android:attr/colorAccent</item>
         <item name="fontFamily">sans-serif</item>

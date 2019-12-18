@@ -1,22 +1,29 @@
 package dev.bmcreations.guacamole.ui
 
+import android.animation.ObjectAnimator
+import android.animation.StateListAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.bmcreations.guacamole.R
+import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.login.LoginActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 
-class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
+class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, FragmentScrollChangeCallback {
 
     private var navController: NavController? = null
 
@@ -33,6 +40,8 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
             navView.setupWithNavController(it)
         }
 
+        setSupportActionBar(mainToolbar)
+
         navController?.let { setupActionBarWithNavController(it) }
     }
 
@@ -43,11 +52,27 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_overflow, menu)
+        return true
+    }
+
     override fun onSupportNavigateUp() = navController?.navigateUp() ?: false
 
     companion object {
         fun newIntent(caller: Context): Intent {
             return Intent(caller, HomeActivity::class.java)
         }
+    }
+
+    override fun onScrollChange(scrollY: Int, firstScroll: Boolean, dragging: Boolean): Float {
+        return mainToolbar.translate(scrollY, firstScroll, dragging)
+    }
+
+    override fun showElevation(show: Boolean) {
+        // If we have some pinned children, and we're offset to only show those views,
+        // we want to be elevate
+        info { "show=$show" }
+        ViewCompat.setElevation(appbar, if (show) 8f else 0f)
     }
 }

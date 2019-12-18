@@ -1,18 +1,22 @@
 package dev.bmcreations.guacamole.ui.library
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks
+import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.graph
+import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
@@ -24,9 +28,12 @@ import kotlinx.android.synthetic.main.recently_added_entity.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
+
 class LibraryFragment: Fragment(), AnkoLogger {
 
     private val graph by lazy { context?.graph() }
+
+    private var fragmentScrollCallback: FragmentScrollChangeCallback? = null
 
     private val vm by lazy {
         graph?.let {
@@ -61,6 +68,13 @@ class LibraryFragment: Fragment(), AnkoLogger {
                 }
                 findNavController().navigate(R.id.show_details_for_album, args, null, extras)
             }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentScrollChangeCallback) {
+            fragmentScrollCallback = context
         }
     }
 
@@ -112,6 +126,19 @@ class LibraryFragment: Fragment(), AnkoLogger {
             this.addItemDecorations(endcaps, horizontalSpacing, header, footer)
         }
         root.recently_added.adapter = recentlyAddedItems
+
+        root.scrollview.setScrollViewCallbacks(object : ObservableScrollViewCallbacks {
+            override fun onUpOrCancelMotionEvent(scrollState: ScrollState?) = Unit
+
+            override fun onScrollChanged(scrollY: Int, firstScroll: Boolean, dragging: Boolean) {
+                val dy = fragmentScrollCallback?.onScrollChange(scrollY, firstScroll, dragging)
+                info { "dy=$dy" }
+                fragmentScrollCallback?.showElevation(show = (dy ?: 0f) >= 0)
+            }
+
+            override fun onDownMotionEvent() = Unit
+
+        })
 
         return root
     }

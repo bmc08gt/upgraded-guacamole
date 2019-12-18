@@ -6,12 +6,26 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:navigationBarColor">?android:attr/windowBackground</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
-    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="Theme.MaterialComponents.DayNight.DarkActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.DayNight.DarkActionBar"/>
+
+    <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="actionOverflowButtonStyle">@style/AppTheme.ActionBarTheme.Overflow</item>
+    </style>
+
+    <style name="AppTheme.ActionBarTheme.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="Theme.MaterialComponents.DayNight.DarkActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="Theme.MaterialComponents.DayNight.DarkActionBar" />
 </resources>

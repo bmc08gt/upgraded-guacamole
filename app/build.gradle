@@ -60,6 +60,8 @@ dependencies {
 
     implementation deps.retrofit.gson
 
+    implementation deps.observablescrolling
+
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junit
     androidTestImplementation deps.test.espresso

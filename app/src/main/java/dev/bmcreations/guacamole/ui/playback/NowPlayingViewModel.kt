@@ -6,9 +6,11 @@ import android.os.ResultReceiver
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import dev.bmcreations.guacamole.auth.TokenProvider
+import dev.bmcreations.guacamole.media.MediaBrowserCallback
+import dev.bmcreations.guacamole.media.MediaBrowserConnection
 import dev.bmcreations.musickit.networking.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
+import dev.bmcreations.guacamole.media.playbackStateString
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
@@ -25,10 +27,16 @@ class NowPlayingViewModel private constructor(val context: Context, val music: M
 
     private var initializationFailedJob : Job? = null
 
-    private val mediaBrowserConnection: MediaBrowserConnection? by lazy { MediaBrowserConnection(context) }
+    private val mediaBrowserConnection: MediaBrowserConnection? by lazy {
+        MediaBrowserConnection(
+            context
+        )
+    }
 
     private val mediaBrowserCallback by lazy {
-        MediaBrowserCallback(mediaBrowserConnection) { extras, i ->
+        MediaBrowserCallback(
+            mediaBrowserConnection
+        ) { extras, i ->
             info { "playback state change -- state=${i.playbackStateString}" }
             when (i) {
                 PlaybackStateCompat.STATE_BUFFERING -> onTrackBuffering()

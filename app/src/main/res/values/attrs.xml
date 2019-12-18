@@ -4,4 +4,13 @@
         <attr name="color" format="color" />
         <attr name="animationDuration" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="AvocadoToolbar">
+        <attr name="android:text"/>
+        <attr name="android:textSize"/>
+        <attr name="android:textStyle"/>
+        <attr name="android:textColor"/>
+        <attr name="android:fontFamily"/>
+        <attr name="android:textFontWeight" />
+    </declare-styleable>
 </resources>

@@ -1,4 +1,4 @@
-package dev.bmcreations.guacamole.ui.playback
+package dev.bmcreations.guacamole.media
 
 import android.os.Bundle
 import android.os.Looper
@@ -6,8 +6,6 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import dev.bmcreations.guacamole.media.MediaBrowserController
-import dev.bmcreations.guacamole.media.MediaSessionManager
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
