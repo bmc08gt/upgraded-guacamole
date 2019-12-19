@@ -24,9 +24,6 @@ class MusicRepository(
     companion object {
         const val API_VERSION = 1
         const val BASE_URL = "https://api.music.apple.com"
-
-        @Volatile
-        private var INSTANCE: MusicRepository? = null
     }
 
     private val retrofit by lazy {
@@ -101,12 +98,12 @@ class MusicRepository(
                     val album = this.data.first()
                     ret = Outcome.success(album)
                     coroutineScope {
-                        this@run.data.first()
-                            .relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) }
+                        album.relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) }
                             ?.let {
                                 _tracks = it.toMutableList()
                             }
                     }
+
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
