@@ -8,5 +8,9 @@
         <item name="android:windowBackground">#000</item>
         <item name="android:navigationBarColor">@color/elevated_background</item>
         <item name="android:statusBarColor">?android:attr/windowBackground</item>
+        <item name="android:ambientShadowAlpha">1</item>
+        <item name="android:outlineAmbientShadowColor">@color/defaultOutlineAmbientShadowColor</item>
+        <item name="android:spotShadowAlpha">1</item>
+        <item name="android:outlineSpotShadowColor">@color/defaultOutlineSpotShadowColor</item>
     </style>
 </resources>

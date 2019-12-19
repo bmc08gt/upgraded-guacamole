@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="elevated_background">#1C1C1E</color>
+
+    <color name="defaultOutlineAmbientShadowColor">#0AFFFFFF</color>
+    <color name="defaultOutlineSpotShadowColor">#30FFFFFF</color>
+</resources>

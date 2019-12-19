@@ -6,7 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:navigationBarColor">?android:attr/windowBackground</item>
+        <item name="android:windowBackground">#FAFAFA</item>
+        <item name="android:navigationBarColor">@color/elevated_background</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 

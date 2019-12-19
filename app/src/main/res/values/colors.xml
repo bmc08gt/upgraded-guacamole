@@ -10,4 +10,9 @@
     <color name="button_color_inverse">#f9f9fd</color>
 
     <color name="equalizer_album_overlay">#99E0E0E0</color>
+
+    <color name="elevated_background">?android:windowBackground</color>
+
+    <color name="defaultOutlineAmbientShadowColor">#0A000000</color>
+    <color name="defaultOutlineSpotShadowColor">#30000000</color>
 </resources>
