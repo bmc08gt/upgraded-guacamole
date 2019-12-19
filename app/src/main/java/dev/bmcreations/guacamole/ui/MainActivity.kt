@@ -1,6 +1,7 @@
 package dev.bmcreations.guacamole.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -20,19 +21,22 @@ class MainActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
 
     private val session by lazy { graph().sessionGraph.sessionManager }
 
-    private var authProvided = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         when {
-            session.isLoggedIn || authProvided -> {
+            session.isLoggedIn() -> {
                 finish()
                 startActivity(Intent(this, HomeActivity::class.java))
             }
-            !session.isLoggedIn -> {
+            !session.isLoggedIn() -> {
                 finish()
                 startActivity(Intent(this, LoginActivity::class.java))
             }
         }
+    }
+
+    companion object {
+        fun newIntent(caller: Context): Intent = Intent(caller, MainActivity::class.java)
     }
 }

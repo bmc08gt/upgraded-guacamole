@@ -17,7 +17,17 @@ class UserPreferences(val context: Context) {
     private val sharedPreferences = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     private var _user: User? = null
-    var currentUser: User?
+    set(value) {
+        field = value
+        if (value == null) {
+            sharedPreferences.edit().remove(CURRENT_USER).apply()
+        } else {
+            sharedPreferences.edit()
+                .putString(CURRENT_USER, gson.toJson(value, User::class.java))
+                .apply()
+        }
+    }
+    var currentUser: User? = null
         get() {
             if (_user == null) {
                 val json = sharedPreferences.getString(CURRENT_USER, null)
@@ -29,11 +39,10 @@ class UserPreferences(val context: Context) {
         }
         set(value) {
             _user = value
-            sharedPreferences.edit().putString(CURRENT_USER, gson.toJson(value, User::class.java))
-                .apply()
+            field = value
         }
 
     fun removeUser() {
-        _user = null
+        currentUser = null
     }
 }

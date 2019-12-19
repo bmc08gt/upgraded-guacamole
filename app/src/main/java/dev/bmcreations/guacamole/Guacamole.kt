@@ -30,7 +30,12 @@ class Guacamole: Application() {
         val sessionGraph = SessionGraphImpl(this)
         AppGraph(
             sessionGraph = sessionGraph,
-            networkGraph = NetworkGraphImpl(this, expiryListener = expiredCallback))
+            networkGraph = NetworkGraphImpl(
+                appContext = this,
+                tokenProvider = sessionGraph.tokenProvider,
+                expiryListener = expiredCallback
+            )
+        )
     }
 
     override fun onCreate() {

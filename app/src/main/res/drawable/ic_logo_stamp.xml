@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape android:shape="oval">
+        <gradient
+            android:angle="135"
+            android:endColor="#3da2ed"
+            android:startColor="#f75b6c"
+            android:type="linear" />
+
+        <gradient
+            android:angle="225"
+            android:endColor="#7d69fc"
+            android:startColor="#E65F83"
+            android:type="linear" />
+
+        <corners android:radius="16dp" />
+
+    </shape>
+</item>
+    <item android:drawable="@mipmap/ic_launcher_foreground" />
+</layer-list>

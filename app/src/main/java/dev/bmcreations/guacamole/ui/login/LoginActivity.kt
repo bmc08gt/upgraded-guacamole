@@ -5,12 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.getViewModel
+import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.HomeActivity
+import dev.bmcreations.guacamole.ui.MainActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
+import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
@@ -35,6 +41,14 @@ class LoginActivity: AppCompatActivity(), AnkoLogger, ActivityNavigation {
 
         loginVm.startActivityForResultEvent.setEventReceiver(this, this)
 
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            title = strings[R.string.app_name]
+        }
+
+        val navController = findNavController(R.id.login_nav_host_fragment)
+        setupActionBarWithNavController(navController)
+
         observe()
     }
 
@@ -49,7 +63,7 @@ class LoginActivity: AppCompatActivity(), AnkoLogger, ActivityNavigation {
                 is LoginViewModel.State.Authenticated -> {
                     info { "Authenticated successfully" }
                     finish()
-                    startActivity(HomeActivity.newIntent(this))
+                    startActivity(MainActivity.newIntent(this))
                 }
                 is LoginViewModel.State.Unauthenticated -> info { "Not authenticated" }
                 is LoginViewModel.State.InvalidAuthentication -> {

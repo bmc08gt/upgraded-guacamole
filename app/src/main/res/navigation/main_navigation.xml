@@ -21,4 +21,8 @@
               android:name="dev.bmcreations.guacamole.ui.details.AlbumDetailFragment"
               android:label="@string/title_details" />
 
+    <fragment android:id="@+id/fragment_settings"
+        android:name="dev.bmcreations.guacamole.ui.settings.SettingsActivity"
+        android:label="@string/title_details" />
+
 </navigation>

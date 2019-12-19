@@ -10,8 +10,17 @@ interface NetworkGraph {
     val musicRepository: MusicRepository
 }
 
-class NetworkGraphImpl(appContext: Context, expiryListener: TokenExpiredCallback): NetworkGraph {
-    private val userPrefs = UserPreferences(appContext)
-    private val tokenProvider = TokenProvider.with(appContext, userPrefs)
-    override val musicRepository: MusicRepository = MusicRepository(tokenProvider, expiryListener)
+class NetworkGraphImpl(
+    appContext: Context,
+    prefs: UserPreferences? = null,
+    tokenProvider: TokenProvider? = null,
+    expiryListener: TokenExpiredCallback
+) : NetworkGraph {
+    private val tokens = if (tokenProvider == null) {
+        val userPrefs = UserPreferences(appContext)
+        TokenProvider.with(appContext, userPrefs)
+    } else {
+        tokenProvider
+    }
+    override val musicRepository: MusicRepository = MusicRepository(tokens, expiryListener)
 }

@@ -42,12 +42,26 @@ class TranslatingToolbar @JvmOverloads constructor(
         view.title.animate().translationY(-view.height.toFloat()).alpha(0f).start()
     }
 
-    fun getYTranslation(): Float = view.title.translationY
+    override fun getTranslationY(): Float {
+        return view.title.translationY
+    }
+
+    override fun setTranslationY(translationY: Float) {
+        view.title.translationY = translationY
+    }
+
+    override fun getAlpha(): Float {
+        return view.title.alpha
+    }
+
+    override fun setAlpha(alpha: Float) {
+        view.title.alpha = alpha
+    }
 
     fun translate(scrollY: Int, firstScroll: Boolean, dragging: Boolean): Float {
         if (dragging || scrollY < height) {
             if (firstScroll) {
-                val y = getYTranslation()
+                val y = translationY
 
                 if (-height < y && height < scrollY) {
                     baseTranslationY = view.height
@@ -59,12 +73,9 @@ class TranslatingToolbar @JvmOverloads constructor(
                 0f
             )
 
-            info { "scrollY=$scrollY, dy=$dy" }
-
             val dAlpha = dy / -height.toFloat()
-            info { "alpha=$dAlpha" }
-            view.title.translationY = -dy
-            view.title.alpha = 1f - dAlpha
+            translationY = -dy
+            alpha = 1f - dAlpha
 
             return dy
         }

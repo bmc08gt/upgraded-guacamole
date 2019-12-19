@@ -1,8 +1,11 @@
 package dev.bmcreations.guacamole.repository
 
-import com.apple.android.sdk.authentication.TokenProvider
+import android.content.Context
+import android.content.Intent
+import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.guacamole.models.User
 import dev.bmcreations.guacamole.preferences.UserPreferences
+import dev.bmcreations.guacamole.ui.MainActivity
 
 class SessionManager(
     private val tokenProvider: TokenProvider,
@@ -11,8 +14,7 @@ class SessionManager(
     var userToken: String = tokenProvider.userToken
     var devToken: String = tokenProvider.developerToken
 
-    val isLoggedIn: Boolean
-        get() = userPreferences.currentUser != null
+    fun isLoggedIn(): Boolean = userPreferences.currentUser != null
 
     fun removeUser() {
         userPreferences.removeUser()

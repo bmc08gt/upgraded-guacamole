@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -19,6 +20,7 @@ import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.login.LoginActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
+import dev.bmcreations.guacamole.ui.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -47,7 +49,7 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
 
     override fun onResume() {
         super.onResume()
-        if(!session.sessionManager.isLoggedIn) {
+        if(!session.sessionManager.isLoggedIn()) {
             startActivity(Intent(this, LoginActivity::class.java))
         }
     }
@@ -55,6 +57,16 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_overflow, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.settings -> {
+                startActivity(SettingsActivity.newIntent(this))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onSupportNavigateUp() = navController?.navigateUp() ?: false
