@@ -10,7 +10,6 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
-import coil.api.get
 import coil.api.load
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
@@ -22,9 +21,6 @@ import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
 import dev.bmcreations.musickit.networking.extensions.mediaId
-import dev.bmcreations.musickit.networking.extensions.uiScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MediaSessionManager(val context: Context,
                           private val player: MediaPlayerController,

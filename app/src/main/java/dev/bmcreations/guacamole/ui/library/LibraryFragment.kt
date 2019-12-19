@@ -15,8 +15,10 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
+import dev.bmcreations.guacamole.extensions.getViewModel
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
+import dev.bmcreations.guacamole.ui.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
@@ -29,15 +31,13 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 
-class LibraryFragment: Fragment(), AnkoLogger {
+class LibraryFragment: NavigationStackFragment() {
 
-    private val graph by lazy { context?.graph() }
-
-    private var fragmentScrollCallback: FragmentScrollChangeCallback? = null
+    private val musicRepo get() = context?.graph()?.networkGraph?.musicRepository
 
     private val vm by lazy {
-        graph?.let {
-            activity?.let { ctx -> LibraryViewModel(ctx, it.networkGraph.musicRepository) }
+        musicRepo?.let {
+            activity?.let { a -> a.getViewModel { LibraryViewModel(it) } }
         }
     }
 
@@ -71,38 +71,9 @@ class LibraryFragment: Fragment(), AnkoLogger {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentScrollChangeCallback) {
-            fragmentScrollCallback = context
-        }
-    }
+    override val layoutResId  get() = R.layout.fragment_library
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        observe()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_library, container, false)
-
-        root.groups.apply {
-            val endcaps = SpacesItemDecoration(8.dp(context), OrientationHelper.VERTICAL).apply {
-                this.endCaps = true
-            }
-            val header = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
-                this.header = true
-                this.topBottomOnly = true
-            }
-            val footer = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
-                this.bottomOnly = true
-            }
-            this.addItemDecorations(endcaps, header, footer)
-        }
+    override fun initView() {
         root.groups.adapter = libraryGroupings
         // list is static so submit it now
         libraryGroupings.submitList(LibraryGrouping.values().toMutableList())
@@ -127,19 +98,22 @@ class LibraryFragment: Fragment(), AnkoLogger {
         }
         root.recently_added.adapter = recentlyAddedItems
 
+        enableToolbarTranslationEffects(true)
+        showToolbarElevation(false)
+
         root.scrollview.setScrollViewCallbacks(object : ObservableScrollViewCallbacks {
             override fun onUpOrCancelMotionEvent(scrollState: ScrollState?) = Unit
 
             override fun onScrollChanged(scrollY: Int, firstScroll: Boolean, dragging: Boolean) {
-                val dy = fragmentScrollCallback?.onScrollChange(scrollY, firstScroll, dragging)
-                fragmentScrollCallback?.showElevation(show = (dy ?: 0f) >= 0)
+                val dy = onScrollChange(scrollY, firstScroll, dragging)
+                showToolbarElevation(show = (dy ?: 0f) >= 0)
             }
 
             override fun onDownMotionEvent() = Unit
 
         })
 
-        return root
+        observe()
     }
 
     private fun observe() {

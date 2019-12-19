@@ -6,12 +6,14 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils
+import com.google.android.material.appbar.AppBarLayout
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.extensions.handleLayout
 import kotlinx.android.synthetic.main.translating_toolbar.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import java.lang.ref.WeakReference
 
 class TranslatingToolbar @JvmOverloads constructor(
     context: Context,
@@ -21,6 +23,12 @@ class TranslatingToolbar @JvmOverloads constructor(
 
     private var baseTranslationY = 0
     private var baseAlpha = 0f
+    private var baseElevation = 8f
+
+    private var translatingEnabled = true
+    private var showElevation = false
+
+    private var appBarReference: WeakReference<AppBarLayout?> = WeakReference(parent as? AppBarLayout)
 
     val view: View = View.inflate(context, R.layout.translating_toolbar, this)
 
@@ -28,18 +36,29 @@ class TranslatingToolbar @JvmOverloads constructor(
         view.title.handleLayout {
             baseTranslationY = view.height
             baseAlpha = 0f
-            view.title.animate().translationY(-view.height.toFloat()).alpha(0f).start()
+            initializeEffects()
         }
+    }
+
+    private fun initializeEffects() {
+        val (y, alpha) = if (translatingEnabled) {
+            Pair(-view.height.toFloat(), 0f)
+        } else {
+            Pair(0f, 1f)
+        }
+
+        translationY = y
+        setAlpha(alpha)
     }
 
     override fun setTitle(resId: Int) {
         view.title.setText(resId)
-        view.title.animate().translationY(-view.height.toFloat()).alpha(0f).start()
+        initializeEffects()
     }
 
     override fun setTitle(title: CharSequence?) {
         view.title.text = title
-        view.title.animate().translationY(-view.height.toFloat()).alpha(0f).start()
+        initializeEffects()
     }
 
     override fun getTranslationY(): Float {
@@ -56,6 +75,26 @@ class TranslatingToolbar @JvmOverloads constructor(
 
     override fun setAlpha(alpha: Float) {
         view.title.alpha = alpha
+    }
+
+    fun showElevation(show: Boolean) {
+        showElevation = show
+        applyElevation()
+    }
+
+    override fun setElevation(elevation: Float) {
+        baseElevation = elevation
+        applyElevation()
+    }
+
+    private fun applyElevation() {
+        appBarReference.get()?.let {
+            ViewCompat.setElevation(it, if (showElevation) baseElevation else 0f)
+        }
+    }
+
+    fun registerAppBarLayout(appBar: AppBarLayout?) {
+        appBarReference = WeakReference(appBar)
     }
 
     fun translate(scrollY: Int, firstScroll: Boolean, dragging: Boolean): Float {
@@ -80,5 +119,10 @@ class TranslatingToolbar @JvmOverloads constructor(
             return dy
         }
         return 0f
+    }
+
+    fun enableTranslationEffect(enable: Boolean) {
+        translatingEnabled = enable
+        initializeEffects()
     }
 }

@@ -8,11 +8,16 @@ import com.apple.android.sdk.authentication.TokenProvider
 import dev.bmcreations.musickit.networking.*
 import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.extensions.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 
-class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenExpiredCallback) : AnkoLogger {
+class MusicRepository(
+    private val tokenProvider: TokenProvider,
+    expiredCallback: TokenExpiredCallback
+) : CoroutineScope by CoroutineScope(Dispatchers.IO), AnkoLogger {
 
     private var userStore: UserStoreFront? = null
 
@@ -50,23 +55,26 @@ class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenEx
         }
     }
 
-    private fun updateUserStoreFront() {
+    private suspend fun updateUserStoreFront() {
         tokenProvider.userToken?.let { token ->
             val bearer = "Bearer ${tokenProvider.developerToken}"
-            uiScope.launch(Dispatchers.IO) {
-                val req = storeFront.getUserStoreFrontAsync(bearer, token)
-                try {
-                    req.await().run {
-                        userStore = this.data.first()
+            coroutineScope {
+                launch {
+                    val req = storeFront.getUserStoreFrontAsync(bearer, token)
+                    try {
+                        req.await().run {
+                            userStore = this.data.first()
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
         }
     }
 
     suspend fun getUserRecentlyAdded(limit: Int? = null, offset: Int? = null): Outcome<RecentlyAddedResult> {
+        updateUserStoreFront()
         var ret: Outcome<RecentlyAddedResult> = Outcome.failure(Throwable("Auth token is null"))
         tokenProvider.userToken?.let { token ->
             val bearer = "Bearer ${tokenProvider.developerToken}"
@@ -92,10 +100,12 @@ class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenEx
                 req.await().run {
                     val album = this.data.first()
                     ret = Outcome.success(album)
-                    uiScope.launch {
-                        this@run.data.first().relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) }?.let {
-                            _tracks = it.toMutableList()
-                        }
+                    coroutineScope {
+                        this@run.data.first()
+                            .relationships?.tracks?.data?.map { AlbumTrackEntity(it!!, album) }
+                            ?.let {
+                                _tracks = it.toMutableList()
+                            }
                     }
                 }
             } catch (e: Exception) {
@@ -107,6 +117,7 @@ class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenEx
     }
 
     suspend fun getAllLibraryPlaylists(): Outcome<List<LibraryPlaylist>> {
+        updateUserStoreFront()
         var ret: Outcome<List<LibraryPlaylist>> = Outcome.failure(Throwable("Auth token is null"))
         tokenProvider.userToken?.let { token ->
             val bearer = "Bearer ${tokenProvider.developerToken}"
@@ -115,16 +126,18 @@ class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenEx
                 try {
                     req.await().run {
                         val res = this.data
-                        uiScope.launch(Dispatchers.Unconfined) {
-                            res.forEach {
-                                val playlist = it
-                                playlist.attributes?.playParams?.globalId?.let { id ->
-                                    val tracksReq = catalog.getPlaylistByIdAsync(bearer, token, store, id)
-                                    tracksReq.await().run {
-                                        val catalogEntry = this.data.first()
-                                        playlist.apply {
-                                            this.attributes?.curator = catalogEntry.attributes?.curatorName
-                                            this.attributes?.trackCount = catalogEntry.relationships?.tracks?.data?.size
+                        coroutineScope {
+                            launch {
+                                res.forEach {
+                                    val playlist = it
+                                    playlist.attributes?.playParams?.globalId?.let { id ->
+                                        val tracksReq = catalog.getPlaylistByIdAsync(bearer, token, store, id)
+                                        tracksReq.await().run {
+                                            val catalogEntry = this.data.first()
+                                            playlist.apply {
+                                                this.attributes?.curator = catalogEntry.attributes?.curatorName
+                                                this.attributes?.trackCount = catalogEntry.relationships?.tracks?.data?.size
+                                            }
                                         }
                                     }
                                 }
@@ -173,8 +186,11 @@ class MusicRepository(val tokenProvider: TokenProvider, expiredCallback: TokenEx
                         val tracks = this.data
                         ret = Outcome.success(playlist.apply {
                             this.tracks = tracks.also { ret ->
-                                uiScope.launch {
-                                    this@MusicRepository._tracks = ret.map { PlaylistTrackEntity(it, this@apply) }.toMutableList() }
+                                coroutineScope {
+                                    launch(Dispatchers.Main) {
+                                        this@MusicRepository._tracks = ret.map { PlaylistTrackEntity(it, this@apply) }.toMutableList()
+                                    }
+                                }
                             }
                         })
                     }

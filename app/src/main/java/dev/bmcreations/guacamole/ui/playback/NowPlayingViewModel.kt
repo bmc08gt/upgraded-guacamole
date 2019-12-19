@@ -16,11 +16,15 @@ import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import dev.bmcreations.musickit.networking.extensions.mediaId
 import dev.bmcreations.musickit.networking.extensions.randomOrNull
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class NowPlayingViewModel private constructor(val context: Context, val music: MusicRepository): ViewModel(), AnkoLogger {
+class NowPlayingViewModel private constructor(
+    val context: Context, val music: MusicRepository
+): CoroutineScope by CoroutineScope(Dispatchers.IO),  ViewModel(), AnkoLogger {
 
     val selectedTrack = MutableLiveData<TrackEntity?>()
     val playState: MutableLiveData<State> = SingleLiveEvent()
@@ -156,7 +160,7 @@ class NowPlayingViewModel private constructor(val context: Context, val music: M
 
     private fun waitForMusicPlayback() {
         initializationFailedJob =
-            inTime(4000) { playState.value = State.InitializationFailed }
+            inTime(offset = 4000) { playState.value = State.InitializationFailed }
         initializationFailedJob?.start()
     }
 

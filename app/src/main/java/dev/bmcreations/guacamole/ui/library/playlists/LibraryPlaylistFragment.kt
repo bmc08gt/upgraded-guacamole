@@ -11,7 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
+import dev.bmcreations.guacamole.extensions.getViewModel
+import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.graph
+import dev.bmcreations.guacamole.ui.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
@@ -23,13 +26,13 @@ import kotlinx.android.synthetic.main.recently_added_entity.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
 
-class LibraryPlaylistFragment: Fragment(), AnkoLogger {
+class LibraryPlaylistFragment: NavigationStackFragment() {
 
-    val graph by lazy { context?.graph() }
+    private val musicRepo get() = context?.graph()?.networkGraph?.musicRepository
 
-    val vm by lazy {
-        graph?.let {
-            activity?.let { ctx -> LibraryViewModel(ctx, it.networkGraph.musicRepository) }
+    private val vm by lazy {
+        musicRepo?.let {
+            activity?.let { a -> a.getViewModel { LibraryViewModel(it) } }
         }
     }
 
@@ -51,12 +54,9 @@ class LibraryPlaylistFragment: Fragment(), AnkoLogger {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_library_playlists, container, false)
+    override val layoutResId get() = R.layout.fragment_library_playlists
+
+    override fun initView() {
         root.playlists.apply {
             val header = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
                 this.header = true
@@ -68,11 +68,11 @@ class LibraryPlaylistFragment: Fragment(), AnkoLogger {
             this.addItemDecorations(header, footer)
         }
         root.playlists.adapter = playlists
-        return root
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        enableToolbarTranslationEffects(false)
+        showToolbarElevation(true)
+        setToolbarTitle(R.string.title_playlists)
+
         observe()
     }
 

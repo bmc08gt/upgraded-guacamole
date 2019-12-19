@@ -1,7 +1,5 @@
 package dev.bmcreations.guacamole.ui
 
-import android.animation.ObjectAnimator
-import android.animation.StateListAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +14,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.login.LoginActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
@@ -43,6 +40,7 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
         }
 
         setSupportActionBar(mainToolbar)
+        mainToolbar.registerAppBarLayout(appbar)
 
         navController?.let { setupActionBarWithNavController(it) }
     }
@@ -82,13 +80,14 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
     }
 
     override fun showElevation(show: Boolean) {
-        // If we have some pinned children, and we're offset to only show those views,
-        // we want to be elevate
-        info { "show=$show" }
-        ViewCompat.setElevation(appbar, if (show) 8f else 0f)
+        mainToolbar.showElevation(show)
     }
 
-    override fun setTitle(title: String) {
+    override fun setTitle(title: String?) {
         supportActionBar?.title = title
+    }
+
+    override fun enableScrollChange(enable: Boolean) {
+        mainToolbar.enableTranslationEffect(enable)
     }
 }

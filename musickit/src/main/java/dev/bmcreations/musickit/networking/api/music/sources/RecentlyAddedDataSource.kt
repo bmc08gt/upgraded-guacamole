@@ -7,7 +7,7 @@ import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
-import dev.bmcreations.musickit.networking.extensions.uiScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -31,7 +31,7 @@ class RecentlyAddedDataFactory : DataSource.Factory<Int, RecentlyAddedEntity>() 
 }
 
 
-class RecentlyAddedDataSource: PageKeyedDataSource<Int, RecentlyAddedEntity>() {
+class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO), PageKeyedDataSource<Int, RecentlyAddedEntity>() {
 
     var musicRepository: MusicRepository? = null
 
@@ -45,7 +45,7 @@ class RecentlyAddedDataSource: PageKeyedDataSource<Int, RecentlyAddedEntity>() {
         initialLoading.postValue(NetworkState.LOADING)
         networkState.postValue(NetworkState.LOADING)
 
-        uiScope.launch(Dispatchers.IO) {
+        launch {
             when (val ret = musicRepository?.getUserRecentlyAdded(limit = params.requestedLoadSize)) {
                 is Outcome.Success -> {
                     callback.onResult(ret.data.data, null, ret.data.nextOffset())
@@ -62,7 +62,7 @@ class RecentlyAddedDataSource: PageKeyedDataSource<Int, RecentlyAddedEntity>() {
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, RecentlyAddedEntity>) {
         networkState.postValue(NetworkState.LOADING)
-        uiScope.launch(Dispatchers.IO) {
+        launch {
             when (val ret = musicRepository?.getUserRecentlyAdded(limit = params.requestedLoadSize, offset = params.key)) {
                 is Outcome.Success -> {
                     val next = ret.data.nextOffset()

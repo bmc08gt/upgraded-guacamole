@@ -1,27 +1,24 @@
 package dev.bmcreations.guacamole.ui.library
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
-import dev.bmcreations.guacamole.auth.TokenProvider
-import dev.bmcreations.musickit.networking.extensions.uiScope
+import androidx.paging.PagedList
+import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
+import dev.bmcreations.musickit.networking.api.music.sources.RecentlyAddedDataFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import androidx.paging.PagedList
-import dev.bmcreations.musickit.networking.NetworkState
-import dev.bmcreations.musickit.networking.api.music.sources.RecentlyAddedDataFactory
 import java.util.concurrent.Executors
 
 
-class LibraryViewModel(context: Context, val musicRepo: MusicRepository): ViewModel(), AnkoLogger {
+class LibraryViewModel(
+    val musicRepo: MusicRepository
+): CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
 
     var recentsNetworkState: LiveData<NetworkState>? = null
     var recentlyAdded: LiveData<PagedList<RecentlyAddedEntity>>? = null
@@ -43,12 +40,11 @@ class LibraryViewModel(context: Context, val musicRepo: MusicRepository): ViewMo
     }
 
     private fun initializePlaylists() {
-        uiScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             musicRepo.getAllLibraryPlaylists().let {
                 when (it) {
-                    is Outcome.Success -> {
-                        uiScope.launch { _playlists = it.data }
-                    }
+                    is Outcome.Success -> viewModelScope.launch(Dispatchers.Main) { _playlists = it.data }
+                    is Outcome.Failure -> it.e.printStackTrace()
                     else -> {}
                 }
             }
@@ -72,11 +68,11 @@ class LibraryViewModel(context: Context, val musicRepo: MusicRepository): ViewMo
 
     fun getLibraryAlbumById(id: String) {
         musicRepo.let { repo ->
-            uiScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 val outcome = repo.getLibraryAlbumById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        uiScope.launch { selected.value = Album(outcome.data) }
+                        viewModelScope.launch(Dispatchers.Main) { selected.value = Album(outcome.data) }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }
@@ -92,11 +88,11 @@ class LibraryViewModel(context: Context, val musicRepo: MusicRepository): ViewMo
 
     fun getLibraryPlaylistById(id: String) {
         musicRepo.let { repo ->
-            uiScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 val outcome = repo.getLibraryPlaylistById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        uiScope.launch { selected.value = Playlist(outcome.data) }
+                        viewModelScope.launch(Dispatchers.Main) { selected.value = Playlist(outcome.data) }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }
@@ -108,11 +104,11 @@ class LibraryViewModel(context: Context, val musicRepo: MusicRepository): ViewMo
 
     fun getLibraryPlaylistWithTracksById(id: String) {
         musicRepo.let { repo ->
-            uiScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 val outcome = repo.getLibraryPlaylistWithTracksById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        uiScope.launch { selected.value = Playlist(outcome.data) }
+                        viewModelScope.launch(Dispatchers.Main) { selected.value = Playlist(outcome.data) }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }

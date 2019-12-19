@@ -20,6 +20,7 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
+import dev.bmcreations.guacamole.ui.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
@@ -29,22 +30,20 @@ import kotlinx.android.synthetic.main.fragment_library.view.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class AlbumDetailFragment : Fragment(), AnkoLogger {
+class AlbumDetailFragment : NavigationStackFragment() {
 
-    private val graph by lazy { context?.graph() }
+    private val musicRepo get() = context?.graph()?.networkGraph?.musicRepository
 
     private val vm by lazy {
-        context?.let { ctx ->
-            graph?.let {
-                getViewModel { LibraryViewModel(ctx, it.networkGraph.musicRepository) } }
-            }
+        musicRepo?.let {
+            getViewModel { LibraryViewModel(it) } }
     }
 
 
     private val nowPlaying by lazy {
         activity?.let { a ->
-            graph?.let {
-                a.getViewModel { NowPlayingViewModel.create(a, it.networkGraph.musicRepository) }
+            musicRepo?.let {
+                a.getViewModel { NowPlayingViewModel.create(a, it) }
             }
         }
     }
@@ -65,14 +64,7 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
     private var albumId: String? = null
     private var albumUrl: String? = null
 
-    private var fragmentScrollCallback: FragmentScrollChangeCallback? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentScrollChangeCallback) {
-            fragmentScrollCallback = context
-        }
-    }
+    override val layoutResId get() = R.layout.fragment_album_detail
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,22 +77,11 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_album_detail, container, false)
+    override fun initView() {
         ViewCompat.setTransitionName(root.ra_image, arguments?.getString("transition_name", null))
 
         root.tracks.addItemDecoration(DividerItemDecoration(context, OrientationHelper.VERTICAL))
         root.tracks.adapter = adapter
-
-        return root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack(R.id.fragment_library, false)
@@ -124,15 +105,16 @@ class AlbumDetailFragment : Fragment(), AnkoLogger {
         play.setOnClickListener { nowPlaying?.playAlbum() }
         shuffle.setOnClickListener { nowPlaying?.shuffleAlbum() }
 
-        albumName?.let { fragmentScrollCallback?.setTitle(it) }
-        fragmentScrollCallback?.showElevation(false)
+        enableToolbarTranslationEffects(true)
+        setToolbarTitle(albumName)
+        showToolbarElevation(false)
 
-        root.setScrollViewCallbacks(object : ObservableScrollViewCallbacks {
+        root.root.setScrollViewCallbacks(object : ObservableScrollViewCallbacks {
             override fun onUpOrCancelMotionEvent(scrollState: ScrollState?) = Unit
 
             override fun onScrollChanged(scrollY: Int, firstScroll: Boolean, dragging: Boolean) {
-                val dy = fragmentScrollCallback?.onScrollChange(scrollY, firstScroll, dragging)
-                fragmentScrollCallback?.showElevation(show = (dy ?: 0f) >= 0)
+                val dy = onScrollChange(scrollY, firstScroll, dragging)
+                showToolbarElevation(show = (dy ?: 0f) >= 0)
             }
 
             override fun onDownMotionEvent() = Unit

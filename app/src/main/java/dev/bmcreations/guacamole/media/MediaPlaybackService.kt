@@ -11,17 +11,16 @@ import androidx.media.MediaBrowserServiceCompat
 import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.controller.MediaPlayerControllerFactory
 import com.apple.android.music.playback.model.*
-import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.guacamole.graph
-import dev.bmcreations.musickit.networking.extensions.uiScope
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
-class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.Listener {
+class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), MediaBrowserServiceCompat(), MediaPlayerController.Listener {
 
     lateinit var mediaSessionManager: MediaSessionManager
     private lateinit var player: MediaPlayerController
@@ -59,9 +58,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), MediaPlayerController.
     private fun updateNotificationForItemChanged(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
         currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
-        uiScope.launch(Dispatchers.IO) {
+        launch {
             while (player.currentPosition == PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN) {}
-            uiScope.launch {
+            launch(Dispatchers.Main) {
                 track?.let {
                     val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
                         PlaybackStateCompat.STATE_PLAYING, player.currentPosition)
