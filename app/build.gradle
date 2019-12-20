@@ -41,6 +41,7 @@ dependencies {
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.coroutinesCore
     implementation deps.kotlin.coroutinesAndroid
+    implementation deps.kotlin.reflect
 
     implementation deps.jetpack.appcompat
     implementation deps.jetpack.corektx
@@ -66,4 +67,5 @@ dependencies {
     testImplementation deps.test.junit
     androidTestImplementation deps.test.junit
     androidTestImplementation deps.test.espresso
+
 }

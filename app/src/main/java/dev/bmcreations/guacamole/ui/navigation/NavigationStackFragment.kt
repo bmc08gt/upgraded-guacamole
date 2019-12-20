@@ -1,4 +1,4 @@
-package dev.bmcreations.guacamole.ui
+package dev.bmcreations.guacamole.ui.navigation
 
 import android.content.Context
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dev.bmcreations.guacamole.extensions.strings
+import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
 import org.jetbrains.anko.AnkoLogger
 
 abstract class NavigationStackFragment : Fragment(), AnkoLogger {

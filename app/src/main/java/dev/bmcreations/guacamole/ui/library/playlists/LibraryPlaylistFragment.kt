@@ -1,10 +1,6 @@
 package dev.bmcreations.guacamole.ui.library.playlists
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -12,9 +8,8 @@ import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.extensions.getViewModel
-import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.graph
-import dev.bmcreations.guacamole.ui.NavigationStackFragment
+import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
@@ -22,9 +17,6 @@ import dev.bmcreations.musickit.networking.api.models.curator
 import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library_playlists.view.*
 import kotlinx.android.synthetic.main.library_playlist_row_entity.view.*
-import kotlinx.android.synthetic.main.recently_added_entity.view.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.toast
 
 class LibraryPlaylistFragment: NavigationStackFragment() {
 

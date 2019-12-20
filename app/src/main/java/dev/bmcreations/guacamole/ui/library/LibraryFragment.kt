@@ -1,12 +1,6 @@
 package dev.bmcreations.guacamole.ui.library
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -17,8 +11,7 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
 import dev.bmcreations.guacamole.extensions.getViewModel
 import dev.bmcreations.guacamole.graph
-import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
-import dev.bmcreations.guacamole.ui.NavigationStackFragment
+import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
@@ -27,8 +20,6 @@ import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
 import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library.view.*
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 
 class LibraryFragment: NavigationStackFragment() {

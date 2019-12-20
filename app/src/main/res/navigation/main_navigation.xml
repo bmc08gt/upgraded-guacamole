@@ -2,13 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/main_navigation"
-            app:startDestination="@id/fragment_library">
+            app:startDestination="@id/menu_library">
 
-    <fragment android:id="@+id/fragment_library"
+    <fragment android:id="@+id/menu_library"
               android:name="dev.bmcreations.guacamole.ui.library.LibraryFragment"
               android:label="@string/title_library">
         <action android:id="@+id/show_details_for_album" app:destination="@id/fragment_details" />
         <action android:id="@+id/show_library_playlists" app:destination="@id/fragment_playlists" />
+    </fragment>
+
+    <fragment android:id="@+id/menu_for_you"
+        android:name="dev.bmcreations.guacamole.ui.user.UserContentFragment"
+        android:label="@string/title_for_you">
+    </fragment>
+
+    <fragment android:id="@+id/menu_browse"
+        android:name="dev.bmcreations.guacamole.ui.browse.BrowseFragment"
+        android:label="@string/title_browse">
     </fragment>
 
     <fragment android:id="@+id/fragment_playlists"
@@ -20,9 +30,5 @@
     <fragment android:id="@+id/fragment_details"
               android:name="dev.bmcreations.guacamole.ui.details.AlbumDetailFragment"
               android:label="@string/title_details" />
-
-    <fragment android:id="@+id/fragment_settings"
-        android:name="dev.bmcreations.guacamole.ui.settings.SettingsActivity"
-        android:label="@string/title_details" />
 
 </navigation>

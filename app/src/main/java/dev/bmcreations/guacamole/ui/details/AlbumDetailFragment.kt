@@ -1,13 +1,8 @@
 package dev.bmcreations.guacamole.ui.details
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,16 +14,12 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.graph
-import dev.bmcreations.guacamole.ui.FragmentScrollChangeCallback
-import dev.bmcreations.guacamole.ui.NavigationStackFragment
+import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.fragment_album_detail.*
 import kotlinx.android.synthetic.main.fragment_album_detail.view.*
-import kotlinx.android.synthetic.main.fragment_library.view.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 class AlbumDetailFragment : NavigationStackFragment() {
 
@@ -84,7 +75,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
         root.tracks.adapter = adapter
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().popBackStack(R.id.fragment_library, false)
+            findNavController().popBackStack(R.id.menu_library, false)
         }
         loadAlbumArt(albumUrl)
 

@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,7 +45,9 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
         setSupportActionBar(mainToolbar)
         mainToolbar.registerAppBarLayout(appbar)
 
-        navController?.let { setupActionBarWithNavController(it) }
+        navController?.let { setupActionBarWithNavController(it,
+            AppBarConfiguration(topLevelDestinationIds = rootTabs))
+        }
     }
 
     override fun onResume() {
@@ -69,12 +74,6 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
 
     override fun onSupportNavigateUp() = navController?.navigateUp() ?: false
 
-    companion object {
-        fun newIntent(caller: Context): Intent {
-            return Intent(caller, HomeActivity::class.java)
-        }
-    }
-
     override fun onScrollChange(scrollY: Int, firstScroll: Boolean, dragging: Boolean): Float {
         return mainToolbar.translate(scrollY, firstScroll, dragging)
     }
@@ -89,5 +88,13 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
 
     override fun enableScrollChange(enable: Boolean) {
         mainToolbar.enableTranslationEffect(enable)
+    }
+
+    companion object {
+        fun newIntent(caller: Context): Intent {
+            return Intent(caller, HomeActivity::class.java)
+        }
+
+        val rootTabs = setOf(R.id.menu_library, R.id.menu_for_you, R.id.menu_browse)
     }
 }

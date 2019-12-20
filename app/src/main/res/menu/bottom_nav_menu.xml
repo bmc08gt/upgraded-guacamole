@@ -4,4 +4,14 @@
         android:id="@+id/menu_library"
         android:icon="@drawable/ic_library_music_24dp"
         android:title="@string/title_library" />
+
+    <item
+        android:id="@+id/menu_for_you"
+        android:icon="@drawable/ic_heart"
+        android:title="@string/title_for_you" />
+
+    <item
+        android:id="@+id/menu_browse"
+        android:icon="@drawable/ic_music_note"
+        android:title="@string/title_browse" />
 </menu>
