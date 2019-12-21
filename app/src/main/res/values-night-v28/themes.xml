@@ -5,9 +5,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">#000</item>
+        <item name="android:windowBackground">@color/root_background</item>
+        <item name="android:colorBackground">@color/root_background</item>
         <item name="android:navigationBarColor">@color/elevated_background</item>
-        <item name="android:statusBarColor">?android:attr/windowBackground</item>
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
         <item name="android:ambientShadowAlpha">1</item>
         <item name="android:outlineAmbientShadowColor">@color/defaultOutlineAmbientShadowColor</item>
         <item name="android:spotShadowAlpha">1</item>

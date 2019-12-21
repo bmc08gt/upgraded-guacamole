@@ -15,6 +15,7 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.login.LoginActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
+import kotlinx.coroutines.*
 import org.jetbrains.anko.AnkoLogger
 
 class MainActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
@@ -23,17 +24,18 @@ class MainActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+
         when {
             session.isLoggedIn() -> {
-                finish()
-                startActivity(Intent(this, HomeActivity::class.java))
+                startActivity(Intent(this@MainActivity, HomeActivity::class.java))
             }
             !session.isLoggedIn() -> {
-                finish()
-                startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             }
         }
+        finish()
     }
 
     companion object {

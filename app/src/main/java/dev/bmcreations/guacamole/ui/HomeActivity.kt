@@ -7,12 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,9 +18,8 @@ import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.login.LoginActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
 import dev.bmcreations.guacamole.ui.settings.SettingsActivity
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, FragmentScrollChangeCallback {
 
@@ -34,7 +30,7 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 

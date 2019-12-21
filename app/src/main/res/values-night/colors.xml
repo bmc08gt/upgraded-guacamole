@@ -2,6 +2,7 @@
 <resources>
     <color name="elevated_background">#1C1C1E</color>
 
+    <color name="root_background">#000000</color>
     <color name="defaultOutlineAmbientShadowColor">#0AFFFFFF</color>
     <color name="defaultOutlineSpotShadowColor">#30FFFFFF</color>
 </resources>

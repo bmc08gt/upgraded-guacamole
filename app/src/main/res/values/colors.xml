@@ -11,6 +11,8 @@
 
     <color name="equalizer_album_overlay">#99E0E0E0</color>
 
+    <color name="root_background">#FFFFFF</color>
+
     <color name="elevated_background">#FAFAFA</color>
 
     <color name="defaultOutlineAmbientShadowColor">#0A000000</color>
