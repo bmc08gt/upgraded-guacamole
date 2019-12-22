@@ -8,14 +8,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.bmcreations.guacamole.media.MediaBrowserCallback
 import dev.bmcreations.guacamole.media.MediaBrowserConnection
-import dev.bmcreations.musickit.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.media.playbackStateString
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
-import dev.bmcreations.musickit.networking.api.models.TrackEntity
+import dev.bmcreations.musickit.extensions.inTime
 import dev.bmcreations.musickit.extensions.mediaId
 import dev.bmcreations.musickit.extensions.randomOrNull
 import dev.bmcreations.musickit.networking.api.models.Container
+import dev.bmcreations.musickit.networking.api.models.Track
+import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.queue.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,12 +26,12 @@ import org.jetbrains.anko.info
 
 class NowPlayingViewModel private constructor(
     val context: Context, val queue: MusicQueue
-): CoroutineScope by CoroutineScope(Dispatchers.IO),  ViewModel(), AnkoLogger {
+) : CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
 
     val selectedTrack = MutableLiveData<TrackEntity?>()
     val playState: MutableLiveData<State> = SingleLiveEvent()
 
-    private var initializationFailedJob : Job? = null
+    private var initializationFailedJob: Job? = null
 
     private val mediaBrowserConnection: MediaBrowserConnection? by lazy {
         MediaBrowserConnection(
@@ -63,11 +64,11 @@ class NowPlayingViewModel private constructor(
     }
 
     sealed class State {
-        object Playing: State()
-        object Paused: State()
-        object Initializing: State()
-        object Uninitialized: State()
-        object InitializationFailed: State()
+        object Playing : State()
+        object Paused : State()
+        object Initializing : State()
+        object Uninitialized : State()
+        object InitializationFailed : State()
     }
 
     init {
@@ -90,54 +91,94 @@ class NowPlayingViewModel private constructor(
         }
     }
 
-    fun loadCollection(collection: Container?) {
-        collection?.let { queue.updateQueue(collection.trackList?.map { t -> TrackEntity(t, it) }) }
+    private fun loadCollection(collection: Container?, position: Int = -1) {
+        collection?.let {
+            val newQueue = when (repeatMode) {
+                PlaybackStateCompat.REPEAT_MODE_NONE -> {
+                    it.trackList?.subList(
+                        position.coerceAtLeast(0),
+                        it.trackList?.size ?: 0
+                    ) ?: emptyList()
+                }
+                PlaybackStateCompat.REPEAT_MODE_ONE -> {
+                    it.trackList?.let { tracks ->
+                        listOf(tracks[position.coerceAtLeast(0)])
+                    }
+                }
+                else -> {
+                    it.trackList
+                }
+            }
+
+            queue.updateQueue(newQueue?.map { t -> TrackEntity(t, collection) })
+        }
     }
 
-    fun playAlbum() {
-        setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE)
+    fun playAlbum(collection: Container?) {
+        shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_NONE
+        loadCollection(collection)
         queue.onTrackSelected()
         play(queue.tracks?.firstOrNull())
     }
 
     fun play(track: TrackEntity?) {
+        loadCollection(track?.container, track?.container?.trackList?.indexOf(track.track) ?: -1)
         queue.onTrackSelected(track)
         track?.let { playInternal(it) }
     }
 
-    fun shuffleAlbum() {
-        setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL)
+    fun shuffleAlbum(collection: Container?) {
+        shuffleMode = PlaybackStateCompat.SHUFFLE_MODE_ALL
+        loadCollection(collection)
         queue.onTrackSelected()
         play(queue.tracks?.randomOrNull())
     }
 
-    fun setShuffleMode(mode: Int) = mediaBrowserConnection?.mediaController?.transportControls?.setShuffleMode(mode)
+    var repeatMode: Int
+        get() = mediaBrowserConnection?.mediaController?.repeatMode
+            ?: PlaybackStateCompat.REPEAT_MODE_NONE
+        set(value) {
+            mediaBrowserConnection?.mediaController?.transportControls?.setRepeatMode(value)
+        }
+
+    var shuffleMode: Int
+        get() = mediaBrowserConnection?.mediaController?.shuffleMode
+            ?: PlaybackStateCompat.SHUFFLE_MODE_NONE
+        set(value) {
+            mediaBrowserConnection?.mediaController?.transportControls?.setShuffleMode(value)
+        }
 
     private fun playInternal(track: TrackEntity) {
         playState.postValue(State.Initializing)
         selectedTrack.postValue(track)
         mediaBrowserConnection?.mediaController?.let { mc ->
             val extras = Bundle().apply {
-                this.putString(MediaSessionManager.EXTRA_QUEUE_IDENTIFIER, track?.toMetadata()?.mediaId)
+                this.putString(
+                    MediaSessionManager.EXTRA_QUEUE_IDENTIFIER,
+                    track?.toMetadata()?.mediaId
+                )
             }
-            mc.sendCommand(MediaSessionManager.COMMAND_SWAP_QUEUE, extras, object : ResultReceiver(null) {
-                override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
-                    if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
-                        mc.queue.clear()
-                        queue.tracks?.forEach { track ->
-                            track.toMetadata().mediaId?.let {
-                                mc.addQueueItem(track.toMetadata().description)
+            mc.sendCommand(
+                MediaSessionManager.COMMAND_SWAP_QUEUE,
+                extras,
+                object : ResultReceiver(null) {
+                    override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
+                        if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
+                            mc.queue.clear()
+                            queue.tracks?.forEach { track ->
+                                track.toMetadata().mediaId?.let {
+                                    mc.addQueueItem(track.toMetadata().description)
+                                }
                             }
+                            mc.transportControls?.prepare()
                         }
-                        mc.transportControls?.prepare()
-                    }
 
-                    track.let {
-                        mc.transportControls?.playFromMediaId(it.toMetadata().mediaId, null)
-                        waitForMusicPlayback()
+                        track.let {
+                            mc.transportControls?.playFromMediaId(it.toMetadata().mediaId, null)
+                            waitForMusicPlayback()
+                        }
                     }
-                }
-            })
+                })
         }
     }
 

@@ -20,6 +20,7 @@ import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
 import kotlinx.android.synthetic.main.fragment_album_detail.*
 import kotlinx.android.synthetic.main.fragment_album_detail.view.*
+import kotlinx.android.synthetic.main.now_playing.*
 
 class AlbumDetailFragment : NavigationStackFragment() {
 
@@ -46,12 +47,12 @@ class AlbumDetailFragment : NavigationStackFragment() {
         TrackListAdapter().apply {
             nowPlaying = this@AlbumDetailFragment.nowPlaying
             onTrackSelected = {
-                nowPlaying?.loadCollection(it.entity?.container)
                 nowPlaying?.play(it.entity)
             }
         }
     }
 
+    private var collection: Container? = null
     private var playlist: Boolean = false
     private var descriptionSummary: String? = null
     private var albumName: String? = null
@@ -97,8 +98,12 @@ class AlbumDetailFragment : NavigationStackFragment() {
             description_group.visible()
         }
 
-        play.setOnClickListener { nowPlaying?.playAlbum() }
-        shuffle.setOnClickListener { nowPlaying?.shuffleAlbum() }
+        play.setOnClickListener {
+            nowPlaying?.playAlbum(collection)
+        }
+        shuffle.setOnClickListener {
+            nowPlaying?.shuffleAlbum(collection)
+        }
 
         enableToolbarTranslationEffects(true)
         setToolbarTitle(albumName)
@@ -134,6 +139,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
                     is Playlist -> loadPlaylist(ret.playlist)
                     is Album -> loadAlbum(ret.album)
                 }
+
             }
         })
         nowPlaying?.playState?.observe(viewLifecycleOwner, Observer {
@@ -161,7 +167,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
                 }
             }
         }
-
+        collection = album
         adapter.submitList(album.toEntities())
     }
 
@@ -184,7 +190,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
                 container.durationInMinutes.toString()
             )
         }
-
+        collection = container
         adapter.submitList(container.toEntities())
     }
 }
