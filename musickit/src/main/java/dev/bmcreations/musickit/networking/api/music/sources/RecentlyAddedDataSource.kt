@@ -6,7 +6,6 @@ import androidx.paging.PageKeyedDataSource
 import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
-import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,15 +14,15 @@ class RecentlyAddedDataFactory : DataSource.Factory<Int, RecentlyAddedEntity>() 
 
     val mutableLiveData: MutableLiveData<RecentlyAddedDataSource> = MutableLiveData()
 
-    private var repo: MusicRepository? = null
+    private var source: LibrarySource? = null
 
-    fun provideMusicRepository(repo: MusicRepository) {
-        this.repo = repo
+    fun provideLibrarySource(source: LibrarySource) {
+        this.source = source
     }
 
     override fun create(): DataSource<Int, RecentlyAddedEntity> {
         val feedDataSource = RecentlyAddedDataSource().apply {
-            this.musicRepository = repo
+            source = this@RecentlyAddedDataFactory.source
         }
         mutableLiveData.postValue(feedDataSource)
         return feedDataSource
@@ -33,7 +32,7 @@ class RecentlyAddedDataFactory : DataSource.Factory<Int, RecentlyAddedEntity>() 
 
 class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO), PageKeyedDataSource<Int, RecentlyAddedEntity>() {
 
-    var musicRepository: MusicRepository? = null
+    var source: LibrarySource? = null
 
     val networkState = MutableLiveData<NetworkState>()
     private val initialLoading = MutableLiveData<NetworkState>()
@@ -46,7 +45,7 @@ class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO),
         networkState.postValue(NetworkState.LOADING)
 
         launch {
-            when (val ret = musicRepository?.getUserRecentlyAdded(limit = params.requestedLoadSize)) {
+            when (val ret = source?.getUserRecentlyAdded(limit = params.requestedLoadSize)) {
                 is Outcome.Success -> {
                     callback.onResult(ret.data.data, null, ret.data.nextOffset())
                     initialLoading.postValue(NetworkState.LOADED)
@@ -63,7 +62,7 @@ class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO),
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, RecentlyAddedEntity>) {
         networkState.postValue(NetworkState.LOADING)
         launch {
-            when (val ret = musicRepository?.getUserRecentlyAdded(limit = params.requestedLoadSize, offset = params.key)) {
+            when (val ret = source?.getUserRecentlyAdded(limit = params.requestedLoadSize, offset = params.key)) {
                 is Outcome.Success -> {
                     val next = ret.data.nextOffset()
 

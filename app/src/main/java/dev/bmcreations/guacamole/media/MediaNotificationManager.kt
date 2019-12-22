@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.RequiresApi
@@ -15,16 +14,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.media.session.MediaButtonReceiver
 import coil.Coil
-import coil.api.get
 import coil.api.load
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
 import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.ui.MainActivity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
-import dev.bmcreations.musickit.networking.extensions.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dev.bmcreations.musickit.extensions.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 

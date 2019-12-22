@@ -10,22 +10,17 @@ import retrofit2.http.Query
 
 interface LibraryService {
     @GET("me/library/recently-added")
-    fun getUserRecentlyAddedAsync(@Header("Authorization") devToken: String,
-                              @Header("Music-User-Token") token: String, @Query("limit") limit: Int?, @Query("offset") offset: Int?): Deferred<RecentlyAddedResult>
+    fun getUserRecentlyAddedAsync(@Query("limit") limit: Int?, @Query("offset") offset: Int?): Deferred<RecentlyAddedResult>
 
     @GET("me/library/albums/{id}")
-    fun getLibraryAlbumByIdAsync(@Header("Authorization") devToken: String,
-                                 @Header("Music-User-Token") token: String, @Path("id") id: String): Deferred<LibraryAlbumResult>
+    fun getLibraryAlbumByIdAsync(@Path("id") id: String): Deferred<LibraryAlbumResult>
 
     @GET("me/library/playlists/{id}")
-    fun getLibraryPlaylistByIdAsync(@Header("Authorization") devToken: String,
-                                    @Header("Music-User-Token") token: String, @Path("id") id: String): Deferred<LibraryPlaylistResult>
+    fun getLibraryPlaylistByIdAsync(@Path("id") id: String): Deferred<LibraryPlaylistResult>
 
     @GET("me/library/playlists/")
-    fun getAllLibraryPlaylistsAsync(@Header("Authorization") devToken: String,
-                                    @Header("Music-User-Token") token: String): Deferred<LibraryPlaylistResult>
+    fun getAllLibraryPlaylistsAsync(): Deferred<LibraryPlaylistResult>
 
     @GET("me/library/playlists/{id}/tracks")
-    fun getLibraryPlaylistTracksByIdAsync(@Header("Authorization") devToken: String,
-                                    @Header("Music-User-Token") token: String, @Path("id") id: String?): Deferred<PlaylistTrackResult>
+    fun getLibraryPlaylistTracksByIdAsync(@Path("id") id: String?): Deferred<TrackResult>
 }

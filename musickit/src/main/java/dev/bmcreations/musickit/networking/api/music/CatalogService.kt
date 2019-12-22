@@ -10,14 +10,14 @@ import retrofit2.http.Path
 
 interface CatalogService {
     @GET("catalog/{storefront}/playlists/{id}")
-    fun getPlaylistByIdAsync(@Header("Authorization") devToken: String,
-                             @Header("Music-User-Token") token: String,
-                             @Path("storefront") lang: String,
-                             @Path("id") id: String): Deferred<CatalogPlaylistResult>
+    fun getPlaylistByIdAsync(
+        @Path("storefront") lang: String,
+        @Path("id") id: String
+    ): Deferred<CatalogPlaylistResult>
 
     @GET("catalog/{storefront}/albums/{id}")
-    fun getAlbumByIdAsync(@Header("Authorization") devToken: String,
-                             @Header("Music-User-Token") token: String,
-                             @Path("storefront") lang: String,
-                             @Path("id") id: String): Deferred<CatalogAlbumResult>
+    fun getAlbumByIdAsync(
+        @Path("storefront") lang: String,
+        @Path("id") id: String
+    ): Deferred<CatalogAlbumResult>
 }

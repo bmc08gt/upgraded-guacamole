@@ -8,6 +8,5 @@ import retrofit2.http.Header
 interface StoreFrontService {
 
     @GET("me/storefront")
-    fun getUserStoreFrontAsync(@Header("Authorization") devToken: String,
-                               @Header("Music-User-Token") token: String): Deferred<UserStoreFrontResult>
+    fun getUserStoreFrontAsync(): Deferred<UserStoreFrontResult>
 }

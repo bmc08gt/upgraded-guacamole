@@ -23,17 +23,20 @@ import kotlinx.android.synthetic.main.fragment_album_detail.view.*
 
 class AlbumDetailFragment : NavigationStackFragment() {
 
-    private val musicRepo get() = context?.graph()?.networkGraph?.musicRepository
+    private val librarySource get() = context?.graph()?.networkGraph?.librarySource
+    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
 
     private val vm by lazy {
-        musicRepo?.let {
-            getViewModel { LibraryViewModel(it) } }
+        librarySource?.let { source ->
+            musicQueue?.let { queue ->
+                getViewModel { LibraryViewModel(source, queue) } }
+            }
     }
 
 
     private val nowPlaying by lazy {
         activity?.let { a ->
-            musicRepo?.let {
+            musicQueue?.let {
                 a.getViewModel { NowPlayingViewModel.create(a, it) }
             }
         }
@@ -43,6 +46,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
         TrackListAdapter().apply {
             nowPlaying = this@AlbumDetailFragment.nowPlaying
             onTrackSelected = {
+                nowPlaying?.loadCollection(it.entity?.container)
                 nowPlaying?.play(it.entity)
             }
         }
@@ -157,9 +161,8 @@ class AlbumDetailFragment : NavigationStackFragment() {
                 }
             }
         }
-        album.relationships?.tracks?.data?.let {
-            adapter.submitList(it.filterNotNull().map { t -> AlbumTrackEntity(t, album) })
-        }
+
+        adapter.submitList(album.toEntities())
     }
 
     private fun loadPlaylist(container: LibraryPlaylist) {
@@ -177,11 +180,11 @@ class AlbumDetailFragment : NavigationStackFragment() {
         }
         context?.let { ctx ->
             album_duration.text = ctx.formattedStrings[R.string.album_length](
-                container.tracks.lastIndex.toString(),
+                container.trackList?.lastIndex.toString(),
                 container.durationInMinutes.toString()
             )
         }
 
-        adapter.submitList(container.tracks.map { t -> PlaylistTrackEntity(t, container) })
+        adapter.submitList(container.toEntities())
     }
 }

@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.networking.extensions
+package dev.bmcreations.musickit.extensions
 
 import kotlinx.coroutines.*
 import java.util.*

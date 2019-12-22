@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.networking.operator;
+package dev.bmcreations.musickit.operator;
 
 import org.jetbrains.annotations.NotNull;
 

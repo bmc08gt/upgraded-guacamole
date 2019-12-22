@@ -13,18 +13,19 @@ import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.visible
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.guacamole.ui.details.populateMiniPlayer
+import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel.State
 import kotlinx.android.synthetic.main.now_playing_mini.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
 
 class NowPlayingFragment : Fragment() {
 
-    private val graph by lazy { context?.graph() }
+    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
 
     private val viewModel by lazy {
         activity?.let { a ->
-            graph?.let {
-                a.getViewModel { NowPlayingViewModel.create(a, it.networkGraph.musicRepository) }
+            musicQueue?.let {
+                a.getViewModel { NowPlayingViewModel.create(a, it) }
             }
         }
     }

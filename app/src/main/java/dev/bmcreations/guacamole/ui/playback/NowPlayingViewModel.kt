@@ -8,14 +8,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.bmcreations.guacamole.media.MediaBrowserCallback
 import dev.bmcreations.guacamole.media.MediaBrowserConnection
-import dev.bmcreations.musickit.networking.extensions.inTime
+import dev.bmcreations.musickit.extensions.inTime
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.media.playbackStateString
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
-import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
-import dev.bmcreations.musickit.networking.extensions.mediaId
-import dev.bmcreations.musickit.networking.extensions.randomOrNull
+import dev.bmcreations.musickit.extensions.mediaId
+import dev.bmcreations.musickit.extensions.randomOrNull
+import dev.bmcreations.musickit.networking.api.models.Container
+import dev.bmcreations.musickit.queue.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,7 +24,7 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 class NowPlayingViewModel private constructor(
-    val context: Context, val music: MusicRepository
+    val context: Context, val queue: MusicQueue
 ): CoroutineScope by CoroutineScope(Dispatchers.IO),  ViewModel(), AnkoLogger {
 
     val selectedTrack = MutableLiveData<TrackEntity?>()
@@ -84,26 +85,30 @@ class NowPlayingViewModel private constructor(
     }
 
     companion object Factory {
-        fun create(context: Context, music: MusicRepository): NowPlayingViewModel {
-            return NowPlayingViewModel(context, music)
+        fun create(context: Context, queue: MusicQueue): NowPlayingViewModel {
+            return NowPlayingViewModel(context, queue)
         }
+    }
+
+    fun loadCollection(collection: Container?) {
+        collection?.let { queue.updateQueue(collection.trackList?.map { t -> TrackEntity(t, it) }) }
     }
 
     fun playAlbum() {
         setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE)
-        music.onTrackSelected()
-        play(music.tracks?.firstOrNull())
+        queue.onTrackSelected()
+        play(queue.tracks?.firstOrNull())
     }
 
     fun play(track: TrackEntity?) {
-        music.onTrackSelected()
+        queue.onTrackSelected(track)
         track?.let { playInternal(it) }
     }
 
     fun shuffleAlbum() {
         setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL)
-        music.onTrackSelected()
-        play(music.tracks?.randomOrNull())
+        queue.onTrackSelected()
+        play(queue.tracks?.randomOrNull())
     }
 
     fun setShuffleMode(mode: Int) = mediaBrowserConnection?.mediaController?.transportControls?.setShuffleMode(mode)
@@ -119,7 +124,7 @@ class NowPlayingViewModel private constructor(
                 override fun onReceiveResult(resultCode: Int, resultData: Bundle?) {
                     if (resultCode == MediaSessionManager.RESULT_ADD_QUEUE_ITEMS) {
                         mc.queue.clear()
-                        music.tracks?.forEach { track ->
+                        queue.tracks?.forEach { track ->
                             track.toMetadata().mediaId?.let {
                                 mc.addQueueItem(track.toMetadata().description)
                             }

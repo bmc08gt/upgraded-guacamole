@@ -2,20 +2,16 @@ package dev.bmcreations.guacamole
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
+import dev.bmcreations.guacamole.auth.TokenExpiredCallback
 import dev.bmcreations.guacamole.graphs.AppGraph
 import dev.bmcreations.guacamole.graphs.NetworkGraphImpl
 import dev.bmcreations.guacamole.graphs.SessionGraphImpl
-import dev.bmcreations.guacamole.ui.MainActivity
-import dev.bmcreations.musickit.networking.TokenExpiredCallback
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
-import java.util.Collections.singletonList
+import dev.bmcreations.musickit.auth.InvalidTokenReason
 
 class Guacamole: Application() {
 
-    private val expiredCallback: TokenExpiredCallback = object :TokenExpiredCallback {
-        override fun onTokenExpired() {
+    private val expiredCallback: TokenExpiredCallback = object : TokenExpiredCallback {
+        override fun onTokenExpired(reason: InvalidTokenReason) {
 //            val sm = appGraph.sessionGraph.sessionManager
 //            if (sm.)
 //            appGraph.sessionGraph.sessionManager.removeUser {
@@ -27,13 +23,12 @@ class Guacamole: Application() {
     }
 
     val appGraph by lazy {
-        val sessionGraph = SessionGraphImpl(this)
+        val sessionGraph = SessionGraphImpl(this, expiredCallback)
         AppGraph(
             sessionGraph = sessionGraph,
             networkGraph = NetworkGraphImpl(
                 appContext = this,
-                tokenProvider = sessionGraph.tokenProvider,
-                expiryListener = expiredCallback
+                tokenProvider = sessionGraph.tokenProvider
             )
         )
     }

@@ -15,16 +15,14 @@ import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
-import dev.bmcreations.musickit.networking.api.models.AlbumTrackEntity
-import dev.bmcreations.musickit.networking.api.models.PlaylistTrackEntity
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
-import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
-import dev.bmcreations.musickit.networking.extensions.albumArtworkUrl
-import dev.bmcreations.musickit.networking.extensions.mediaId
+import dev.bmcreations.musickit.extensions.albumArtworkUrl
+import dev.bmcreations.musickit.extensions.mediaId
+import dev.bmcreations.musickit.queue.MusicQueue
 
 class MediaSessionManager(val context: Context,
                           private val player: MediaPlayerController,
-                          private val musicRepository: MusicRepository)
+                          private val musicQueue: MusicQueue)
     : MediaSessionCompat.Callback() {
 
     private var queueIdentifier: String? = ""
@@ -40,12 +38,7 @@ class MediaSessionManager(val context: Context,
         }
     val currentTrackMediaId: String?
         get() {
-            return player.currentContainerStoreId ?: song?.let {
-                when (it) {
-                    is PlaylistTrackEntity -> it.track.id
-                    is AlbumTrackEntity -> it.track.id
-                }
-            }
+            return player.currentContainerStoreId ?: song?.track?.id
         }
 
     init {
@@ -79,21 +72,10 @@ class MediaSessionManager(val context: Context,
 
     fun updateQueue(entity: TrackEntity?) {
         entity?.let { e ->
-            when (e) {
-                is PlaylistTrackEntity -> {
-                    e.toMetadata().mediaId.let {
-                        queueIndex = queueItems.indexOfFirst { item -> item.description.mediaId == it }
-                        this.song = e
-                            updateQueue()
-                    }
-                }
-                is AlbumTrackEntity -> {
-                    e.toMetadata().mediaId.let {
-                        queueIndex = queueItems.indexOfFirst { item -> item.description.mediaId == it }
-                        this.song = e
-                        updateQueue()
-                    }
-                }
+            e.toMetadata().mediaId.let {
+                queueIndex = queueItems.indexOfFirst { item -> item.description.mediaId == it }
+                this.song = e
+                updateQueue()
             }
         }
     }
@@ -129,7 +111,7 @@ class MediaSessionManager(val context: Context,
 
         val mediaId = queueItems[queueIndex].description.mediaId
         mediaId?.let {
-            song = musicRepository.getTrackByMetadataMediaId(mediaId)
+            song = musicQueue.getTrackByMetadataMediaId(mediaId)
             val mBuilder = song?.toMetadataBuilder()
             val metadata = mBuilder?.build()
 
@@ -241,7 +223,7 @@ class MediaSessionManager(val context: Context,
                     val mediaId: String? = it.getString(EXTRA_TRACK_ID, null)
                     if (null != mediaId) {
                         val bundle = Bundle()
-                        val song = musicRepository.getTrackByMetadataMediaId(mediaId)
+                        val song = musicQueue.getTrackByMetadataMediaId(mediaId)
                         bundle.putParcelable(EXTRA_TRACK, song)
                         cb?.send(RESULT_TRACK, bundle)
                     }

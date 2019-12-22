@@ -6,8 +6,9 @@ import androidx.paging.PagedList
 import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.*
-import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
+import dev.bmcreations.musickit.networking.api.music.sources.LibrarySource
 import dev.bmcreations.musickit.networking.api.music.sources.RecentlyAddedDataFactory
+import dev.bmcreations.musickit.queue.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +18,8 @@ import java.util.concurrent.Executors
 
 
 class LibraryViewModel(
-    val musicRepo: MusicRepository
+    val librarySource: LibrarySource,
+    val musicQueue: MusicQueue
 ): CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
 
     var recentsNetworkState: LiveData<NetworkState>? = null
@@ -41,7 +43,7 @@ class LibraryViewModel(
 
     private fun initializePlaylists() {
         viewModelScope.launch {
-            musicRepo.getAllLibraryPlaylists().let {
+            librarySource.getAllLibraryPlaylists().let {
                 when (it) {
                     is Outcome.Success -> viewModelScope.launch(Dispatchers.Main) { _playlists = it.data }
                     is Outcome.Failure -> it.e.printStackTrace()
@@ -53,7 +55,7 @@ class LibraryViewModel(
 
     private fun initializeRecents() {
         val recentFactory = RecentlyAddedDataFactory().apply {
-            this.provideMusicRepository(musicRepo)
+            this.provideLibrarySource(librarySource)
         }
         recentsNetworkState = Transformations.switchMap(recentFactory.mutableLiveData) { source -> source.networkState }
         val pagedListConfig = PagedList.Config.Builder()
@@ -67,7 +69,7 @@ class LibraryViewModel(
     }
 
     fun getLibraryAlbumById(id: String) {
-        musicRepo.let { repo ->
+        librarySource.let { repo ->
             viewModelScope.launch {
                 val outcome = repo.getLibraryAlbumById(id)
                 when (outcome) {
@@ -87,7 +89,7 @@ class LibraryViewModel(
     }
 
     fun getLibraryPlaylistById(id: String) {
-        musicRepo.let { repo ->
+        librarySource.let { repo ->
             viewModelScope.launch {
                 val outcome = repo.getLibraryPlaylistById(id)
                 when (outcome) {
@@ -103,7 +105,7 @@ class LibraryViewModel(
     }
 
     fun getLibraryPlaylistWithTracksById(id: String) {
-        musicRepo.let { repo ->
+        librarySource.let { repo ->
             viewModelScope.launch {
                 val outcome = repo.getLibraryPlaylistWithTracksById(id)
                 when (outcome) {

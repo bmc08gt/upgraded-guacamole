@@ -4,81 +4,35 @@ import android.os.Parcelable
 import android.support.v4.media.MediaMetadataCompat
 import kotlinx.android.parcel.Parcelize
 
-sealed class TrackEntity : Parcelable {
-    override fun equals(other: Any?): Boolean {
-        return if (other is TrackEntity) {
-            when (this) {
-                is AlbumTrackEntity -> {
-                    if (other is AlbumTrackEntity) {
-                        this === other
-                    } else {
-                        false
-                    }
-                }
-                is PlaylistTrackEntity -> {
-                    if (other is PlaylistTrackEntity) {
-                        this === other
-                    } else {
-                        false
-                    }
-                }
-            }
-        } else {
-            false
-        }
-    }
 
-    override fun hashCode(): Int {
-        return javaClass.hashCode()
-    }
-
-    abstract fun toMetadataBuilder(): MediaMetadataCompat.Builder
-    abstract fun toMetadata(): MediaMetadataCompat
-}
 @Parcelize
-data class PlaylistTrackEntity(val track: PlaylistTrack, val playlist: LibraryPlaylist): TrackEntity(), Parcelable {
-    override fun toMetadataBuilder(): MediaMetadataCompat.Builder {
+open class Container(
+    var name: String? = null,
+    var artist: String? = null,
+    var trackList: List<Track>? = emptyList(),
+    var isPlaylist: Boolean = false
+): Parcelable
+
+@Parcelize
+data class TrackEntity(val track: Track, val container: Container): Parcelable {
+    fun toMetadataBuilder(): MediaMetadataCompat.Builder {
         return MediaMetadataCompat.Builder().apply {
-            this@PlaylistTrackEntity.track.also { track ->
+            this@TrackEntity.track.also { track ->
                 this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.attributes?.albumName)
+                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, container.name)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.attributes?.artistName)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, track.attributes?.artistName)
+                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, container.artist)
                 this.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.attributes?.name)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.attributes?.durationInMillis ?: 0)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
-                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, playlist.attributes?.trackCount?.toLong() ?: 0)
-            }
-        }
-    }
-    override fun toMetadata(): MediaMetadataCompat {
-        return toMetadataBuilder().build()
-    }
-}
-
-@Parcelize
-data class AlbumTrackEntity(val track: LibraryAlbum.Relationships.Tracks.Data, val album: LibraryAlbum): TrackEntity(), Parcelable {
-    override fun toMetadataBuilder(): MediaMetadataCompat.Builder {
-        return MediaMetadataCompat.Builder().apply {
-            this@AlbumTrackEntity.track.also { track ->
-                this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album.attributes?.name)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.attributes?.artistName)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, album.attributes?.artistName)
-                this.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.attributes?.name)
-                this.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.attributes?.durationInMillis ?: 0)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, track.attributes?.artwork?.urlWithDimensions)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
-                this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
-                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, album.relationships?.tracks?.data?.size?.toLong() ?: 0)
+                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (container.trackList?.count() ?: 0).toLong())
             }
         }
     }
 
-    override fun toMetadata(): MediaMetadataCompat {
+    fun toMetadata(): MediaMetadataCompat {
         return toMetadataBuilder().build()
     }
 }
-

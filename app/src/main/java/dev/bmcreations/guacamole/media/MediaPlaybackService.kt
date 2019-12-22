@@ -13,7 +13,6 @@ import com.apple.android.music.playback.controller.MediaPlayerControllerFactory
 import com.apple.android.music.playback.model.*
 import dev.bmcreations.guacamole.graph
 import dev.bmcreations.musickit.networking.api.models.TrackEntity
-import dev.bmcreations.musickit.networking.api.music.repository.MusicRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,31 +23,28 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
 
     lateinit var mediaSessionManager: MediaSessionManager
     private lateinit var player: MediaPlayerController
-    private lateinit var musicRepository: MusicRepository
     private lateinit var mediaNotificationManager: MediaNotificationManager
     private var serviceInStartedState = false
+
+    private val tokenProvider get() = graph().sessionGraph.tokenProvider
+    private val mediaQueue get() = graph().sessionGraph.musicQueue
 
     override fun onCreate() {
         super.onCreate()
 
         initPlayer()
-        initMusicRepository()
         initMediaSessionManager()
         initMediaNotificationManager()
     }
 
     private fun initPlayer() {
-        player = MediaPlayerControllerFactory.createLocalController(this.applicationContext, graph().sessionGraph.tokenProvider)
+        player = MediaPlayerControllerFactory.createLocalController(this.applicationContext, tokenProvider)
         player.addListener(this)
     }
 
     private fun initMediaSessionManager() {
-        mediaSessionManager = MediaSessionManager(this, player, musicRepository)
+        mediaSessionManager = MediaSessionManager(this, player, mediaQueue)
         sessionToken = mediaSessionManager.sessionToken
-    }
-
-    private fun initMusicRepository() {
-        musicRepository = graph().networkGraph.musicRepository
     }
 
     private fun initMediaNotificationManager() {
@@ -57,7 +53,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
 
     private fun updateNotificationForItemChanged(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
+        currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
         launch {
             while (player.currentPosition == PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN) {}
             launch(Dispatchers.Main) {
@@ -73,7 +69,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
 
     private fun updateNotificationForPause() {
         var track: TrackEntity? = null
-        mediaSessionManager.currentTrackMediaId?.let { track = musicRepository.getTrackByMediaId(it) }
+        mediaSessionManager.currentTrackMediaId?.let { track = mediaQueue.getTrackByMediaId(it) }
         track?.let {
             stopForeground(false)
             val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
@@ -92,13 +88,13 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
 
     private fun updateQueue(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
+        currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
         mediaSessionManager.updateQueue(track)
     }
 
     private fun moveServiceToStartedState() {
         var track: TrackEntity? = null
-        mediaSessionManager.currentTrackMediaId?.let { track = musicRepository.getTrackByMediaId(it) }
+        mediaSessionManager.currentTrackMediaId?.let { track = mediaQueue.getTrackByMediaId(it) }
         track?.let {
             val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
                 PlaybackStateCompat.STATE_PLAYING, player.currentPosition)
@@ -126,7 +122,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     }
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
-        musicRepository.loadMediaItems(parentId, result)
+        mediaQueue.loadMediaItems(parentId, result)
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
@@ -193,7 +189,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
 
     private fun sendItemChangedBroadcast(currentItem: PlayerQueueItem) {
         var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = musicRepository.getTrackByCatalogId(it) }
+        currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         val intent = Intent(ACTION_CURRENT_ITEM_CHANGED)
         intent.putExtra(EXTRA_CURRENT_ITEM, track)

@@ -24,11 +24,13 @@ import kotlinx.android.synthetic.main.recently_added_entity.view.*
 
 class LibraryFragment: NavigationStackFragment() {
 
-    private val musicRepo get() = context?.graph()?.networkGraph?.musicRepository
+    private val librarySource get() = context?.graph()?.networkGraph?.librarySource
+    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
 
     private val vm by lazy {
-        musicRepo?.let {
-            activity?.let { a -> a.getViewModel { LibraryViewModel(it) } }
+        librarySource?.let { source ->
+            musicQueue?.let { queue ->
+                getViewModel { LibraryViewModel(source, queue) } }
         }
     }
 

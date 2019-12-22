@@ -3,19 +3,20 @@ package dev.bmcreations.musickit.networking.api.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import dev.bmcreations.musickit.networking.extensions.sumByLong
-import dev.bmcreations.musickit.networking.operator.FieldProperty
-import dev.bmcreations.musickit.networking.operator.NullableFieldProperty
+import dev.bmcreations.musickit.extensions.sumByLong
+import dev.bmcreations.musickit.operator.FieldProperty
+import dev.bmcreations.musickit.operator.NullableFieldProperty
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
 @Parcelize
 data class LibraryPlaylistResult(val data: List<LibraryPlaylist>) : Parcelable
 
-var LibraryPlaylist.tracks by FieldProperty<LibraryPlaylist, List<PlaylistTrack>> { emptyList() }
+fun LibraryPlaylist.toEntities(): List<TrackEntity> = trackList?.map { t -> TrackEntity(t, this) } ?: emptyList()
+
 val LibraryPlaylist.durationInMillis: Long
     get() {
-        return tracks.sumByLong { it.attributes?.durationInMillis ?: 0 }
+        return trackList?.sumByLong { it.attributes?.durationInMillis ?: 0 } ?: 0
     }
 val LibraryPlaylist.durationInMinutes: Long
     get() {
@@ -47,7 +48,7 @@ data class LibraryPlaylist(
     val href: String?,
     @SerializedName("attributes")
     val attributes: Attributes?
-) : Parcelable {
+) : Container(),  Parcelable {
     @Parcelize
     data class Attributes(
         @SerializedName("artwork")

@@ -1,6 +1,5 @@
 package dev.bmcreations.guacamole.ui.details
 
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.musickit.networking.api.models.*
-import dev.bmcreations.musickit.networking.extensions.mediaId
+import dev.bmcreations.musickit.extensions.mediaId
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.equalizer as peq
 import kotlinx.android.synthetic.main.playlist_track_entity.view.playlist_track_art
@@ -33,59 +32,52 @@ class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(item
 
     fun hideVisualization() {
         entity?.let {
-            when (it) {
-                is PlaylistTrackEntity -> {
-                    itemView.playlist_track_art.removeTint()
-                    itemView.peq.stop()
-                    itemView.peq.gone()
-                }
-                else -> {
-                    itemView.track_number.visible()
-                    itemView.aeq.stop()
-                    itemView.aeq.invisible()
-                }
+            if (it.container.isPlaylist) {
+                itemView.playlist_track_art.removeTint()
+                itemView.peq.stop()
+                itemView.peq.gone()
+            } else {
+                itemView.track_number.visible()
+                itemView.aeq.stop()
+                itemView.aeq.invisible()
             }
         }
     }
 
     fun pauseVisualization() {
         entity?.let {
-            when (it) {
-                is PlaylistTrackEntity -> {
-                    if (!itemView.peq.isVisible()) {
+            if (it.container.isPlaylist) {
+                if (!itemView.peq.isVisible()) {
+                    if (it.container.isPlaylist) {
                         itemView.playlist_track_art.tint(itemView.context.colors[R.color.equalizer_album_overlay])
                         itemView.peq.visible()
                     }
                     itemView.peq.stop()
                 }
-                else -> {
-                    if (!itemView.aeq.isVisible()) {
-                        itemView.track_number.invisible()
-                        itemView.aeq.visible()
-                    }
-                    itemView.aeq.stop()
+            } else {
+                if (!itemView.aeq.isVisible()) {
+                    itemView.track_number.invisible()
+                    itemView.aeq.visible()
                 }
+                itemView.aeq.stop()
             }
         }
     }
 
     fun visualizePlayback() {
         entity?.let {
-            when (it) {
-                is PlaylistTrackEntity -> {
-                    if (!itemView.peq.isVisible()) {
-                        itemView.playlist_track_art.tint(itemView.context.colors[R.color.equalizer_album_overlay])
-                        itemView.peq.visible()
-                    }
-                    itemView.peq.animateBars()
+            if (it.container.isPlaylist) {
+                if (!itemView.peq.isVisible()) {
+                    itemView.playlist_track_art.tint(itemView.context.colors[R.color.equalizer_album_overlay])
+                    itemView.peq.visible()
                 }
-                else -> {
-                    if (!itemView.aeq.isVisible()) {
-                        itemView.track_number.invisible()
-                        itemView.aeq.visible()
-                    }
-                    itemView.aeq.animateBars()
+                itemView.peq.animateBars()
+            } else {
+                if (!itemView.aeq.isVisible()) {
+                    itemView.track_number.invisible()
+                    itemView.aeq.visible()
                 }
+                itemView.aeq.animateBars()
             }
         }
     }
