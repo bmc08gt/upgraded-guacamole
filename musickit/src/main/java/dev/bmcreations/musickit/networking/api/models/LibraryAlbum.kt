@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
 @Parcelize
-data class LibraryAlbumResult(val data: List<LibraryAlbum>) : Parcelable
+open class LibraryAlbumResult: PagedListImpl<LibraryAlbum>(), Parcelable
 
 fun LibraryAlbum.toEntities(): List<TrackEntity> = relationships?.tracks?.data?.filterNotNull()?.map { t -> TrackEntity(t, this) } ?: emptyList()
 

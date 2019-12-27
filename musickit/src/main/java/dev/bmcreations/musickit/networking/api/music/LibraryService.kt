@@ -12,13 +12,22 @@ interface LibraryService {
     @GET("me/library/recently-added")
     fun getUserRecentlyAddedAsync(@Query("limit") limit: Int?, @Query("offset") offset: Int?): Deferred<RecentlyAddedResult>
 
+    @GET("me/library/albums")
+    fun getAllLibraryAlbumsAsync(
+        @Query("include") relationships: String? = null,
+        @Query("limit") limit: Int = 100,
+        @Query("offset") offset: Int?): Deferred<LibraryAlbumResult>
+
     @GET("me/library/albums/{id}")
     fun getLibraryAlbumByIdAsync(@Path("id") id: String): Deferred<LibraryAlbumResult>
+
+    @GET("me/library/artists/{id}")
+    fun getLibraryArtistByIdAsync(@Path("id") id: String): Deferred<LibraryArtistsResult>
 
     @GET("me/library/playlists/{id}")
     fun getLibraryPlaylistByIdAsync(@Path("id") id: String): Deferred<LibraryPlaylistResult>
 
-    @GET("me/library/playlists/")
+    @GET("me/library/playlists")
     fun getAllLibraryPlaylistsAsync(): Deferred<LibraryPlaylistResult>
 
     @GET("me/library/playlists/{id}/tracks")

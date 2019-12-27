@@ -1,10 +1,13 @@
 package dev.bmcreations.musickit.networking.api.music.sources
 
+import dev.bmcreations.musickit.extensions.paged
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.provideLibraryService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 
 class LibrarySource(
@@ -31,14 +34,14 @@ class LibrarySource(
         return ret
     }
 
-    suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum> {
+    suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum?> {
         storeFrontSource.updateStoreIfNeeded()
-        var ret: Outcome<LibraryAlbum>
+        var ret: Outcome<LibraryAlbum?>
         val req = library.getLibraryAlbumByIdAsync(id)
         try {
             req.await().run {
-                val album = this.data.first()
-                album.apply {
+                val album = this.data?.first()
+                album?.apply {
                     name = attributes?.name
                     artist = attributes?.artistName
                     trackList = relationships?.tracks?.data?.filterNotNull()
@@ -46,6 +49,28 @@ class LibrarySource(
                 ret = Outcome.success(album)
 
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ret = Outcome.failure(e)
+        }
+        return ret
+    }
+
+    suspend fun getAllLibraryAlbums(): Outcome<List<LibraryAlbum>> {
+        storeFrontSource.updateStoreIfNeeded()
+        var ret: Outcome<List<LibraryAlbum>>
+        try {
+            val results = paged<List<LibraryAlbum>, LibraryAlbumResult>(
+                pagedCall = { next -> library.getAllLibraryAlbumsAsync(offset = next?.substringAfter("offset=")?.toInt()) },
+                scope = this
+            )
+            ret = Outcome.success(results.apply {
+                this?.map {
+                    it.name = it.attributes?.name
+                    it.artist = it.attributes?.artistName
+                    it.trackList = it.relationships?.tracks?.data?.filterNotNull()
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
             ret = Outcome.failure(e)

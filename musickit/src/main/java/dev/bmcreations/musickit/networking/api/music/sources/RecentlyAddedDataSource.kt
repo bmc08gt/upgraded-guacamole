@@ -47,7 +47,7 @@ class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO),
         launch {
             when (val ret = source?.getUserRecentlyAdded(limit = params.requestedLoadSize)) {
                 is Outcome.Success -> {
-                    callback.onResult(ret.data.data, null, ret.data.nextOffset())
+                    callback.onResult(ret.data?.data ?: emptyList(), null, ret.data?.nextOffset())
                     initialLoading.postValue(NetworkState.LOADED)
                     networkState.postValue(NetworkState.LOADED)
                 }
@@ -64,9 +64,9 @@ class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO),
         launch {
             when (val ret = source?.getUserRecentlyAdded(limit = params.requestedLoadSize, offset = params.key)) {
                 is Outcome.Success -> {
-                    val next = ret.data.nextOffset()
+                    val next = ret.data?.nextOffset()
 
-                    callback.onResult(ret.data.data, next)
+                    callback.onResult(ret.data?.data ?: emptyList(), next)
                     networkState.postValue(NetworkState.LOADED)
 
                 }
