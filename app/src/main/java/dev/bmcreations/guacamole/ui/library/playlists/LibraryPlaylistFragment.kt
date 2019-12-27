@@ -7,10 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
-import dev.bmcreations.guacamole.extensions.getViewModel
-import dev.bmcreations.guacamole.graph
-import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
-import dev.bmcreations.guacamole.ui.library.LibraryViewModel
+import dev.bmcreations.guacamole.ui.library.LibraryBaseFragment
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
 import dev.bmcreations.musickit.networking.api.models.curator
@@ -18,17 +15,7 @@ import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library_playlists.view.*
 import kotlinx.android.synthetic.main.library_playlist_row_entity.view.*
 
-class LibraryPlaylistFragment: NavigationStackFragment() {
-
-    private val librarySource get() = context?.graph()?.networkGraph?.librarySource
-    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
-
-    private val vm by lazy {
-        librarySource?.let { source ->
-            musicQueue?.let { queue ->
-                getViewModel { LibraryViewModel(source, queue) } }
-        }
-    }
+class LibraryPlaylistFragment: LibraryBaseFragment() {
 
     val playlists by lazy {
         LibraryPlaylistAdapter().apply {

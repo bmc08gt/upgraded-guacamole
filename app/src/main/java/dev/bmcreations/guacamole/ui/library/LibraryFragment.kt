@@ -22,25 +22,17 @@ import kotlinx.android.synthetic.main.fragment_library.view.*
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
 
 
-class LibraryFragment: NavigationStackFragment() {
-
-    private val librarySource get() = context?.graph()?.networkGraph?.librarySource
-    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
-
-    private val vm by lazy {
-        librarySource?.let { source ->
-            musicQueue?.let { queue ->
-                getViewModel { LibraryViewModel(source, queue) } }
-        }
-    }
+class LibraryFragment: LibraryBaseFragment() {
 
     private val libraryGroupings by lazy {
         LibraryGroupingAdapter().apply {
             this.onGroupingClicked = {
                 when (it.entity) {
-                    LibraryGrouping.Playlists -> {
-                        findNavController().navigate(R.id.show_library_playlists)
-                    }
+                    LibraryGrouping.Playlists -> findNavController().navigate(R.id.show_library_playlists)
+                    LibraryGrouping.Albums -> {}
+                    LibraryGrouping.Artists -> findNavController().navigate(R.id.show_library_artists)
+                    LibraryGrouping.Songs -> {}
+                    null -> TODO()
                 }
 
             }
