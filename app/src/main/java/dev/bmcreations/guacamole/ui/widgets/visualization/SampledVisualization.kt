@@ -74,7 +74,7 @@ internal class SampledVisualization(context: Context, attributeSet: AttributeSet
             if (previous == null) {
                 constraints.connect(bar.id, ConstraintSet.LEFT, parent.id, ConstraintSet.LEFT)
             } else {
-                constraints.connect(bar.id, ConstraintSet.LEFT, previous!!.id, ConstraintSet.RIGHT, 2.dp(context))
+                constraints.connect(bar.id, ConstraintSet.LEFT, previous!!.id, ConstraintSet.RIGHT, 2.dp)
                 if (bars.lastIndex == index) {
                     constraints.connect(bar.id, ConstraintSet.RIGHT, parent.id, ConstraintSet.RIGHT)
                 }

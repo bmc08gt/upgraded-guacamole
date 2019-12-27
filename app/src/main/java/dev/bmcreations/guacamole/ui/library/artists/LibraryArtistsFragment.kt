@@ -35,11 +35,11 @@ class LibraryArtistsFragment: LibraryBaseFragment() {
         super.initView()
 
         root.artists.apply {
-            val header = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+            val header = SpacesItemDecoration(10.dp, OrientationHelper.VERTICAL).apply {
                 this.header = true
                 this.topBottomOnly = true
             }
-            val footer = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+            val footer = SpacesItemDecoration(10.dp, OrientationHelper.VERTICAL).apply {
                 this.bottomOnly = true
             }
             this.addItemDecorations(header, footer)

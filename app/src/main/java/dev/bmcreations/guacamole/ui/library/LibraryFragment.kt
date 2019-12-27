@@ -64,19 +64,19 @@ class LibraryFragment: LibraryBaseFragment() {
         libraryGroupings.submitList(LibraryGrouping.values().toMutableList())
 
         root.recently_added.apply {
-            val endcaps = SpacesItemDecoration(8.dp(context), OrientationHelper.HORIZONTAL).apply {
+            val endcaps = SpacesItemDecoration(8.dp, OrientationHelper.HORIZONTAL).apply {
                 this.endCaps = true
                 this.grid = true
             }
-            val horizontalSpacing = SpacesItemDecoration(4.dp(context), OrientationHelper.HORIZONTAL).apply {
+            val horizontalSpacing = SpacesItemDecoration(4.dp, OrientationHelper.HORIZONTAL).apply {
                 this.grid = true
             }
-            val header = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+            val header = SpacesItemDecoration(10.dp, OrientationHelper.VERTICAL).apply {
                 this.grid = true
                 this.header = true
                 this.topBottomOnly = true
             }
-            val footer = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+            val footer = SpacesItemDecoration(10.dp, OrientationHelper.VERTICAL).apply {
                 this.bottomOnly = true
             }
             this.addItemDecorations(endcaps, horizontalSpacing, header, footer)

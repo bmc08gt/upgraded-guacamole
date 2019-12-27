@@ -46,7 +46,7 @@ class AvocadoToolbar @JvmOverloads constructor(
                         setTextSize(
                             it.getFloat(
                                 R.styleable.AvocadoToolbar_android_textSize,
-                                24.sp(context).toFloat()
+                                24.sp.toFloat()
                             )
                         )
                     }

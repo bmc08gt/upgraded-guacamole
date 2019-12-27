@@ -39,11 +39,11 @@ class LibraryPlaylistFragment: LibraryBaseFragment() {
 
     override fun initView() {
         root.playlists.apply {
-            val header = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+            val header = SpacesItemDecoration(10.dp, OrientationHelper.VERTICAL).apply {
                 this.header = true
                 this.topBottomOnly = true
             }
-            val footer = SpacesItemDecoration(10.dp(context), OrientationHelper.VERTICAL).apply {
+            val footer = SpacesItemDecoration(10.dp, OrientationHelper.VERTICAL).apply {
                 this.bottomOnly = true
             }
             this.addItemDecorations(header, footer)

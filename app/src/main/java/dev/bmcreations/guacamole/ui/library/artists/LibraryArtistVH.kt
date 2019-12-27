@@ -28,7 +28,7 @@ class LibraryArtistVH(itemView: View): RecyclerView.ViewHolder(itemView) {
                     error(R.drawable.empty_artist_placeholder)
                     transformations(
                         CircleCropTransformation(),
-                        RoundedCornersTransformation(40.dp(itemView.context).toFloat())
+                        RoundedCornersTransformation(40.dp.toFloat())
                     )
                 }
                 itemView.artist_name.text = artist.name
