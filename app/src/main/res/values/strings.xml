@@ -5,6 +5,9 @@
     <string name="sign_in_with">Sign in with Apple Music</string>
     <string name="title_details">Details</string>
     <string name="title_playlists">Playlists</string>
+    <string name="title_artists">Artists</string>
+    <string name="title_albums">Albums</string>
+    <string name="title_songs">Songs</string>
     <string name="title_settings">Settings</string>
 
     <string name="title_library">Library</string>

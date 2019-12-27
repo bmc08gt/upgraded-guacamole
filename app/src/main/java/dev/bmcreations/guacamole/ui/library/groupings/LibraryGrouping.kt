@@ -1,5 +1,8 @@
 package dev.bmcreations.guacamole.ui.library.groupings
 
 enum class LibraryGrouping {
-    Playlists
+    Playlists,
+    Albums,
+    Artists,
+    Songs
 }

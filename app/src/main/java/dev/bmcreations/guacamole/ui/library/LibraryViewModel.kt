@@ -3,6 +3,7 @@ package dev.bmcreations.guacamole.ui.library
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import dev.bmcreations.guacamole.ui.library.artists.Artist
 import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.*
@@ -20,21 +21,35 @@ import java.util.concurrent.Executors
 class LibraryViewModel(
     val librarySource: LibrarySource,
     val musicQueue: MusicQueue
-): CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
+) : CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
 
     var recentsNetworkState: LiveData<NetworkState>? = null
     var recentlyAdded: LiveData<PagedList<RecentlyAddedEntity>>? = null
 
     private var _playlists: List<LibraryPlaylist> = listOf()
-    set(value) {
-        field = value
-        playlists.value = value
-    }
+        set(value) {
+            field = value
+            playlists.value = value
+        }
     val playlists = MutableLiveData<List<LibraryPlaylist>>()
+
+    private var _albums: List<LibraryAlbum> = listOf()
+        set(value) {
+            field = value
+            albums.value = value
+        }
+    val albums = MutableLiveData<List<LibraryAlbum>>()
+
+    val artists = Transformations.map(albums) { list ->
+        list.map { Artist(name = it.artist) }.sortedBy { it.name?.toLowerCase() }.distinctBy { it.name }.filterNot { it.name?.trim().isNullOrBlank() }
+    }
+
+    val songs = Transformations.map(albums) { albums -> albums.map { it.trackList }}
 
     val selected: MutableLiveData<LibraryResult?> = MutableLiveData()
 
     init {
+        initializeLibraryAlbums()
         initializePlaylists()
         initializeRecents()
 
@@ -45,9 +60,27 @@ class LibraryViewModel(
         viewModelScope.launch {
             librarySource.getAllLibraryPlaylists().let {
                 when (it) {
-                    is Outcome.Success -> viewModelScope.launch(Dispatchers.Main) { _playlists = it.data }
+                    is Outcome.Success -> viewModelScope.launch(Dispatchers.Main) {
+                        _playlists = it.data ?: emptyList()
+                    }
                     is Outcome.Failure -> it.e.printStackTrace()
-                    else -> {}
+                    else -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initializeLibraryAlbums() {
+        viewModelScope.launch {
+            librarySource.getAllLibraryAlbums().let {
+                when (it) {
+                    is Outcome.Success -> viewModelScope.launch(Dispatchers.Main) {
+                        _albums = it.data ?: emptyList()
+                    }
+                    is Outcome.Failure -> it.e.printStackTrace()
+                    else -> {
+                    }
                 }
             }
         }
@@ -57,7 +90,8 @@ class LibraryViewModel(
         val recentFactory = RecentlyAddedDataFactory().apply {
             this.provideLibrarySource(librarySource)
         }
-        recentsNetworkState = Transformations.switchMap(recentFactory.mutableLiveData) { source -> source.networkState }
+        recentsNetworkState =
+            Transformations.switchMap(recentFactory.mutableLiveData) { source -> source.networkState }
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setInitialLoadSizeHint(10)
@@ -74,7 +108,9 @@ class LibraryViewModel(
                 val outcome = repo.getLibraryAlbumById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        viewModelScope.launch(Dispatchers.Main) { selected.value = Album(outcome.data) }
+                        viewModelScope.launch(Dispatchers.Main) {
+                            selected.value = Album(outcome.data)
+                        }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }
@@ -94,7 +130,9 @@ class LibraryViewModel(
                 val outcome = repo.getLibraryPlaylistById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        viewModelScope.launch(Dispatchers.Main) { selected.value = Playlist(outcome.data) }
+                        viewModelScope.launch(Dispatchers.Main) {
+                            selected.value = Playlist(outcome.data)
+                        }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }
@@ -110,7 +148,9 @@ class LibraryViewModel(
                 val outcome = repo.getLibraryPlaylistWithTracksById(id)
                 when (outcome) {
                     is Outcome.Success -> {
-                        viewModelScope.launch(Dispatchers.Main) { selected.value = Playlist(outcome.data) }
+                        viewModelScope.launch(Dispatchers.Main) {
+                            selected.value = Playlist(outcome.data)
+                        }
                     }
                     is Outcome.Failure -> {
                         info { outcome.e.localizedMessage }

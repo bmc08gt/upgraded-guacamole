@@ -136,8 +136,8 @@ class AlbumDetailFragment : NavigationStackFragment() {
         vm?.selected?.observe(this, Observer {
             it?.let { ret ->
                 when (ret) {
-                    is Playlist -> loadPlaylist(ret.playlist)
-                    is Album -> loadAlbum(ret.album)
+                    is Playlist -> ret.playlist?.let { loadPlaylist(it) }
+                    is Album -> ret.album?.let { loadAlbum(it) }
                 }
 
             }
