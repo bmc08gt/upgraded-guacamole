@@ -50,6 +50,7 @@ dependencies {
     implementation deps.jetpack.navigation_fragment
     implementation deps.jetpack.navigation_ui
     implementation deps.jetpack.lifecycle_extensions
+    implementation deps.jetpack.lifecycle_livedata_ktx
     implementation deps.jetpack.localbroadcast
     implementation deps.jetpack.navigation_fragment_ktx
     implementation deps.jetpack.navigation_ui_ktx
