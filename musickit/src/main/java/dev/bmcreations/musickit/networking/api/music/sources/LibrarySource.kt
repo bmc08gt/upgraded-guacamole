@@ -6,8 +6,6 @@ import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.provideLibraryService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 
 class LibrarySource(
@@ -44,6 +42,7 @@ class LibrarySource(
                 album?.apply {
                     name = attributes?.name
                     artist = attributes?.artistName
+                    artwork = attributes?.artwork?.urlWithDimensions
                     trackList = relationships?.tracks?.data?.filterNotNull()
                 }
                 ret = Outcome.success(album)
@@ -68,6 +67,7 @@ class LibrarySource(
                 this?.map {
                     it.name = it.attributes?.name
                     it.artist = it.attributes?.artistName
+                    it.artwork = it.attributes?.artwork?.urlWithDimensions
                     it.trackList = it.relationships?.tracks?.data?.filterNotNull()
                 }
             })
@@ -101,6 +101,7 @@ class LibrarySource(
                 ret = Outcome.success(record.apply {
                     name = record.attributes?.name
                     artist = "Various Artists"
+                    artwork = this.attributes?.artwork?.urlWithDimensions
                     isPlaylist = true
                 })
             }
@@ -123,6 +124,7 @@ class LibrarySource(
                     record.apply {
                         name = record.attributes?.name
                         artist = "Various Artists"
+                        artwork = this.attributes?.artwork?.urlWithDimensions
                         trackList = data
                         isPlaylist = true
                     }

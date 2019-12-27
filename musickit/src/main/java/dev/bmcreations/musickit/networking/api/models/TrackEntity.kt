@@ -9,6 +9,7 @@ import kotlinx.android.parcel.Parcelize
 open class Container(
     var name: String? = null,
     var artist: String? = null,
+    var artwork: String? = null,
     var trackList: List<Track>? = emptyList(),
     var isPlaylist: Boolean = false
 ): Parcelable
