@@ -14,7 +14,7 @@ interface LibraryService {
 
     @GET("me/library/albums")
     fun getAllLibraryAlbumsAsync(
-        @Query("include") relationships: String? = null,
+        @Query("include") relationships: String? = "tracks",
         @Query("limit") limit: Int = 100,
         @Query("offset") offset: Int?): Deferred<LibraryAlbumResult>
 
@@ -32,4 +32,11 @@ interface LibraryService {
 
     @GET("me/library/playlists/{id}/tracks")
     fun getLibraryPlaylistTracksByIdAsync(@Path("id") id: String?): Deferred<TrackResult>
+
+    @GET("me/library/songs")
+    fun getAllLibrarySongsAsync(
+        @Query("include") relationships: String? = "albums,artists",
+        @Query("limit") limit: Int = 100,
+        @Query("offset") offset: Int?
+    ): Deferred<LibrarySongResult>
 }

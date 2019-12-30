@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import dev.bmcreations.guacamole.ui.library.artists.Artist
+import dev.bmcreations.guacamole.ui.library.songs.Song
 import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.*
@@ -33,23 +34,33 @@ class LibraryViewModel(
         }
     val playlists = MutableLiveData<List<LibraryPlaylist>>()
 
-    private var _albums: List<LibraryAlbum> = listOf()
-        set(value) {
-            field = value
-            albums.value = value
-        }
-    val albums = MutableLiveData<List<LibraryAlbum>>()
+    private var tracks = MutableLiveData<List<Track>>()
 
-    val artists = Transformations.map(albums) { list ->
-        list.map { Artist(name = it.artist) }.sortedBy { it.name?.toLowerCase() }.distinctBy { it.name }.filterNot { it.name?.trim().isNullOrBlank() }
+    val songs = Transformations.map(tracks) { entities ->
+        entities.map { entity -> TrackEntity(entity, entity.librarySongContainer(entities)) }
     }
 
-    val songs = Transformations.map(albums) { albums -> albums.map { it.trackList }}
+    val artists = Transformations.map(tracks) { list ->
+        list.asSequence()
+            .mapNotNull { it.relationships?.artists?.data?.firstOrNull() }
+            .map { Artist(it.attributes?.name) }
+            .filterNot { it.name?.trim().isNullOrBlank() }
+            .distinctBy { it.name }
+            .sortedBy { it.name?.toLowerCase() }
+            .toList()
+    }
+
+//    val albums = Transformations.map(tracks) { list ->
+//        list.asSequence()
+//            .mapNotNull { Album
+//            song.relationships?.albums?.data?.firstOrNull()
+//        }.map {  }
+//    }
 
     val selected: MutableLiveData<LibraryResult?> = MutableLiveData()
 
     init {
-        initializeLibraryAlbums()
+        initializeLibrarySongs()
         initializePlaylists()
         initializeRecents()
 
@@ -71,19 +82,8 @@ class LibraryViewModel(
         }
     }
 
-    private fun initializeLibraryAlbums() {
-        viewModelScope.launch {
-            librarySource.getAllLibraryAlbums().let {
-                when (it) {
-                    is Outcome.Success -> viewModelScope.launch(Dispatchers.Main) {
-                        _albums = it.data ?: emptyList()
-                    }
-                    is Outcome.Failure -> it.e.printStackTrace()
-                    else -> {
-                    }
-                }
-            }
-        }
+    private fun initializeLibrarySongs() {
+        librarySource.getAllLibrarySongs(tracks)
     }
 
     private fun initializeRecents() {

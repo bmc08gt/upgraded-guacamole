@@ -16,7 +16,7 @@ fun LibraryPlaylist.toEntities(): List<TrackEntity> = trackList?.map { t -> Trac
 
 val LibraryPlaylist.durationInMillis: Long
     get() {
-        return trackList?.sumByLong { it.attributes?.durationInMillis ?: 0 } ?: 0
+        return trackList?.sumByLong { it.attributes?.durationInMillis?.toLong() ?: 0 } ?: 0
     }
 val LibraryPlaylist.durationInMinutes: Long
     get() {

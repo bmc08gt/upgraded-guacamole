@@ -13,7 +13,7 @@ class TrackListAdapter : ListAdapter<TrackEntity, TrackVH>(TRACK_DATA_DIFF_CALLB
     var onTrackSelected: ((TrackVH) -> (Unit))? = null
 
     override fun getItemViewType(position: Int): Int {
-        return if (super.getItem(position).container.isPlaylist) PLAYLIST else ALBUM
+        return if (super.getItem(position).container?.isPlaylist == true) PLAYLIST else ALBUM
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackVH {

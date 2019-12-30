@@ -52,7 +52,6 @@ class LibraryPlaylistFragment: LibraryBaseFragment() {
 
         enableToolbarTranslationEffects(false)
         showToolbarElevation(true)
-        setToolbarTitle(R.string.title_playlists)
 
         observe()
     }

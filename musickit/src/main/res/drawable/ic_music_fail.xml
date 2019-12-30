@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <padding android:top="32dp" android:bottom="32dp" android:left="32dp" android:right="32dp" />
-            <solid android:color="@android:color/white" />
+            <solid android:color="?android:windowBackground" />
         </shape>
     </item>
     <item android:drawable="@drawable/ic_music_note" />

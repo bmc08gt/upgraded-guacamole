@@ -32,7 +32,7 @@ class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(item
 
     fun hideVisualization() {
         entity?.let {
-            if (it.container.isPlaylist) {
+            if (it.container?.isPlaylist == true) {
                 itemView.playlist_track_art.removeTint()
                 itemView.peq.stop()
                 itemView.peq.gone()
@@ -46,9 +46,9 @@ class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(item
 
     fun pauseVisualization() {
         entity?.let {
-            if (it.container.isPlaylist) {
+            if (it.container?.isPlaylist == true) {
                 if (!itemView.peq.isVisible()) {
-                    if (it.container.isPlaylist) {
+                    if (it.container?.isPlaylist == true) {
                         itemView.playlist_track_art.tint(itemView.context.colors[R.color.equalizer_album_overlay])
                         itemView.peq.visible()
                     }
@@ -66,7 +66,7 @@ class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(item
 
     fun visualizePlayback() {
         entity?.let {
-            if (it.container.isPlaylist) {
+            if (it.container?.isPlaylist == true) {
                 if (!itemView.peq.isVisible()) {
                     itemView.playlist_track_art.tint(itemView.context.colors[R.color.equalizer_album_overlay])
                     itemView.peq.visible()

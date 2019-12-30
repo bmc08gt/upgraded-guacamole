@@ -14,7 +14,7 @@ fun LibraryAlbum.toEntities(): List<TrackEntity> = relationships?.tracks?.data?.
 
 val LibraryAlbum.Relationships.Tracks.durationInMillis: Long
     get() {
-        return this.data?.sumByLong { it?.attributes?.durationInMillis ?: 0L } ?: 0
+        return this.data?.sumByLong { it?.attributes?.durationInMillis?.toLong() ?: 0L } ?: 0
     }
 val LibraryAlbum.Relationships.Tracks.durationInMinutes: Long
     get() {
@@ -46,7 +46,12 @@ data class LibraryAlbum(
     val relationships: Relationships?,
     @SerializedName("type")
     val type: String?
-) : Container(attributes?.name, attributes?.artistName, relationships?.tracks?.data?.filterNotNull() ?: emptyList()), Parcelable {
+) : Container(
+    attributes?.name,
+    attributes?.artistName,
+    attributes?.artwork?.urlWithDimensions,
+    relationships?.tracks?.data?.filterNotNull() ?: emptyList()
+), Parcelable {
     @Parcelize
     data class Relationships(
         @SerializedName("tracks")

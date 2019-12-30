@@ -48,7 +48,6 @@ class LibraryArtistsFragment: LibraryBaseFragment() {
 
         enableToolbarTranslationEffects(false)
         showToolbarElevation(true)
-        setToolbarTitle(R.string.title_artists)
 
         observe()
     }

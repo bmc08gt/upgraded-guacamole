@@ -31,7 +31,7 @@ class LibraryFragment: LibraryBaseFragment() {
                     LibraryGrouping.Playlists -> findNavController().navigate(R.id.show_library_playlists)
                     LibraryGrouping.Albums -> {}
                     LibraryGrouping.Artists -> findNavController().navigate(R.id.show_library_artists)
-                    LibraryGrouping.Songs -> {}
+                    LibraryGrouping.Songs -> findNavController().navigate(R.id.show_library_songs)
                     null -> TODO()
                 }
 

@@ -1,5 +1,6 @@
 package dev.bmcreations.musickit.networking.api.music.sources
 
+import androidx.lifecycle.MutableLiveData
 import dev.bmcreations.musickit.extensions.paged
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.api.models.*
@@ -48,29 +49,6 @@ class LibrarySource(
                 ret = Outcome.success(album)
 
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ret = Outcome.failure(e)
-        }
-        return ret
-    }
-
-    suspend fun getAllLibraryAlbums(): Outcome<List<LibraryAlbum>> {
-        storeFrontSource.updateStoreIfNeeded()
-        var ret: Outcome<List<LibraryAlbum>>
-        try {
-            val results = paged<List<LibraryAlbum>, LibraryAlbumResult>(
-                pagedCall = { next -> library.getAllLibraryAlbumsAsync(offset = next?.substringAfter("offset=")?.toInt()) },
-                scope = this
-            )
-            ret = Outcome.success(results.apply {
-                this?.map {
-                    it.name = it.attributes?.name
-                    it.artist = it.attributes?.artistName
-                    it.artwork = it.attributes?.artwork?.urlWithDimensions
-                    it.trackList = it.relationships?.tracks?.data?.filterNotNull()
-                }
-            })
         } catch (e: Exception) {
             e.printStackTrace()
             ret = Outcome.failure(e)
@@ -139,4 +117,22 @@ class LibrarySource(
         return ret
     }
 
+    fun getAllLibrarySongs(tracks: MutableLiveData<List<Track>>) {
+        storeFrontSource.updateStoreIfNeeded()
+        try {
+            paged(
+                pagedCall = { next ->
+                    library.getAllLibrarySongsAsync(
+                        offset = next?.substringAfter(
+                            "offset="
+                        )?.toInt()
+                    )
+                },
+                scope = this,
+                liveData = tracks
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

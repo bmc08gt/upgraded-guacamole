@@ -1,18 +1,18 @@
 package dev.bmcreations.musickit.networking.api.models
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+
 import kotlinx.android.parcel.Parcelize
+import android.os.Parcelable
 
 @Parcelize
-data class TrackResult(val data: List<Track>) : Parcelable
+open class LibrarySongResult: PagedListImpl<Track>(), Parcelable
 
 @Parcelize
-data class Track(
-    val attributes: Attributes?,
-    val href: String?,
+data class LibrarySong(
     val id: String?,
     val type: String?,
+    val href: String?,
+    val attributes: Attributes?,
     val relationships: Relationships?
 ) : Parcelable {
     @Parcelize
@@ -28,28 +28,19 @@ data class Track(
         val trackNumber: Int?,
         val contentRating: String?
     ) : Parcelable {
-
         @Parcelize
         data class Artwork(
-            @SerializedName("height")
+            val width: Int?,
             val height: Int?,
-            @SerializedName("url")
-            val url: String?,
-            @SerializedName("width")
-            val width: Int?
+            val url: String?
         ) : Parcelable
 
         @Parcelize
         data class PlayParams(
-            @SerializedName("id")
             val id: String?,
-            @SerializedName("isLibrary")
-            val isLibrary: Boolean?,
-            @SerializedName("kind")
             val kind: String?,
-            @SerializedName("reporting")
+            val isLibrary: Boolean?,
             val reporting: Boolean?,
-            @SerializedName("catalogId")
             val catalogId: String?
         ) : Parcelable
     }
@@ -71,21 +62,3 @@ data class Track(
         ): Parcelable
     }
 }
-
-val Track.Attributes.Artwork.urlWithDimensions: String?
-    get() {
-        return url?.let { url ->
-            val w = width ?: 600
-            val h = height ?: 600
-            return url.replace(
-                "{w}", w.toString(), ignoreCase = false
-            ).replace(
-                "{h}", h.toString(), ignoreCase = false
-            )
-        }
-    }
-
-val Track.Attributes.isExplicit: Boolean
-    get() {
-        return contentRating?.equals("explicit", ignoreCase = true) ?: false
-    }

@@ -40,7 +40,7 @@ fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
         }
     }
 
-    if (container.isPlaylist) {
+    if (container?.isPlaylist == true) {
         holder.itemView.track_name.text = this.track.attributes?.name
         holder.itemView.track_artist.text = this.track.attributes?.artistName
         if (this.track.attributes?.isExplicit == true) {

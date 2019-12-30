@@ -11,6 +11,7 @@
         <action android:id="@+id/show_library_playlists" app:destination="@id/fragment_playlists" />
         <action android:id="@+id/show_library_albums" app:destination="@id/fragment_albums" />
         <action android:id="@+id/show_library_artists" app:destination="@id/fragment_artists" />
+        <action android:id="@+id/show_library_songs" app:destination="@id/fragment_songs" />
     </fragment>
 
     <fragment android:id="@+id/menu_for_you"
@@ -31,14 +32,18 @@
 
     <fragment android:id="@+id/fragment_artists"
         android:name="dev.bmcreations.guacamole.ui.library.artists.LibraryArtistsFragment"
-        android:label="@string/title_playlists">
+        android:label="@string/title_artists">
         <action android:id="@+id/show_details_for_playlist" app:destination="@id/fragment_details" />
     </fragment>
 
+    <fragment android:id="@+id/fragment_songs"
+        android:name="dev.bmcreations.guacamole.ui.library.songs.LibrarySongsFragment"
+        android:label="@string/title_songs" />
+
     <fragment android:id="@+id/fragment_albums"
         android:name="dev.bmcreations.guacamole.ui.library.playlists.LibraryPlaylistFragment"
-        android:label="@string/title_playlists">
-        <action android:id="@+id/show_details_for_playlist" app:destination="@id/fragment_details" />
+        android:label="@string/title_albums">
+        <action android:id="@+id/show_details_for_album" app:destination="@id/fragment_details" />
     </fragment>
 
     <fragment android:id="@+id/fragment_details"

@@ -5,4 +5,5 @@
     <color name="root_background">#000000</color>
     <color name="defaultOutlineAmbientShadowColor">#0AFFFFFF</color>
     <color name="defaultOutlineSpotShadowColor">#30FFFFFF</color>
+    <color name="track_outline">#99FFFFFF</color>
 </resources>

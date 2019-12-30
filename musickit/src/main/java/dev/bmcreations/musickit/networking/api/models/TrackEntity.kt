@@ -15,20 +15,20 @@ open class Container(
 ): Parcelable
 
 @Parcelize
-data class TrackEntity(val track: Track, val container: Container): Parcelable {
+data class TrackEntity(val track: Track, val container: Container?): Parcelable {
     fun toMetadataBuilder(): MediaMetadataCompat.Builder {
         return MediaMetadataCompat.Builder().apply {
             this@TrackEntity.track.also { track ->
                 this.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.attributes?.playParams?.catalogId)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, container.name)
+                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, container?.name)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.attributes?.artistName)
-                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, container.artist)
+                this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, container?.artist)
                 this.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.attributes?.name)
-                this.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.attributes?.durationInMillis ?: 0)
+                this.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.attributes?.durationInMillis?.toLong() ?: 0)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, track.attributes?.artwork?.urlWithDimensions)
                 this.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, track.attributes?.trackNumber?.toLong() ?: 0)
-                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (container.trackList?.count() ?: 0).toLong())
+                this.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, (container?.trackList?.count() ?: 0).toLong())
             }
         }
     }
@@ -37,3 +37,5 @@ data class TrackEntity(val track: Track, val container: Container): Parcelable {
         return toMetadataBuilder().build()
     }
 }
+
+fun Track.librarySongContainer(trackList: List<Track>?): Container = Container(attributes?.albumName, attributes?.artistName, attributes?.artwork?.urlWithDimensions, trackList, true)
