@@ -14,6 +14,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.graph
+import dev.bmcreations.guacamole.media.State
 import dev.bmcreations.guacamole.models.apple.*
 import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
@@ -24,20 +25,21 @@ import kotlinx.android.synthetic.main.fragment_album_detail.view.*
 class AlbumDetailFragment : NavigationStackFragment() {
 
     private val librarySource get() = context?.graph()?.networkGraph?.librarySource
-    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
+    private val geniusSearch get() = context?.graph()?.networkGraph?.geniusSearchSource
+    private val mediaState get() = context?.graph()?.sessionGraph?.mediaState
 
     private val vm by lazy {
         librarySource?.let { source ->
-            musicQueue?.let { queue ->
-                getViewModel { LibraryViewModel(source, queue) } }
+            geniusSearch?.let { genius ->
+                getViewModel { LibraryViewModel(source, genius) }
             }
+        }
     }
-
 
     private val nowPlaying by lazy {
         activity?.let { a ->
-            musicQueue?.let {
-                a.getViewModel { NowPlayingViewModel.create(a, it) }
+            mediaState?.let {
+                a.getViewModel { NowPlayingViewModel.create(it) }
             }
         }
     }
@@ -85,11 +87,11 @@ class AlbumDetailFragment : NavigationStackFragment() {
 
         albumArtist?.let { artist_name.text = it }
         albumName?.let { album_name.text = it }
-        albumId?.let {
+        albumId?.let { id ->
             if (playlist) {
-                vm?.getLibraryPlaylistWithTracksById(it)
+                vm?.getLibraryPlaylistWithTracksById(id) { result -> result.playlist?.let { loadPlaylist(it) } }
             } else {
-                vm?.getLibraryAlbumById(it)
+                vm?.getLibraryAlbumById(id) { result -> result.album?.let { loadAlbum(it) } }
             }
         }
         descriptionSummary?.let {
@@ -98,10 +100,10 @@ class AlbumDetailFragment : NavigationStackFragment() {
         }
 
         play.setOnClickListener {
-            nowPlaying?.playAlbum(collection)
+            nowPlaying?.playCollection(collection)
         }
         shuffle.setOnClickListener {
-            nowPlaying?.shuffleAlbum(collection)
+            nowPlaying?.shuffleCollection(collection)
         }
 
         enableToolbarTranslationEffects(true)
@@ -132,19 +134,10 @@ class AlbumDetailFragment : NavigationStackFragment() {
     }
 
     private fun observe() {
-        vm?.selected?.observe(this, Observer {
-            it?.let { ret ->
-                when (ret) {
-                    is Playlist -> ret.playlist?.let { loadPlaylist(it) }
-                    is Album -> ret.album?.let { loadAlbum(it) }
-                }
-
-            }
-        })
-        nowPlaying?.playState?.observe(viewLifecycleOwner, Observer {
+        mediaState?.playState?.observe(viewLifecycleOwner, Observer {
             when (it) {
-                NowPlayingViewModel.State.Playing,
-                NowPlayingViewModel.State.Paused -> tracks.swapAdapter(adapter, true)
+                State.Playing,
+                State.Paused -> tracks.swapAdapter(adapter, true)
             }
         })
     }

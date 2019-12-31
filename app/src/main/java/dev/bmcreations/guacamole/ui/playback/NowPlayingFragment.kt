@@ -12,20 +12,19 @@ import dev.bmcreations.guacamole.extensions.getViewModel
 import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.visible
 import dev.bmcreations.guacamole.graph
+import dev.bmcreations.guacamole.media.State
 import dev.bmcreations.guacamole.ui.details.populateMiniPlayer
-import dev.bmcreations.guacamole.ui.library.LibraryViewModel
-import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel.State
 import kotlinx.android.synthetic.main.now_playing_mini.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
 
 class NowPlayingFragment : Fragment() {
 
-    private val musicQueue get() = context?.graph()?.sessionGraph?.musicQueue
+    private val mediaState get() = context?.graph()?.sessionGraph?.mediaState
 
     private val viewModel by lazy {
         activity?.let { a ->
-            musicQueue?.let {
-                a.getViewModel { NowPlayingViewModel.create(a, it) }
+            mediaState?.let {
+                a.getViewModel { NowPlayingViewModel.create(it) }
             }
         }
     }
@@ -52,8 +51,8 @@ class NowPlayingFragment : Fragment() {
     }
 
     private fun observe() {
-        viewModel?.playState?.observe(viewLifecycleOwner, Observer { handlePlayState(it) })
-        viewModel?.selectedTrack?.observe(viewLifecycleOwner, Observer { it?.populateMiniPlayer(root) })
+        mediaState?.playState?.observe(viewLifecycleOwner, Observer { handlePlayState(it) })
+        mediaState?.currentTrack?.observe(viewLifecycleOwner, Observer { it?.populateMiniPlayer(root) })
     }
 
     private fun handlePlayState(state: State) {

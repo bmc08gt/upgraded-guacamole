@@ -9,6 +9,7 @@ import dev.bmcreations.networking.auth.toTokenReason
 import dev.bmcreations.networking.api.apple.services.CatalogService
 import dev.bmcreations.networking.api.apple.services.LibraryService
 import dev.bmcreations.networking.api.apple.services.StoreFrontService
+import dev.bmcreations.networking.api.genius.services.SearchService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,6 +29,10 @@ fun provideCatalogService(retrofit: Retrofit): CatalogService {
 
 fun provideStoreFrontService(retrofit: Retrofit): StoreFrontService {
     return retrofit.create(StoreFrontService::class.java)
+}
+
+fun provideGeniusSearchService(retrofit: Retrofit): SearchService {
+    return retrofit.create(SearchService::class.java)
 }
 
 fun provideOkHttpClientBuilder(tokenProvider: TokenProviding): OkHttpClient.Builder {

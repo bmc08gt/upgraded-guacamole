@@ -17,8 +17,8 @@ class LibrarySongsFragment : LibraryBaseFragment() {
 
     private val nowPlaying by lazy {
         activity?.let { a ->
-            musicQueue?.let {
-                a.getViewModel { NowPlayingViewModel.create(a, it) }
+            mediaState?.let {
+                a.getViewModel { NowPlayingViewModel.create(it) }
             }
         }
     }

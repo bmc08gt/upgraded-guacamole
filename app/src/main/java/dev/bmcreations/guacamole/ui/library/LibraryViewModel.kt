@@ -10,6 +10,7 @@ import dev.bmcreations.networking.api.apple.sources.LibrarySource
 import dev.bmcreations.networking.api.apple.sources.RecentlyAddedDataFactory
 import dev.bmcreations.guacamole.media.MusicQueue
 import dev.bmcreations.guacamole.models.apple.*
+import dev.bmcreations.networking.api.genius.sources.GeniusSearchSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ import java.util.concurrent.Executors
 
 class LibraryViewModel(
     val librarySource: LibrarySource,
-    val musicQueue: MusicQueue
+    val geniusSearch: GeniusSearchSource
 ) : CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
 
     var recentsNetworkState: LiveData<NetworkState>? = null
@@ -61,14 +62,10 @@ class LibraryViewModel(
 //        }.map {  }
 //    }
 
-    val selected: MutableLiveData<LibraryResult?> = MutableLiveData()
-
     init {
         initializeLibrarySongs()
         initializePlaylists()
         initializeRecents()
-
-        selected.value = null
     }
 
     private fun initializePlaylists() {
@@ -106,17 +103,14 @@ class LibraryViewModel(
             .build()
     }
 
-    fun getLibraryAlbumById(id: String) {
+    fun getLibraryAlbumById(id: String, cb: (Album) -> Unit) {
         librarySource.let { repo ->
             viewModelScope.launch {
                 val outcome = repo.getLibraryAlbumById(id)
                 when (outcome) {
                     is Outcome.Success -> {
                         viewModelScope.launch(Dispatchers.Main) {
-                            selected.value =
-                                Album(
-                                    outcome.data
-                                )
+                            cb.invoke(Album(outcome.data))
                         }
                     }
                     is Outcome.Failure -> {
@@ -131,17 +125,14 @@ class LibraryViewModel(
         initializePlaylists()
     }
 
-    fun getLibraryPlaylistById(id: String) {
+    fun getLibraryPlaylistById(id: String, cb: (Playlist) -> Unit) {
         librarySource.let { repo ->
             viewModelScope.launch {
                 val outcome = repo.getLibraryPlaylistById(id)
                 when (outcome) {
                     is Outcome.Success -> {
                         viewModelScope.launch(Dispatchers.Main) {
-                            selected.value =
-                                Playlist(
-                                    outcome.data
-                                )
+                            cb.invoke(Playlist(outcome.data))
                         }
                     }
                     is Outcome.Failure -> {
@@ -152,17 +143,14 @@ class LibraryViewModel(
         }
     }
 
-    fun getLibraryPlaylistWithTracksById(id: String) {
+    fun getLibraryPlaylistWithTracksById(id: String, cb: (Playlist) -> Unit) {
         librarySource.let { repo ->
             viewModelScope.launch {
                 val outcome = repo.getLibraryPlaylistWithTracksById(id)
                 when (outcome) {
                     is Outcome.Success -> {
                         viewModelScope.launch(Dispatchers.Main) {
-                            selected.value =
-                                Playlist(
-                                    outcome.data
-                                )
+                            cb.invoke(Playlist(outcome.data))
                         }
                     }
                     is Outcome.Failure -> {

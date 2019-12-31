@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
-import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import dev.bmcreations.guacamole.extensions.mediaId
+import dev.bmcreations.guacamole.media.MediaState
 import dev.bmcreations.guacamole.models.apple.TrackEntity
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.equalizer as peq
@@ -16,14 +16,14 @@ import kotlinx.android.synthetic.main.album_track_entity.view.equalizer as aeq
 
 class TrackVH private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    var nowPlaying: NowPlayingViewModel? = null
+    var mediaState: MediaState? = null
     var onClick: ((TrackVH) -> Unit)? = null
 
     var entity: TrackEntity? = null
         set(value) {
             field = value
             value?.let { entity ->
-                entity.populate(this@TrackVH, nowPlaying)
+                entity.populate(this@TrackVH, mediaState)
                 entity.toMetadata().mediaId?.let {
                     itemView.setOnClickListener { onClick?.invoke(this) }
                 }

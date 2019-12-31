@@ -63,6 +63,8 @@ dependencies {
     implementation deps.anko.commons
 
     implementation deps.retrofit.gson
+    implementation deps.okhttp3_logging
+
 
     implementation deps.observablescrolling
 

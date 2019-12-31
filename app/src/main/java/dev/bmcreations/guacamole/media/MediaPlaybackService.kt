@@ -27,7 +27,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     private var serviceInStartedState = false
 
     private val tokenProvider get() = graph().sessionGraph.tokenProvider
-    private val mediaQueue get() = graph().sessionGraph.musicQueue
+    private val mediaQueue get() = graph().sessionGraph.mediaState.queue
 
     override fun onCreate() {
         super.onCreate()

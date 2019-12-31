@@ -1,20 +1,16 @@
 package dev.bmcreations.guacamole.ui.library.artists
 
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.guacamole.extensions.dp
 import kotlinx.android.synthetic.main.library_artist_row_entity.view.*
 
-data class Artist(val name: String?, val url: String? = null)
+data class Artist(val name: String?, var url: String? = null)
 
 class LibraryArtistVH(itemView: View): RecyclerView.ViewHolder(itemView) {
     var onClick: ((Artist) -> Unit)? = null

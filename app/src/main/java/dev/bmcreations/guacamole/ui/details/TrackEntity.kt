@@ -6,10 +6,11 @@ import coil.api.load
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.visible
+import dev.bmcreations.guacamole.media.MediaState
+import dev.bmcreations.guacamole.media.State
 import dev.bmcreations.guacamole.models.apple.TrackEntity
 import dev.bmcreations.guacamole.models.apple.isExplicit
 import dev.bmcreations.guacamole.models.apple.urlWithDimensions
-import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.explicit
@@ -29,15 +30,15 @@ val TRACK_DATA_DIFF_CALLBACK
     ): Boolean = oldItem == newItem
 }
 
-fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
+fun TrackEntity.populate(holder: TrackVH, mediaState: MediaState?) {
     holder.hideVisualization()
-    val selected = nowPlaying?.selectedTrack?.value
+    val selected = mediaState?.currentTrack?.value
     if (selected == this) {
-        nowPlaying.playState.value?.let { state ->
+        mediaState.playState.value?.let { state ->
             when (state) {
-                NowPlayingViewModel.State.Playing -> holder.visualizePlayback()
-                NowPlayingViewModel.State.Paused,
-                NowPlayingViewModel.State.Initializing -> holder.pauseVisualization()
+                State.Playing -> holder.visualizePlayback()
+                State.Paused,
+                State.Initializing -> holder.pauseVisualization()
             }
         }
     }

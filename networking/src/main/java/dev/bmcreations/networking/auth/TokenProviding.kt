@@ -3,6 +3,7 @@ package dev.bmcreations.networking.auth
 interface TokenProviding {
     fun getDeveloperToken(): String
     fun getUserToken(): String
+    fun getGeniusApiToken(): String?
     fun onTokenExpired(reason: InvalidTokenReason)
 }
 

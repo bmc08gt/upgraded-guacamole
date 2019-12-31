@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.graph
+import dev.bmcreations.guacamole.media.MediaStateLifecycleObserver
 import dev.bmcreations.guacamole.ui.login.LoginActivity
 import dev.bmcreations.guacamole.ui.navigation.ActivityNavigation
 import dev.bmcreations.guacamole.ui.settings.SettingsActivity
@@ -37,6 +38,8 @@ class HomeActivity : AppCompatActivity(), ActivityNavigation, AnkoLogger, Fragme
         navController = findNavController(R.id.nav_host_fragment).also {
             navView.setupWithNavController(it)
         }
+
+        MediaStateLifecycleObserver.registerLifecycle(lifecycle)
 
         setSupportActionBar(mainToolbar)
         mainToolbar.registerAppBarLayout(appbar)

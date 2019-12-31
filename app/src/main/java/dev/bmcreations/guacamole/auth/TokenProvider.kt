@@ -18,6 +18,8 @@ class TokenProvider private constructor(
 
     override fun getUserToken(): String = prefs.currentUser?.token ?: ""
 
+    override fun getGeniusApiToken(): String? = context.strings[R.string.genius_api_token]
+
     companion object {
         fun with(context: Context, userPreferences: UserPreferences, expiredCallback: TokenExpiredCallback?): TokenProvider {
             return TokenProvider(context, userPreferences, expiredCallback)
