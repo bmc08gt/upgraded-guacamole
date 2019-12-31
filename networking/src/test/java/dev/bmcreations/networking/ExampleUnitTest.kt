@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit
+package dev.bmcreations.networking
 
 import org.junit.Test
 

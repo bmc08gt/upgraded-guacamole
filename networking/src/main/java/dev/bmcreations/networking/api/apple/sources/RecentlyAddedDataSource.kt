@@ -1,11 +1,11 @@
-package dev.bmcreations.musickit.networking.api.music.sources
+package dev.bmcreations.networking.api.apple.sources
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import dev.bmcreations.guacamole.models.RecentlyAddedEntity
-import dev.bmcreations.musickit.networking.NetworkState
-import dev.bmcreations.musickit.networking.Outcome
+import dev.bmcreations.networking.NetworkState
+import dev.bmcreations.networking.Outcome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,8 +52,18 @@ class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO),
                     networkState.postValue(NetworkState.LOADED)
                 }
                 is Outcome.Failure -> {
-                    initialLoading.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
-                    networkState.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
+                    initialLoading.postValue(
+                        NetworkState(
+                            NetworkState.Status.FAILED,
+                            ret.e.localizedMessage
+                        )
+                    )
+                    networkState.postValue(
+                        NetworkState(
+                            NetworkState.Status.FAILED,
+                            ret.e.localizedMessage
+                        )
+                    )
                 }
             }
         }
@@ -70,7 +80,12 @@ class RecentlyAddedDataSource: CoroutineScope by CoroutineScope(Dispatchers.IO),
                     networkState.postValue(NetworkState.LOADED)
 
                 }
-                is Outcome.Failure -> networkState.postValue(NetworkState(NetworkState.Status.FAILED, ret.e.localizedMessage))
+                is Outcome.Failure -> networkState.postValue(
+                    NetworkState(
+                        NetworkState.Status.FAILED,
+                        ret.e.localizedMessage
+                    )
+                )
             }
         }
     }

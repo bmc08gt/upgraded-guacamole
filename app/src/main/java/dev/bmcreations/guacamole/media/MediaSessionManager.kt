@@ -18,11 +18,11 @@ import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
 import dev.bmcreations.guacamole.models.TrackEntity
 import dev.bmcreations.guacamole.extensions.albumArtworkUrl
 import dev.bmcreations.guacamole.extensions.mediaId
-import dev.bmcreations.musickit.queue.MusicQueue
 
 class MediaSessionManager(val context: Context,
                           private val player: MediaPlayerController,
-                          private val musicQueue: MusicQueue)
+                          private val musicQueue: MusicQueue
+)
     : MediaSessionCompat.Callback() {
 
     private var queueIdentifier: String? = ""

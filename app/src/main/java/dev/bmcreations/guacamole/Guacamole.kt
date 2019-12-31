@@ -6,7 +6,7 @@ import dev.bmcreations.guacamole.auth.TokenExpiredCallback
 import dev.bmcreations.guacamole.graphs.AppGraph
 import dev.bmcreations.guacamole.graphs.NetworkGraphImpl
 import dev.bmcreations.guacamole.graphs.SessionGraphImpl
-import dev.bmcreations.musickit.auth.InvalidTokenReason
+import dev.bmcreations.networking.auth.InvalidTokenReason
 
 class Guacamole: Application() {
 

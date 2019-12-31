@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.networking.api
+package dev.bmcreations.networking.api.apple
 
 object AppleMusicApi {
     const val VERSION = 1

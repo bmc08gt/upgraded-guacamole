@@ -16,7 +16,7 @@ import dev.bmcreations.guacamole.models.TrackEntity
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.guacamole.operator.inTime
 import dev.bmcreations.guacamole.extensions.mediaId
-import dev.bmcreations.musickit.queue.MusicQueue
+import dev.bmcreations.guacamole.media.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

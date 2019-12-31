@@ -1,8 +1,5 @@
-package dev.bmcreations.musickit.networking.api.music
+package dev.bmcreations.networking.api.apple.services
 
-import dev.bmcreations.guacamole.models.CatalogAlbum
-import dev.bmcreations.guacamole.models.CatalogAlbumResult
-import dev.bmcreations.guacamole.models.CatalogPlaylistResult
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path

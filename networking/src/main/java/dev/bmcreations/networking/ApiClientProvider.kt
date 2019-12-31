@@ -1,14 +1,13 @@
-package dev.bmcreations.musickit.networking
+package dev.bmcreations.networking
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import dev.bmcreations.musickit.BuildConfig
-import dev.bmcreations.musickit.auth.TokenProviding
-import dev.bmcreations.musickit.auth.toTokenReason
-import dev.bmcreations.musickit.networking.api.music.CatalogService
-import dev.bmcreations.musickit.networking.api.music.LibraryService
-import dev.bmcreations.musickit.networking.api.music.StoreFrontService
+import dev.bmcreations.networking.auth.TokenProviding
+import dev.bmcreations.networking.auth.toTokenReason
+import dev.bmcreations.networking.api.apple.services.CatalogService
+import dev.bmcreations.networking.api.apple.services.LibraryService
+import dev.bmcreations.networking.api.apple.services.StoreFrontService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -68,7 +67,9 @@ fun provideOkHttpClient(tokenProvider: TokenProviding): OkHttpClient {
 fun provideRetrofit(
     gson: Gson = provideGson(),
     tokenProvider: TokenProviding,
-    httpClient: OkHttpClient = provideOkHttpClient(tokenProvider),
+    httpClient: OkHttpClient = provideOkHttpClient(
+        tokenProvider
+    ),
     baseUrl: String
 ): Retrofit {
     return Retrofit.Builder()

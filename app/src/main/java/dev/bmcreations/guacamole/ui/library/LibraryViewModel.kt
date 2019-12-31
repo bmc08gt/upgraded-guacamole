@@ -7,11 +7,11 @@ import dev.bmcreations.guacamole.models.LibraryPlaylist
 import dev.bmcreations.guacamole.models.RecentlyAddedEntity
 import dev.bmcreations.guacamole.models.librarySongContainer
 import dev.bmcreations.guacamole.ui.library.artists.Artist
-import dev.bmcreations.musickit.networking.NetworkState
-import dev.bmcreations.musickit.networking.Outcome
-import dev.bmcreations.musickit.networking.api.music.sources.LibrarySource
-import dev.bmcreations.musickit.networking.api.music.sources.RecentlyAddedDataFactory
-import dev.bmcreations.musickit.queue.MusicQueue
+import dev.bmcreations.networking.NetworkState
+import dev.bmcreations.networking.Outcome
+import dev.bmcreations.networking.api.apple.sources.LibrarySource
+import dev.bmcreations.networking.api.apple.sources.RecentlyAddedDataFactory
+import dev.bmcreations.guacamole.media.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

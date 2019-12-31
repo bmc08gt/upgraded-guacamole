@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit
+package dev.bmcreations.networking
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

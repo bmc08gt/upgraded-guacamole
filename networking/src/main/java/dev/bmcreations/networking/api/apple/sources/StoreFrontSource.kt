@@ -1,7 +1,6 @@
-package dev.bmcreations.musickit.networking.api.music.sources
+package dev.bmcreations.networking.api.apple.sources
 
-import dev.bmcreations.guacamole.models.UserStoreFront
-import dev.bmcreations.musickit.networking.provideStoreFrontService
+import dev.bmcreations.networking.provideStoreFrontService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

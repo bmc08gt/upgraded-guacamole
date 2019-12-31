@@ -5,7 +5,7 @@ import dev.bmcreations.guacamole.auth.TokenExpiredCallback
 import dev.bmcreations.guacamole.auth.TokenProvider
 import dev.bmcreations.guacamole.preferences.UserPreferences
 import dev.bmcreations.guacamole.repository.SessionManager
-import dev.bmcreations.musickit.queue.MusicQueue
+import dev.bmcreations.guacamole.media.MusicQueue
 
 interface SessionGraph {
     val tokenProvider: TokenProvider
@@ -18,5 +18,6 @@ class SessionGraphImpl(appContext: Context, expiredCallback: TokenExpiredCallbac
     override val userPreferences: UserPreferences = UserPreferences(appContext)
     override val tokenProvider: TokenProvider = TokenProvider.with(appContext, userPreferences, expiredCallback)
     override val sessionManager: SessionManager = SessionManager(tokenProvider, userPreferences)
-    override val musicQueue: MusicQueue = MusicQueue()
+    override val musicQueue: MusicQueue =
+        MusicQueue()
 }

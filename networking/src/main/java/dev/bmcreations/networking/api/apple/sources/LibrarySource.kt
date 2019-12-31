@@ -1,12 +1,13 @@
-package dev.bmcreations.musickit.networking.api.music.sources
+package dev.bmcreations.networking.api.apple.sources
 
 import androidx.lifecycle.MutableLiveData
+import dev.bmcreations.guacamole.models.LibraryAlbum
 import dev.bmcreations.guacamole.models.LibraryPlaylist
 import dev.bmcreations.guacamole.models.RecentlyAddedResult
 import dev.bmcreations.guacamole.models.urlWithDimensions
 import dev.bmcreations.guacamole.operator.paged
-import dev.bmcreations.musickit.networking.Outcome
-import dev.bmcreations.musickit.networking.provideLibraryService
+import dev.bmcreations.networking.Outcome
+import dev.bmcreations.networking.provideLibraryService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
@@ -35,9 +36,9 @@ class LibrarySource(
         return ret
     }
 
-    suspend fun getLibraryAlbumById(id: String): Outcome<dev.bmcreations.guacamole.models.LibraryAlbum?> {
+    suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum?> {
         storeFrontSource.updateStoreIfNeeded()
-        var ret: Outcome<dev.bmcreations.guacamole.models.LibraryAlbum?>
+        var ret: Outcome<LibraryAlbum?>
         val req = library.getLibraryAlbumByIdAsync(id)
         try {
             req.await().run {

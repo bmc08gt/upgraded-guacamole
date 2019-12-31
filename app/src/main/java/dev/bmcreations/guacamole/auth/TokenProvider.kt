@@ -4,8 +4,8 @@ import android.content.Context
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.preferences.UserPreferences
-import dev.bmcreations.musickit.auth.InvalidTokenReason
-import dev.bmcreations.musickit.auth.TokenProviding
+import dev.bmcreations.networking.auth.InvalidTokenReason
+import dev.bmcreations.networking.auth.TokenProviding
 
 class TokenProvider private constructor(
     private val context: Context,

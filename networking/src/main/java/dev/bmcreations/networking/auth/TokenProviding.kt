@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.auth
+package dev.bmcreations.networking.auth
 
 interface TokenProviding {
     fun getDeveloperToken(): String
