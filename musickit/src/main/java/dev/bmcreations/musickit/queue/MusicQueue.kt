@@ -2,8 +2,8 @@ package dev.bmcreations.musickit.queue
 
 import android.support.v4.media.MediaBrowserCompat
 import androidx.media.MediaBrowserServiceCompat
+import dev.bmcreations.guacamole.models.TrackEntity
 import dev.bmcreations.musickit.extensions.songName
-import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.networking.api.music.getTrackByCatalogId
 import dev.bmcreations.musickit.networking.api.music.getTrackByMediaId
 import dev.bmcreations.musickit.networking.api.music.getTrackByMetadataMediaId

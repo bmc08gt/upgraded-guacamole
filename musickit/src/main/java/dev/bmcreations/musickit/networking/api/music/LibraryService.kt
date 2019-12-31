@@ -1,10 +1,9 @@
 package dev.bmcreations.musickit.networking.api.music
 
-import dev.bmcreations.musickit.networking.api.models.*
+import dev.bmcreations.guacamole.models.LibraryPlaylistResult
+import dev.bmcreations.guacamole.models.RecentlyAddedResult
 import kotlinx.coroutines.Deferred
-import okhttp3.ResponseBody
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -16,13 +15,13 @@ interface LibraryService {
     fun getAllLibraryAlbumsAsync(
         @Query("include") relationships: String? = "tracks",
         @Query("limit") limit: Int = 100,
-        @Query("offset") offset: Int?): Deferred<LibraryAlbumResult>
+        @Query("offset") offset: Int?): Deferred<dev.bmcreations.guacamole.models.LibraryAlbumResult>
 
     @GET("me/library/albums/{id}")
-    fun getLibraryAlbumByIdAsync(@Path("id") id: String): Deferred<LibraryAlbumResult>
+    fun getLibraryAlbumByIdAsync(@Path("id") id: String): Deferred<dev.bmcreations.guacamole.models.LibraryAlbumResult>
 
     @GET("me/library/artists/{id}")
-    fun getLibraryArtistByIdAsync(@Path("id") id: String): Deferred<LibraryArtistsResult>
+    fun getLibraryArtistByIdAsync(@Path("id") id: String): Deferred<dev.bmcreations.guacamole.models.LibraryArtistsResult>
 
     @GET("me/library/playlists/{id}")
     fun getLibraryPlaylistByIdAsync(@Path("id") id: String): Deferred<LibraryPlaylistResult>
@@ -31,12 +30,12 @@ interface LibraryService {
     fun getAllLibraryPlaylistsAsync(): Deferred<LibraryPlaylistResult>
 
     @GET("me/library/playlists/{id}/tracks")
-    fun getLibraryPlaylistTracksByIdAsync(@Path("id") id: String?): Deferred<TrackResult>
+    fun getLibraryPlaylistTracksByIdAsync(@Path("id") id: String?): Deferred<dev.bmcreations.guacamole.models.TrackResult>
 
     @GET("me/library/songs")
     fun getAllLibrarySongsAsync(
         @Query("include") relationships: String? = "albums,artists",
         @Query("limit") limit: Int = 100,
         @Query("offset") offset: Int?
-    ): Deferred<LibrarySongResult>
+    ): Deferred<dev.bmcreations.guacamole.models.LibrarySongResult>
 }

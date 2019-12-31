@@ -2,7 +2,7 @@ package dev.bmcreations.guacamole.ui.library.playlists
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import dev.bmcreations.musickit.networking.api.models.LibraryPlaylist
+import dev.bmcreations.guacamole.models.LibraryPlaylist
 
 class LibraryPlaylistAdapter  : ListAdapter<LibraryPlaylist, LibraryPlaylistVH>(LIBRARY_PLAYLIST_DIFF_CALLBACK) {
 

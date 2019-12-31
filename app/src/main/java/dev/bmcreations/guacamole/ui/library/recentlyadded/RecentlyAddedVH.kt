@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
-import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
+import dev.bmcreations.guacamole.models.RecentlyAddedEntity
+import dev.bmcreations.guacamole.models.urlWithDimensions
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
 
 class RecentlyAddedVH private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {

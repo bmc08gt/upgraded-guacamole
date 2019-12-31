@@ -1,11 +1,9 @@
-package dev.bmcreations.musickit.networking.api.models
+package dev.bmcreations.guacamole.models
 
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import dev.bmcreations.musickit.extensions.sumByLong
-import dev.bmcreations.musickit.operator.FieldProperty
-import dev.bmcreations.musickit.operator.NullableFieldProperty
+import dev.bmcreations.guacamole.operator.NullableFieldProperty
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 

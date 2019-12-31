@@ -1,9 +1,8 @@
-package dev.bmcreations.musickit.networking.api.models
+package dev.bmcreations.guacamole.models
 
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import dev.bmcreations.musickit.extensions.sumByLong
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
@@ -99,4 +98,15 @@ data class LibraryAlbum(
             val width: Int?
         ) : Parcelable
     }
+}
+
+/**
+ * Returns the sum of all values produced by [selector] function applied to each element in the collection.
+ */
+inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
+    var sum = 0L
+    for (element in this) {
+        sum += selector(element)
+    }
+    return sum
 }

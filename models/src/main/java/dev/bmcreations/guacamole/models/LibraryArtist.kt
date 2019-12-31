@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.networking.api.models
+package dev.bmcreations.guacamole.models
 
 
 import kotlinx.android.parcel.Parcelize

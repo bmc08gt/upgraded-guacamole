@@ -7,11 +7,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
+import dev.bmcreations.guacamole.models.curator
+import dev.bmcreations.guacamole.models.urlWithDimensions
 import dev.bmcreations.guacamole.ui.library.LibraryBaseFragment
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
-import dev.bmcreations.musickit.networking.api.models.curator
-import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library_playlists.view.*
 import kotlinx.android.synthetic.main.library_playlist_row_entity.view.*
 

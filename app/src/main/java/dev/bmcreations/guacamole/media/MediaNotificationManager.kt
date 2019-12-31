@@ -1,5 +1,6 @@
 package dev.bmcreations.guacamole.media
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,8 +20,10 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
 import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.ui.MainActivity
-import dev.bmcreations.musickit.networking.api.models.TrackEntity
-import dev.bmcreations.musickit.extensions.*
+import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.musickit.extensions.albumArtworkUrl
+import dev.bmcreations.musickit.extensions.artistName
+import dev.bmcreations.musickit.extensions.songName
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
@@ -65,12 +68,13 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
     }
 
 
-    fun getNotification(song: TrackEntity, token: MediaSessionCompat.Token, state: Int, currentPosition: Long): Notification {
+    fun getNotification(song: dev.bmcreations.guacamole.models.TrackEntity, token: MediaSessionCompat.Token, state: Int, currentPosition: Long): Notification {
         val builder = buildNotification(song, token, state, currentPosition)
         return builder.build()
     }
 
-    private fun buildNotification(song: TrackEntity, token: MediaSessionCompat.Token, state: Int,
+    @SuppressLint("RestrictedApi")
+    private fun buildNotification(song: dev.bmcreations.guacamole.models.TrackEntity, token: MediaSessionCompat.Token, state: Int,
                                   currentPosition: Long): NotificationCompat.Builder {
         info { "buildNotification(song=${song.toMetadata().songName}, state=$state, position=$currentPosition)" }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createChannel()

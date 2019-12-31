@@ -1,2 +1,2 @@
-include ':guacamole'
+include ':models'
 include ':app', ':musickit-sdk', ':mediaplayback', ':musickit'

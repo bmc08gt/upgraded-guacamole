@@ -2,8 +2,8 @@ package dev.bmcreations.guacamole.ui.library.recentlyadded
 
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
+import dev.bmcreations.guacamole.models.RecentlyAddedEntity
 import dev.bmcreations.musickit.networking.NetworkState
-import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
 
 
 class RecentlyAddedAdapter : PagedListAdapter<RecentlyAddedEntity, RecentlyAddedVH>(RECENTLY_ADDED_DIFF_CALLBACK) {

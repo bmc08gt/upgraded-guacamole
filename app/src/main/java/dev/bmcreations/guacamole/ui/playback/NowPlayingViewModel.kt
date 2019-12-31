@@ -6,17 +6,16 @@ import android.os.ResultReceiver
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import dev.bmcreations.guacamole.extensions.randomOrNull
 import dev.bmcreations.guacamole.media.MediaBrowserCallback
 import dev.bmcreations.guacamole.media.MediaBrowserConnection
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.media.playbackStateString
+import dev.bmcreations.guacamole.models.Container
+import dev.bmcreations.guacamole.models.TrackEntity
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.musickit.extensions.inTime
 import dev.bmcreations.musickit.extensions.mediaId
-import dev.bmcreations.musickit.extensions.randomOrNull
-import dev.bmcreations.musickit.networking.api.models.Container
-import dev.bmcreations.musickit.networking.api.models.Track
-import dev.bmcreations.musickit.networking.api.models.TrackEntity
 import dev.bmcreations.musickit.queue.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -110,7 +109,12 @@ class NowPlayingViewModel private constructor(
                 }
             }
 
-            queue.updateQueue(newQueue?.map { t -> TrackEntity(t, collection) })
+            queue.updateQueue(newQueue?.map { t ->
+                TrackEntity(
+                    t,
+                    collection
+                )
+            })
         }
     }
 

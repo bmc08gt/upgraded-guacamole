@@ -1,11 +1,12 @@
-package dev.bmcreations.musickit.operator
+package dev.bmcreations.guacamole.operator
 
 import kotlin.reflect.KProperty
 
 class FieldProperty<R, T : Any>(
     val initializer: (R) -> T = { throw IllegalStateException("Not initialized.") }
 ) {
-    private val map = WeakIdentityHashMap<R, T>()
+    private val map =
+        WeakIdentityHashMap<R, T>()
 
     operator fun getValue(thisRef: R, property: KProperty<*>): T =
         map[thisRef] ?: setValue(thisRef, property, initializer(thisRef))
@@ -29,7 +30,8 @@ class FieldProperty<R, T : Any>(
  * provide the initial value. The default [initializer] returns `null`.
  */
 class NullableFieldProperty<R, T>(val initializer: R.() -> T? = { null }) {
-    private val map = WeakIdentityHashMap<R, T>()
+    private val map =
+        WeakIdentityHashMap<R, T>()
 
     operator fun getValue(thisRef: R, property: KProperty<*>): T? =
         if (thisRef in map) map[thisRef] else setValue(thisRef, property, initializer(thisRef))

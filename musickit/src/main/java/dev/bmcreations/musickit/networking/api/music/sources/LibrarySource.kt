@@ -1,9 +1,11 @@
 package dev.bmcreations.musickit.networking.api.music.sources
 
 import androidx.lifecycle.MutableLiveData
+import dev.bmcreations.guacamole.models.LibraryPlaylist
+import dev.bmcreations.guacamole.models.RecentlyAddedResult
+import dev.bmcreations.guacamole.models.urlWithDimensions
 import dev.bmcreations.musickit.extensions.paged
 import dev.bmcreations.musickit.networking.Outcome
-import dev.bmcreations.musickit.networking.api.models.*
 import dev.bmcreations.musickit.networking.provideLibraryService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,9 +35,9 @@ class LibrarySource(
         return ret
     }
 
-    suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum?> {
+    suspend fun getLibraryAlbumById(id: String): Outcome<dev.bmcreations.guacamole.models.LibraryAlbum?> {
         storeFrontSource.updateStoreIfNeeded()
-        var ret: Outcome<LibraryAlbum?>
+        var ret: Outcome<dev.bmcreations.guacamole.models.LibraryAlbum?>
         val req = library.getLibraryAlbumByIdAsync(id)
         try {
             req.await().run {
@@ -117,7 +119,7 @@ class LibrarySource(
         return ret
     }
 
-    fun getAllLibrarySongs(tracks: MutableLiveData<List<Track>>) {
+    fun getAllLibrarySongs(tracks: MutableLiveData<List<dev.bmcreations.guacamole.models.Track>>) {
         storeFrontSource.updateStoreIfNeeded()
         try {
             paged(

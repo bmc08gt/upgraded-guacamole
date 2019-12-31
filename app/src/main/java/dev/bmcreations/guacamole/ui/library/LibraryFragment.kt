@@ -9,15 +9,12 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
-import dev.bmcreations.guacamole.extensions.getViewModel
-import dev.bmcreations.guacamole.graph
-import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
+import dev.bmcreations.guacamole.models.urlWithDimensions
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations
-import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
 import kotlinx.android.synthetic.main.fragment_library.view.*
 import kotlinx.android.synthetic.main.recently_added_entity.view.*
 

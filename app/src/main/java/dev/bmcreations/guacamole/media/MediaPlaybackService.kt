@@ -12,7 +12,7 @@ import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.controller.MediaPlayerControllerFactory
 import com.apple.android.music.playback.model.*
 import dev.bmcreations.guacamole.graph
-import dev.bmcreations.musickit.networking.api.models.TrackEntity
+import dev.bmcreations.guacamole.models.TrackEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,7 +52,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     }
 
     private fun updateNotificationForItemChanged(currentItem: PlayerQueueItem) {
-        var track: TrackEntity? = null
+        var track: dev.bmcreations.guacamole.models.TrackEntity? = null
         currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
         launch {
             while (player.currentPosition == PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN) {}
@@ -68,7 +68,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     }
 
     private fun updateNotificationForPause() {
-        var track: TrackEntity? = null
+        var track: dev.bmcreations.guacamole.models.TrackEntity? = null
         mediaSessionManager.currentTrackMediaId?.let { track = mediaQueue.getTrackByMediaId(it) }
         track?.let {
             stopForeground(false)
@@ -87,13 +87,13 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     }
 
     private fun updateQueue(currentItem: PlayerQueueItem) {
-        var track: TrackEntity? = null
+        var track: dev.bmcreations.guacamole.models.TrackEntity? = null
         currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
         mediaSessionManager.updateQueue(track)
     }
 
     private fun moveServiceToStartedState() {
-        var track: TrackEntity? = null
+        var track: dev.bmcreations.guacamole.models.TrackEntity? = null
         mediaSessionManager.currentTrackMediaId?.let { track = mediaQueue.getTrackByMediaId(it) }
         track?.let {
             val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
@@ -192,7 +192,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     override fun onPlaybackQueueItemsAdded(playerController: MediaPlayerController, queueInsertionType: Int, containerType: Int, itemType: Int) = Unit
 
     private fun sendItemChangedBroadcast(currentItem: PlayerQueueItem) {
-        var track: TrackEntity? = null
+        var track: dev.bmcreations.guacamole.models.TrackEntity? = null
         currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         val intent = Intent(ACTION_CURRENT_ITEM_CHANGED)

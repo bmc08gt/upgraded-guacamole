@@ -3,9 +3,9 @@ package dev.bmcreations.musickit.networking.api.music.sources
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
+import dev.bmcreations.guacamole.models.RecentlyAddedEntity
 import dev.bmcreations.musickit.networking.NetworkState
 import dev.bmcreations.musickit.networking.Outcome
-import dev.bmcreations.musickit.networking.api.models.RecentlyAddedEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

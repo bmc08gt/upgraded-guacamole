@@ -1,11 +1,9 @@
-package dev.bmcreations.musickit.networking.api.models
+package dev.bmcreations.guacamole.models
 
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 @Parcelize

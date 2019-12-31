@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.operator;
+package dev.bmcreations.guacamole.operator;
 
 import org.jetbrains.annotations.NotNull;
 

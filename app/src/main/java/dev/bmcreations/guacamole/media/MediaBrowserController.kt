@@ -7,7 +7,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import dev.bmcreations.musickit.networking.api.models.TrackEntity
+import dev.bmcreations.guacamole.models.TrackEntity
 
 open class MediaBrowserController(val context: Context) {
 
@@ -129,7 +129,7 @@ open class MediaBrowserController(val context: Context) {
             intent?.let {
                 if (it.action == MediaPlaybackService.ACTION_CURRENT_ITEM_CHANGED) {
                     it.extras?.let { extras ->
-                        val song = extras.getParcelable(MediaPlaybackService.EXTRA_CURRENT_ITEM) as? TrackEntity
+                        val song = extras.getParcelable(MediaPlaybackService.EXTRA_CURRENT_ITEM) as? dev.bmcreations.guacamole.models.TrackEntity
                         performOnAllCallbacks(object : CallbackCommand {
                             override fun perform(callback: MediaControllerCompat.Callback) {
                                 callback.onMetadataChanged(song?.toMetadata())

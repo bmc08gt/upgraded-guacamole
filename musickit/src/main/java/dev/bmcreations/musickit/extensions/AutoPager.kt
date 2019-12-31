@@ -1,12 +1,11 @@
 package dev.bmcreations.musickit.extensions
 
 import androidx.lifecycle.MutableLiveData
-import dev.bmcreations.musickit.networking.api.models.LibrarySong
-import dev.bmcreations.musickit.networking.api.models.PagedListImpl
+import dev.bmcreations.guacamole.models.LibrarySong
+import dev.bmcreations.guacamole.models.PagedListImpl
 import kotlinx.coroutines.*
-import kotlin.coroutines.resume
 
- fun <E, T> paged(
+fun <E, T> paged(
     pagedCall: ((next: String?) -> Deferred<T>),
     next: String? = null,
     scope: CoroutineScope,
@@ -15,7 +14,7 @@ import kotlin.coroutines.resume
 ) {
      scope.launch {
          when (val nextPage = pagedCall.invoke(next).await()) {
-             is PagedListImpl<*> -> {
+             is dev.bmcreations.guacamole.models.PagedListImpl<*> -> {
                  results.addAll((nextPage.data as? List<E>) ?: emptyList())
                  if (nextPage.next != null) {
                      paged(pagedCall, nextPage.next, scope, results, liveData)

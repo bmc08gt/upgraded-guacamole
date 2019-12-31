@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import dev.bmcreations.guacamole.R
-import dev.bmcreations.musickit.networking.api.models.LibraryPlaylist
-import dev.bmcreations.musickit.networking.api.models.curator
-import dev.bmcreations.musickit.networking.api.models.urlWithDimensions
+import dev.bmcreations.guacamole.models.LibraryPlaylist
+import dev.bmcreations.guacamole.models.curator
+import dev.bmcreations.guacamole.models.urlWithDimensions
 import kotlinx.android.synthetic.main.library_playlist_row_entity.view.*
-import kotlinx.android.synthetic.main.recently_added_entity.view.*
 
 class LibraryPlaylistVH private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

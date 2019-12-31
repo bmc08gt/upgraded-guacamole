@@ -37,6 +37,7 @@ android {
 dependencies {
     implementation project(':musickit')
     implementation project(':mediaplayback')
+    implementation project(':models')
 
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.coroutinesCore

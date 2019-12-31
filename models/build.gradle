@@ -13,6 +13,7 @@ android {
         versionName appInfo.versionName
         testInstrumentationRunner androidbuild.testInstrumentationRunner
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,36 +21,18 @@ android {
         }
     }
 
-    androidExtensions {
-        experimental = true
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs += "-Xjvm-default=compatibility"
-    }
 }
 
 dependencies {
-    api project(':musickit-sdk')
-    implementation project(':mediaplayback')
-    implementation project(':models')
-
+    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.coroutinesCore
     implementation deps.kotlin.coroutinesAndroid
-
-    implementation deps.jetpack.appcompat
     implementation deps.jetpack.corektx
+    implementation deps.jetpack.appcompat
     implementation deps.jetpack.legacy_support_v4
     implementation deps.jetpack.media
-    api deps.jetpack.paging_ktx
 
-    implementation deps.anko.commons
-
-    implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
-    implementation deps.retrofit.coroutines
     implementation deps.okhttp3
-    implementation deps.okhttp3_logging
 }
