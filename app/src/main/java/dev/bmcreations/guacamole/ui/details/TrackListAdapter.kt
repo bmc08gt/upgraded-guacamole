@@ -5,9 +5,9 @@ import androidx.recyclerview.widget.ListAdapter
 import dev.bmcreations.guacamole.ui.details.TrackVH.Factory.ALBUM
 import dev.bmcreations.guacamole.ui.details.TrackVH.Factory.PLAYLIST
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
-import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.guacamole.models.apple.TrackEntity
 
-class TrackListAdapter : ListAdapter<dev.bmcreations.guacamole.models.TrackEntity, TrackVH>(TRACK_DATA_DIFF_CALLBACK) {
+class TrackListAdapter : ListAdapter<TrackEntity, TrackVH>(TRACK_DATA_DIFF_CALLBACK) {
 
     var nowPlaying: NowPlayingViewModel? = null
     var onTrackSelected: ((TrackVH) -> (Unit))? = null

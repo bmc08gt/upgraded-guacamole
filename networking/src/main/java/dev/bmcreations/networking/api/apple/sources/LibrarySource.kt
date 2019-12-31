@@ -1,10 +1,7 @@
 package dev.bmcreations.networking.api.apple.sources
 
 import androidx.lifecycle.MutableLiveData
-import dev.bmcreations.guacamole.models.LibraryAlbum
-import dev.bmcreations.guacamole.models.LibraryPlaylist
-import dev.bmcreations.guacamole.models.RecentlyAddedResult
-import dev.bmcreations.guacamole.models.urlWithDimensions
+import dev.bmcreations.guacamole.models.apple.*
 import dev.bmcreations.guacamole.operator.paged
 import dev.bmcreations.networking.Outcome
 import dev.bmcreations.networking.provideLibraryService
@@ -120,7 +117,7 @@ class LibrarySource(
         return ret
     }
 
-    fun getAllLibrarySongs(tracks: MutableLiveData<List<dev.bmcreations.guacamole.models.Track>>) {
+    fun getAllLibrarySongs(tracks: MutableLiveData<List<Track>>) {
         storeFrontSource.updateStoreIfNeeded()
         try {
             paged(

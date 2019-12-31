@@ -2,7 +2,7 @@ package dev.bmcreations.guacamole.media
 
 import android.support.v4.media.MediaBrowserCompat
 import androidx.media.MediaBrowserServiceCompat
-import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.guacamole.models.apple.TrackEntity
 import dev.bmcreations.guacamole.extensions.songName
 import dev.bmcreations.guacamole.extensions.getTrackByCatalogId
 import dev.bmcreations.guacamole.extensions.getTrackByMediaId

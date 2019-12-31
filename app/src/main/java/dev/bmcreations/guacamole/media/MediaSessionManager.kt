@@ -15,7 +15,7 @@ import com.apple.android.music.playback.controller.MediaPlayerController
 import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
-import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.guacamole.models.apple.TrackEntity
 import dev.bmcreations.guacamole.extensions.albumArtworkUrl
 import dev.bmcreations.guacamole.extensions.mediaId
 

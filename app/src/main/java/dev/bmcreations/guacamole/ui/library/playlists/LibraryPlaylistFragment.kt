@@ -7,8 +7,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.OrientationHelper
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
-import dev.bmcreations.guacamole.models.curator
-import dev.bmcreations.guacamole.models.urlWithDimensions
+import dev.bmcreations.guacamole.models.apple.curator
+import dev.bmcreations.guacamole.models.apple.urlWithDimensions
 import dev.bmcreations.guacamole.ui.library.LibraryBaseFragment
 import dev.bmcreations.guacamole.ui.widgets.SpacesItemDecoration
 import dev.bmcreations.guacamole.ui.widgets.addItemDecorations

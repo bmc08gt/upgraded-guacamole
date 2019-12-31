@@ -9,7 +9,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.dp
-import dev.bmcreations.guacamole.models.urlWithDimensions
+import dev.bmcreations.guacamole.models.apple.urlWithDimensions
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGrouping
 import dev.bmcreations.guacamole.ui.library.groupings.LibraryGroupingAdapter
 import dev.bmcreations.guacamole.ui.library.recentlyadded.RecentlyAddedAdapter

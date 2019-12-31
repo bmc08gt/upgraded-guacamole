@@ -1,4 +1,4 @@
-package dev.bmcreations.guacamole.models
+package dev.bmcreations.guacamole.models.apple
 
 import android.os.Parcelable
 import android.support.v4.media.MediaMetadataCompat
@@ -10,12 +10,12 @@ open class Container(
     var name: String? = null,
     var artist: String? = null,
     var artwork: String? = null,
-    var trackList: List<dev.bmcreations.guacamole.models.Track>? = emptyList(),
+    var trackList: List<Track>? = emptyList(),
     var isPlaylist: Boolean = false
 ): Parcelable
 
 @Parcelize
-data class TrackEntity(val track: dev.bmcreations.guacamole.models.Track, val container: Container?): Parcelable {
+data class TrackEntity(val track: Track, val container: Container?): Parcelable {
     fun toMetadataBuilder(): MediaMetadataCompat.Builder {
         return MediaMetadataCompat.Builder().apply {
             this@TrackEntity.track.also { track ->
@@ -38,4 +38,11 @@ data class TrackEntity(val track: dev.bmcreations.guacamole.models.Track, val co
     }
 }
 
-fun dev.bmcreations.guacamole.models.Track.librarySongContainer(trackList: List<dev.bmcreations.guacamole.models.Track>?): Container = Container(attributes?.albumName, attributes?.artistName, attributes?.artwork?.urlWithDimensions, trackList, true)
+fun Track.librarySongContainer(trackList: List<Track>?): Container =
+    Container(
+        attributes?.albumName,
+        attributes?.artistName,
+        attributes?.artwork?.urlWithDimensions,
+        trackList,
+        true
+    )

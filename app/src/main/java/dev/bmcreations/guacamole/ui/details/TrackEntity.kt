@@ -6,8 +6,9 @@ import coil.api.load
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.gone
 import dev.bmcreations.guacamole.extensions.visible
-import dev.bmcreations.guacamole.models.isExplicit
-import dev.bmcreations.guacamole.models.urlWithDimensions
+import dev.bmcreations.guacamole.models.apple.TrackEntity
+import dev.bmcreations.guacamole.models.apple.isExplicit
+import dev.bmcreations.guacamole.models.apple.urlWithDimensions
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.now_playing_mini.view.*
@@ -16,19 +17,19 @@ import kotlinx.android.synthetic.main.now_playing_mini.view.track_name
 import kotlinx.android.synthetic.main.playlist_track_entity.view.*
 
 val TRACK_DATA_DIFF_CALLBACK
-        = object : DiffUtil.ItemCallback<dev.bmcreations.guacamole.models.TrackEntity>() {
+        = object : DiffUtil.ItemCallback<TrackEntity>() {
     override fun areItemsTheSame(
-        oldItem: dev.bmcreations.guacamole.models.TrackEntity,
-        newItem: dev.bmcreations.guacamole.models.TrackEntity
+        oldItem: TrackEntity,
+        newItem: TrackEntity
     ): Boolean = oldItem.track.id == newItem.track.id
 
     override fun areContentsTheSame(
-        oldItem: dev.bmcreations.guacamole.models.TrackEntity,
-        newItem: dev.bmcreations.guacamole.models.TrackEntity
+        oldItem: TrackEntity,
+        newItem: TrackEntity
     ): Boolean = oldItem == newItem
 }
 
-fun dev.bmcreations.guacamole.models.TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
+fun TrackEntity.populate(holder: TrackVH, nowPlaying: NowPlayingViewModel?) {
     holder.hideVisualization()
     val selected = nowPlaying?.selectedTrack?.value
     if (selected == this) {
@@ -75,7 +76,7 @@ fun dev.bmcreations.guacamole.models.TrackEntity.populate(holder: TrackVH, nowPl
     }
 }
 
-fun dev.bmcreations.guacamole.models.TrackEntity.populateMiniPlayer(view: View) {
+fun TrackEntity.populateMiniPlayer(view: View) {
     view.track_name?.text = this.track.attributes?.name
     if (this.track.attributes?.isExplicit == true) {
         view.explicit.visible()

@@ -11,8 +11,8 @@ import dev.bmcreations.guacamole.media.MediaBrowserCallback
 import dev.bmcreations.guacamole.media.MediaBrowserConnection
 import dev.bmcreations.guacamole.media.MediaSessionManager
 import dev.bmcreations.guacamole.media.playbackStateString
-import dev.bmcreations.guacamole.models.Container
-import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.guacamole.models.apple.Container
+import dev.bmcreations.guacamole.models.apple.TrackEntity
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
 import dev.bmcreations.guacamole.operator.inTime
 import dev.bmcreations.guacamole.extensions.mediaId

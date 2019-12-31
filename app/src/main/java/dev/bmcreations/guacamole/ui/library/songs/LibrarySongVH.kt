@@ -8,15 +8,15 @@ import coil.api.load
 import coil.transform.RoundedCornersTransformation
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
-import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.guacamole.models.apple.TrackEntity
 import kotlinx.android.synthetic.main.library_song_row_entity.view.*
 import kotlinx.android.synthetic.main.library_song_row_entity.view.equalizer
 import kotlinx.android.synthetic.main.library_song_row_entity.view.track_name
 
-data class Song(val track: dev.bmcreations.guacamole.models.TrackEntity)
+data class Song(val track: TrackEntity)
 
 class LibrarySongVH(itemView: View): RecyclerView.ViewHolder(itemView) {
-    var onClick: ((dev.bmcreations.guacamole.models.TrackEntity) -> Unit)? = null
+    var onClick: ((TrackEntity) -> Unit)? = null
 
     var entity: Song? = null
         set(value) {

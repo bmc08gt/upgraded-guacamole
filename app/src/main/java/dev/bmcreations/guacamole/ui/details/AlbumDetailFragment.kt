@@ -14,7 +14,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.graph
-import dev.bmcreations.guacamole.models.*
+import dev.bmcreations.guacamole.models.apple.*
 import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
 import dev.bmcreations.guacamole.ui.library.LibraryViewModel
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
@@ -51,7 +51,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
         }
     }
 
-    private var collection: dev.bmcreations.guacamole.models.Container? = null
+    private var collection: Container? = null
     private var playlist: Boolean = false
     private var descriptionSummary: String? = null
     private var albumName: String? = null
@@ -135,8 +135,8 @@ class AlbumDetailFragment : NavigationStackFragment() {
         vm?.selected?.observe(this, Observer {
             it?.let { ret ->
                 when (ret) {
-                    is dev.bmcreations.guacamole.models.Playlist -> ret.playlist?.let { loadPlaylist(it) }
-                    is dev.bmcreations.guacamole.models.Album -> ret.album?.let { loadAlbum(it) }
+                    is Playlist -> ret.playlist?.let { loadPlaylist(it) }
+                    is Album -> ret.album?.let { loadAlbum(it) }
                 }
 
             }
@@ -149,7 +149,7 @@ class AlbumDetailFragment : NavigationStackFragment() {
         })
     }
 
-    private fun loadAlbum(container: dev.bmcreations.guacamole.models.LibraryAlbum) {
+    private fun loadAlbum(container: LibraryAlbum) {
         val album = container
         if (ra_image.drawable == null) {
             val url = albumUrl ?: album.attributes?.artwork?.urlWithDimensions

@@ -3,7 +3,7 @@ package dev.bmcreations.networking.api.apple.sources
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
-import dev.bmcreations.guacamole.models.RecentlyAddedEntity
+import dev.bmcreations.guacamole.models.apple.RecentlyAddedEntity
 import dev.bmcreations.networking.NetworkState
 import dev.bmcreations.networking.Outcome
 import kotlinx.coroutines.CoroutineScope

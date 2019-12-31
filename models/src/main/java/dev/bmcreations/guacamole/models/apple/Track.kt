@@ -1,4 +1,4 @@
-package dev.bmcreations.guacamole.models
+package dev.bmcreations.guacamole.models.apple
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
@@ -61,13 +61,13 @@ data class Track(
     ) : Parcelable {
         @Parcelize
         data class Albums(
-            val `data`: List<dev.bmcreations.guacamole.models.LibraryAlbum?>?,
+            val `data`: List<LibraryAlbum?>?,
             val href: String?
         ) : Parcelable
 
         @Parcelize
         data class Artists(
-            val `data`: List<dev.bmcreations.guacamole.models.LibraryArtist>
+            val `data`: List<LibraryArtist>
         ): Parcelable
     }
 }

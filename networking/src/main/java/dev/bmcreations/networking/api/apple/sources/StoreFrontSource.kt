@@ -1,5 +1,6 @@
 package dev.bmcreations.networking.api.apple.sources
 
+import dev.bmcreations.guacamole.models.apple.UserStoreFront
 import dev.bmcreations.networking.provideStoreFrontService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +11,7 @@ class StoreFrontSource(
     private val retrofit: Retrofit
 ) : CoroutineScope by CoroutineScope(Dispatchers.IO) {
 
-    private var _store: dev.bmcreations.guacamole.models.UserStoreFront? = null
+    private var _store: UserStoreFront? = null
     val store get() = _store
 
     private val storeFront by lazy {

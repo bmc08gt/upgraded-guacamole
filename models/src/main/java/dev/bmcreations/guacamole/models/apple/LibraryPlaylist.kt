@@ -1,4 +1,4 @@
-package dev.bmcreations.guacamole.models
+package dev.bmcreations.guacamole.models.apple
 
 
 import android.os.Parcelable
@@ -10,7 +10,12 @@ import java.util.concurrent.TimeUnit
 @Parcelize
 data class LibraryPlaylistResult(val data: List<LibraryPlaylist>) : Parcelable
 
-fun LibraryPlaylist.toEntities(): List<TrackEntity> = trackList?.map { t -> TrackEntity(t, this) } ?: emptyList()
+fun LibraryPlaylist.toEntities(): List<TrackEntity> = trackList?.map { t ->
+    TrackEntity(
+        t,
+        this
+    )
+} ?: emptyList()
 
 val LibraryPlaylist.durationInMillis: Long
     get() {

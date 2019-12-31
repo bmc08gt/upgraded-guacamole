@@ -1,8 +1,9 @@
-package dev.bmcreations.guacamole.models
+package dev.bmcreations.guacamole.models.apple
 
 
 import kotlinx.android.parcel.Parcelize
 import android.os.Parcelable
+import dev.bmcreations.guacamole.models.PagedListImpl
 
 @Parcelize
 open class LibrarySongResult: PagedListImpl<Track>(), Parcelable
@@ -52,13 +53,13 @@ data class LibrarySong(
     ) : Parcelable {
         @Parcelize
         data class Albums(
-            val `data`: List<dev.bmcreations.guacamole.models.LibraryAlbum?>?,
+            val `data`: List<LibraryAlbum?>?,
             val href: String?
         ) : Parcelable
 
         @Parcelize
         data class Artists(
-            val `data`: List<dev.bmcreations.guacamole.models.LibraryArtist>
+            val `data`: List<LibraryArtist>
         ): Parcelable
     }
 }

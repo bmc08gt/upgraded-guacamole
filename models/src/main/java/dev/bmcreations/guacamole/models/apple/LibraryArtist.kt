@@ -1,4 +1,4 @@
-package dev.bmcreations.guacamole.models
+package dev.bmcreations.guacamole.models.apple
 
 
 import kotlinx.android.parcel.Parcelize

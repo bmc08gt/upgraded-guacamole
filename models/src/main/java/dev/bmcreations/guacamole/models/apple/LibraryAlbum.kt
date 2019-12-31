@@ -1,15 +1,21 @@
-package dev.bmcreations.guacamole.models
+package dev.bmcreations.guacamole.models.apple
 
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import dev.bmcreations.guacamole.models.PagedListImpl
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
 
 @Parcelize
 open class LibraryAlbumResult: PagedListImpl<LibraryAlbum>(), Parcelable
 
-fun LibraryAlbum.toEntities(): List<TrackEntity> = relationships?.tracks?.data?.filterNotNull()?.map { t -> TrackEntity(t, this) } ?: emptyList()
+fun LibraryAlbum.toEntities(): List<TrackEntity> = relationships?.tracks?.data?.filterNotNull()?.map { t ->
+    TrackEntity(
+        t,
+        this
+    )
+} ?: emptyList()
 
 val LibraryAlbum.Relationships.Tracks.durationInMillis: Long
     get() {

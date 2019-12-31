@@ -3,15 +3,13 @@ package dev.bmcreations.guacamole.ui.library
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import dev.bmcreations.guacamole.models.LibraryPlaylist
-import dev.bmcreations.guacamole.models.RecentlyAddedEntity
-import dev.bmcreations.guacamole.models.librarySongContainer
 import dev.bmcreations.guacamole.ui.library.artists.Artist
 import dev.bmcreations.networking.NetworkState
 import dev.bmcreations.networking.Outcome
 import dev.bmcreations.networking.api.apple.sources.LibrarySource
 import dev.bmcreations.networking.api.apple.sources.RecentlyAddedDataFactory
 import dev.bmcreations.guacamole.media.MusicQueue
+import dev.bmcreations.guacamole.models.apple.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,11 +33,11 @@ class LibraryViewModel(
         }
     val playlists = MutableLiveData<List<LibraryPlaylist>>()
 
-    private var tracks = MutableLiveData<List<dev.bmcreations.guacamole.models.Track>>()
+    private var tracks = MutableLiveData<List<Track>>()
 
     val songs = Transformations.map(tracks) { entities ->
         entities.map { entity ->
-            dev.bmcreations.guacamole.models.TrackEntity(
+            TrackEntity(
                 entity,
                 entity.librarySongContainer(entities)
             )
@@ -63,7 +61,7 @@ class LibraryViewModel(
 //        }.map {  }
 //    }
 
-    val selected: MutableLiveData<dev.bmcreations.guacamole.models.LibraryResult?> = MutableLiveData()
+    val selected: MutableLiveData<LibraryResult?> = MutableLiveData()
 
     init {
         initializeLibrarySongs()
@@ -116,7 +114,9 @@ class LibraryViewModel(
                     is Outcome.Success -> {
                         viewModelScope.launch(Dispatchers.Main) {
                             selected.value =
-                                dev.bmcreations.guacamole.models.Album(outcome.data)
+                                Album(
+                                    outcome.data
+                                )
                         }
                     }
                     is Outcome.Failure -> {
@@ -139,7 +139,9 @@ class LibraryViewModel(
                     is Outcome.Success -> {
                         viewModelScope.launch(Dispatchers.Main) {
                             selected.value =
-                                dev.bmcreations.guacamole.models.Playlist(outcome.data)
+                                Playlist(
+                                    outcome.data
+                                )
                         }
                     }
                     is Outcome.Failure -> {
@@ -158,7 +160,9 @@ class LibraryViewModel(
                     is Outcome.Success -> {
                         viewModelScope.launch(Dispatchers.Main) {
                             selected.value =
-                                dev.bmcreations.guacamole.models.Playlist(outcome.data)
+                                Playlist(
+                                    outcome.data
+                                )
                         }
                     }
                     is Outcome.Failure -> {

@@ -3,11 +3,11 @@ package dev.bmcreations.guacamole.ui.library.songs
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import dev.bmcreations.guacamole.models.TrackEntity
+import dev.bmcreations.guacamole.models.apple.TrackEntity
 
 class LibrarySongsAdapter: ListAdapter<Song, LibrarySongVH>(LIBRARY_SONG_DIFF_CALLBACK) {
 
-    var onSongClicked: ((dev.bmcreations.guacamole.models.TrackEntity) -> (Unit))? = null
+    var onSongClicked: ((TrackEntity) -> (Unit))? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibrarySongVH {
         return LibrarySongVH.create(parent, viewType)

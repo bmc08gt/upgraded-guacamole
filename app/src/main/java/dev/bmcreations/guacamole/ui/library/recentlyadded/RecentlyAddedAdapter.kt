@@ -2,7 +2,7 @@ package dev.bmcreations.guacamole.ui.library.recentlyadded
 
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
-import dev.bmcreations.guacamole.models.RecentlyAddedEntity
+import dev.bmcreations.guacamole.models.apple.RecentlyAddedEntity
 import dev.bmcreations.networking.NetworkState
 
 
