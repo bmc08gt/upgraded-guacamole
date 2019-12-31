@@ -70,4 +70,4 @@ fastlane/test_output
 fastlane/readme.md
 
 # Music Kit token
-app/src/main/res/values/music_kit_api_token.xml
+app/src/main/res/values/api_tokens.xml
