@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import dev.bmcreations.guacamole.models.apple.*
 import dev.bmcreations.guacamole.operator.paged
 import dev.bmcreations.networking.Outcome
-import dev.bmcreations.networking.provideLibraryService
+import dev.bmcreations.networking.api.provideLibraryService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit

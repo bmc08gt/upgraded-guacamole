@@ -1,8 +1,9 @@
-package dev.bmcreations.networking
+package dev.bmcreations.networking.api
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dev.bmcreations.networking.BuildConfig
 import dev.bmcreations.networking.auth.TokenProviding
 import dev.bmcreations.networking.auth.toTokenReason
 import dev.bmcreations.networking.api.apple.services.CatalogService
@@ -61,7 +62,9 @@ fun provideOkHttpClientBuilder(tokenProvider: TokenProviding): OkHttpClient.Buil
 }
 
 fun provideOkHttpClient(tokenProvider: TokenProviding): OkHttpClient {
-    return provideOkHttpClientBuilder(tokenProvider).build()
+    return provideOkHttpClientBuilder(
+        tokenProvider
+    ).build()
 }
 
 fun provideRetrofit(
