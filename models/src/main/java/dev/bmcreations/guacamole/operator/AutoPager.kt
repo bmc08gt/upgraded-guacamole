@@ -1,8 +1,6 @@
-package dev.bmcreations.musickit.extensions
+package dev.bmcreations.guacamole.operator
 
 import androidx.lifecycle.MutableLiveData
-import dev.bmcreations.guacamole.models.LibrarySong
-import dev.bmcreations.guacamole.models.PagedListImpl
 import kotlinx.coroutines.*
 
 fun <E, T> paged(
@@ -17,7 +15,13 @@ fun <E, T> paged(
              is dev.bmcreations.guacamole.models.PagedListImpl<*> -> {
                  results.addAll((nextPage.data as? List<E>) ?: emptyList())
                  if (nextPage.next != null) {
-                     paged(pagedCall, nextPage.next, scope, results, liveData)
+                     paged(
+                         pagedCall,
+                         nextPage.next,
+                         scope,
+                         results,
+                         liveData
+                     )
                  }
                  liveData.postValue(results)
              }

@@ -14,8 +14,8 @@ import dev.bmcreations.guacamole.media.playbackStateString
 import dev.bmcreations.guacamole.models.Container
 import dev.bmcreations.guacamole.models.TrackEntity
 import dev.bmcreations.guacamole.viewmodel.SingleLiveEvent
-import dev.bmcreations.musickit.extensions.inTime
-import dev.bmcreations.musickit.extensions.mediaId
+import dev.bmcreations.guacamole.operator.inTime
+import dev.bmcreations.guacamole.extensions.mediaId
 import dev.bmcreations.musickit.queue.MusicQueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -210,7 +210,9 @@ class NowPlayingViewModel private constructor(
 
     private fun waitForMusicPlayback() {
         initializationFailedJob =
-            inTime(offset = 4000) { playState.value = State.InitializationFailed }
+            inTime(offset = 4000) {
+                playState.value = State.InitializationFailed
+            }
         initializationFailedJob?.start()
     }
 

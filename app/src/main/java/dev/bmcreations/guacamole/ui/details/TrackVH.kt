@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.*
 import dev.bmcreations.guacamole.ui.playback.NowPlayingViewModel
-import dev.bmcreations.musickit.extensions.mediaId
+import dev.bmcreations.guacamole.extensions.mediaId
 import kotlinx.android.synthetic.main.album_track_entity.view.*
 import kotlinx.android.synthetic.main.playlist_track_entity.view.equalizer as peq
 import kotlinx.android.synthetic.main.playlist_track_entity.view.playlist_track_art

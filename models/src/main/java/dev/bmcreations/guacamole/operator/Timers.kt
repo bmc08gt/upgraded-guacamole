@@ -1,10 +1,13 @@
-package dev.bmcreations.musickit.extensions
+package dev.bmcreations.guacamole.operator
 
 import kotlinx.coroutines.*
 import java.util.*
 
 fun at(date: Date, callback: (() -> Unit)): Job {
-    return at(timestamp = date.time, callback = callback)
+    return at(
+        timestamp = date.time,
+        callback = callback
+    )
 }
 
 fun at(scope: CoroutineScope = CoroutineScope(Dispatchers.Main), timestamp: Long, callback: (() -> Unit)): Job {

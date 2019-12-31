@@ -16,8 +16,8 @@ import com.apple.android.music.playback.model.MediaItemType
 import com.apple.android.music.playback.model.PlaybackState
 import com.apple.android.music.playback.queue.CatalogPlaybackQueueItemProvider
 import dev.bmcreations.guacamole.models.TrackEntity
-import dev.bmcreations.musickit.extensions.albumArtworkUrl
-import dev.bmcreations.musickit.extensions.mediaId
+import dev.bmcreations.guacamole.extensions.albumArtworkUrl
+import dev.bmcreations.guacamole.extensions.mediaId
 import dev.bmcreations.musickit.queue.MusicQueue
 
 class MediaSessionManager(val context: Context,

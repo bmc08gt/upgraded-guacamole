@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import dev.bmcreations.guacamole.models.LibraryPlaylist
 import dev.bmcreations.guacamole.models.RecentlyAddedResult
 import dev.bmcreations.guacamole.models.urlWithDimensions
-import dev.bmcreations.musickit.extensions.paged
+import dev.bmcreations.guacamole.operator.paged
 import dev.bmcreations.musickit.networking.Outcome
 import dev.bmcreations.musickit.networking.provideLibraryService
 import kotlinx.coroutines.CoroutineScope

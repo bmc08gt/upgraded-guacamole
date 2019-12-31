@@ -1,4 +1,4 @@
-package dev.bmcreations.musickit.extensions
+package dev.bmcreations.guacamole.extensions
 
 import android.support.v4.media.MediaMetadataCompat
 

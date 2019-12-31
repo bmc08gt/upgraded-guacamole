@@ -20,10 +20,9 @@ import dev.bmcreations.guacamole.R
 import dev.bmcreations.guacamole.extensions.colors
 import dev.bmcreations.guacamole.extensions.strings
 import dev.bmcreations.guacamole.ui.MainActivity
-import dev.bmcreations.guacamole.models.TrackEntity
-import dev.bmcreations.musickit.extensions.albumArtworkUrl
-import dev.bmcreations.musickit.extensions.artistName
-import dev.bmcreations.musickit.extensions.songName
+import dev.bmcreations.guacamole.extensions.albumArtworkUrl
+import dev.bmcreations.guacamole.extensions.artistName
+import dev.bmcreations.guacamole.extensions.songName
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
