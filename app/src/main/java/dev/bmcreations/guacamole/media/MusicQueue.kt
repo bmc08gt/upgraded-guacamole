@@ -41,11 +41,11 @@ class MusicQueue : AnkoLogger {
         _tracks?.removeAll(tracks)
     }
 
-    fun getTrackByMetadataMediaId(id: String): TrackEntity? = tracks?.getTrackByMetadataMediaId(id)
+    fun getTrackByMetadataMediaId(id: String?): TrackEntity? = tracks?.getTrackByMetadataMediaId(id)
 
-    fun getTrackByMediaId(id: String): TrackEntity? = tracks?.getTrackByMediaId(id)
+    fun getTrackByMediaId(id: String?): TrackEntity? = tracks?.getTrackByMediaId(id)
 
-    fun getTrackByCatalogId(id: String): TrackEntity? = tracks?.getTrackByCatalogId(id)
+    fun getTrackByCatalogId(id: String?): TrackEntity? = tracks?.getTrackByCatalogId(id)
 
     fun loadMediaItems(
         parentId: String,

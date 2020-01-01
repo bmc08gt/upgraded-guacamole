@@ -75,6 +75,7 @@ class MediaSessionManager(val context: Context,
             e.toMetadata().mediaId.let {
                 queueIndex = queueItems.indexOfFirst { item -> item.description.mediaId == it }
                 this.song = e
+                onPrepare()
                 updateQueue()
             }
         }

@@ -43,6 +43,7 @@ open class MediaBrowserController(val context: Context) {
         mediaController = null
         mediaBrowser?.disconnect()
         mediaBrowser = null
+
     }
 
     fun subscribe(parentId: String) {

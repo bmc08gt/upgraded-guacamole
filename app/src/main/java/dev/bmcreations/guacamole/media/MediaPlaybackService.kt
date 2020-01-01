@@ -51,20 +51,13 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
         mediaNotificationManager = MediaNotificationManager(this)
     }
 
-    private fun updateNotificationForItemChanged(currentItem: PlayerQueueItem) {
-        var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
-        launch {
-            while (player.currentPosition == PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN) {}
-            launch(Dispatchers.Main) {
-                track?.let {
-                    val notification = mediaNotificationManager.getNotification(it, mediaSessionManager.sessionToken,
-                        PlaybackStateCompat.STATE_PLAYING, player.currentPosition)
-                    mediaNotificationManager.notificationManager
-                        .notify(MediaNotificationManager.NOTIFICATION_ID, notification)
-                }
-            }
-        }
+    private fun updateNotificationForItemChanged(track: TrackEntity) {
+        while (player.currentPosition == PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN) {}
+        val notification = mediaNotificationManager.getNotification(track, mediaSessionManager.sessionToken,
+            PlaybackStateCompat.STATE_PLAYING, player.currentPosition)
+
+        mediaNotificationManager.notificationManager
+            .notify(MediaNotificationManager.NOTIFICATION_ID, notification)
     }
 
     private fun updateNotificationForPause() {
@@ -86,9 +79,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
         mediaSessionManager.onDestroy()
     }
 
-    private fun updateQueue(currentItem: PlayerQueueItem) {
-        var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
+    private fun updateQueue(track: TrackEntity) {
         mediaSessionManager.updateQueue(track)
     }
 
@@ -143,9 +134,11 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     override fun onCurrentItemChanged(p0: MediaPlayerController, p1: PlayerQueueItem?, p2: PlayerQueueItem?) {
         updatePlaybackState(p0.playbackState, p0.isBuffering)
         p2?.let {
-            updateNotificationForItemChanged(it)
-            sendItemChangedBroadcast(it)
-            updateQueue(it)
+            mediaQueue.getTrackByCatalogId(it.item.subscriptionStoreId)?.let { track ->
+                updateNotificationForItemChanged(track)
+                sendItemChangedBroadcast(track)
+                updateQueue(track)
+            }
         }
     }
 
@@ -191,9 +184,7 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
 
     override fun onPlaybackQueueItemsAdded(playerController: MediaPlayerController, queueInsertionType: Int, containerType: Int, itemType: Int) = Unit
 
-    private fun sendItemChangedBroadcast(currentItem: PlayerQueueItem) {
-        var track: TrackEntity? = null
-        currentItem.item.subscriptionStoreId?.let { track = mediaQueue.getTrackByCatalogId(it) }
+    private fun sendItemChangedBroadcast(track: TrackEntity) {
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         val intent = Intent(ACTION_CURRENT_ITEM_CHANGED)
         intent.putExtra(EXTRA_CURRENT_ITEM, track)
@@ -201,9 +192,8 @@ class MediaPlaybackService : CoroutineScope by CoroutineScope(Dispatchers.IO), M
     }
 
     companion object : AnkoLogger {
-        private val CANONICAL_NAME = MediaPlaybackService::class.java.canonicalName
-        val ACTION_CURRENT_ITEM_CHANGED = "$CANONICAL_NAME.action_current_item_changed"
-        val EXTRA_CURRENT_ITEM = "$CANONICAL_NAME.extra_current_item"
+        const val ACTION_CURRENT_ITEM_CHANGED = "action_current_item_changed"
+        const val EXTRA_CURRENT_ITEM = "extra_current_item"
 
         init {
             try {

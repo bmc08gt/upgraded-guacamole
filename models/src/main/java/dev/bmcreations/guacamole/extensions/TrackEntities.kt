@@ -8,15 +8,15 @@ import dev.bmcreations.guacamole.models.apple.TrackEntity
 
 
 fun List<TrackEntity>?.getTrackByMetadataMediaId(
-    id: String
+    id: String?
 ): TrackEntity? = this?.find { it.toMetadata().mediaId == id }
 
 fun List<TrackEntity>?.getTrackByMediaId(
-    id: String
+    id: String?
 ): TrackEntity? = this?.find { it.track.id == id }
 
 fun List<TrackEntity>?.getTrackByCatalogId(
-    id: String
+    id: String?
 ): TrackEntity? = this?.find { it.track.attributes?.playParams?.catalogId == id }
 
 fun List<TrackEntity>?.loadMediaItems(
