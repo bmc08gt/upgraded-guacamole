@@ -72,7 +72,7 @@
             app:tint="@color/explicit_rating_tint"
             tools:visibility="visible"
             android:visibility="visible"
-            android:src="@drawable/ic_baseline_explicit_black_24dp"/>
+            android:src="@drawable/ic_baseline_explicit_24dp"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             style="@style/AppTheme.NowPlaying.Artist"

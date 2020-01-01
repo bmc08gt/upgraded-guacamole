@@ -6,4 +6,7 @@
     <color name="defaultOutlineAmbientShadowColor">#0AFFFFFF</color>
     <color name="defaultOutlineSpotShadowColor">#30FFFFFF</color>
     <color name="track_outline">#99FFFFFF</color>
+
+    <color name="explicit_rating_tint">#8AFFFFFF</color>
+    <color name="play_pause_tint">#FFF</color>
 </resources>

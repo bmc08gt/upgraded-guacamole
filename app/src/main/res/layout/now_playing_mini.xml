@@ -50,7 +50,7 @@
             app:tint="@color/explicit_rating_tint"
             tools:visibility="visible"
             android:visibility="gone"
-            android:src="@drawable/ic_baseline_explicit_black_24dp"/>
+            android:src="@drawable/ic_baseline_explicit_24dp"/>
 
     <androidx.constraintlayout.widget.Barrier
             android:id="@+id/play_pause_barrier"
@@ -73,7 +73,7 @@
             app:tint="@color/explicit_rating_tint"
             android:tint="@android:color/black"
             tools:visibility="invisible"
-            android:src="@drawable/ic_play_arrow_gray_32dp"/>
+            android:src="@drawable/ic_play_arrow_32dp"/>
 
     <ProgressBar
             android:id="@+id/loading"

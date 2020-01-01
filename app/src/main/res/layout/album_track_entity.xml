@@ -62,6 +62,6 @@
             app:tint="@color/explicit_rating_tint"
             tools:visibility="visible"
             android:visibility="gone"
-            android:src="@drawable/ic_baseline_explicit_black_24dp"/>
+            android:src="@drawable/ic_baseline_explicit_24dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

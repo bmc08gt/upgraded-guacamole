@@ -68,14 +68,14 @@ class NowPlayingFragment : Fragment() {
                     is State.Playing -> {
                         root.loading.gone()
                         root.play_pause.visible().also {
-                            root.play_pause.setImageResource(R.drawable.ic_baseline_pause_black_24dp)
+                            root.play_pause.setImageResource(R.drawable.ic_baseline_pause_24dp)
                         }
                     }
                     is State.InitializationFailed,
                     is State.Paused -> {
                         root.loading.gone()
                         root.play_pause.visible().also {
-                            root.play_pause.setImageResource(R.drawable.ic_play_arrow_gray_32dp)
+                            root.play_pause.setImageResource(R.drawable.ic_play_arrow_32dp)
                         }
                     }
                 }

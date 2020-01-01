@@ -5,6 +5,7 @@
     <color name="colorAccent">#ea576c</color>
 
     <color name="explicit_rating_tint">#54000000</color>
+    <color name="play_pause_tint">#FF000000</color>
 
     <color name="button_color">#ea576c</color>
     <color name="button_color_inverse">#f9f9fd</color>

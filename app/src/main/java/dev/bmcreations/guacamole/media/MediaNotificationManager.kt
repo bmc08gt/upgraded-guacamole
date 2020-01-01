@@ -37,7 +37,7 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
 
     private val playAction: NotificationCompat.Action by lazy {
         NotificationCompat.Action(
-            R.drawable.ic_play_arrow_gray_32dp,
+            R.drawable.ic_play_arrow_white_32dp,
             mediaPlaybackService.strings[R.string.media_play],
             MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_PLAY)
         )
@@ -45,7 +45,7 @@ class MediaNotificationManager(private val mediaPlaybackService: MediaPlaybackSe
 
     private val pauseAction: NotificationCompat.Action by lazy {
         NotificationCompat.Action(
-            R.drawable.ic_baseline_pause_black_24dp,
+            R.drawable.ic_baseline_pause_white_24dp,
             mediaPlaybackService.strings[R.string.media_pause],
             MediaButtonReceiver.buildMediaButtonPendingIntent(mediaPlaybackService, PlaybackStateCompat.ACTION_PAUSE)
         )
