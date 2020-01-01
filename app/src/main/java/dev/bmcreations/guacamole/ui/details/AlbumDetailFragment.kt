@@ -99,12 +99,8 @@ class AlbumDetailFragment : NavigationStackFragment() {
             description_group.visible()
         }
 
-        play.setOnClickListener {
-            nowPlaying?.playCollection(collection)
-        }
-        shuffle.setOnClickListener {
-            nowPlaying?.shuffleCollection(collection)
-        }
+        play_collection.setOnClickListener { nowPlaying?.playCollection(collection) }
+        shuffle_collection.setOnClickListener { nowPlaying?.shuffleCollection(collection) }
 
         enableToolbarTranslationEffects(true)
         setToolbarTitle(albumName)

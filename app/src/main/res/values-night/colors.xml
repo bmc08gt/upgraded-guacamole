@@ -3,6 +3,7 @@
     <color name="elevated_background">#1C1C1E</color>
 
     <color name="root_background">#000000</color>
+    <color name="button_color_inverse">#1C1C1F</color>
     <color name="defaultOutlineAmbientShadowColor">#0AFFFFFF</color>
     <color name="defaultOutlineSpotShadowColor">#30FFFFFF</color>
     <color name="track_outline">#99FFFFFF</color>

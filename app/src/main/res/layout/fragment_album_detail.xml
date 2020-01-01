@@ -100,54 +100,100 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/play"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/play_collection"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/rounded_button_inverse"
-            android:drawableStart="@drawable/ic_play_arrow_white_32dp"
-            android:drawablePadding="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="20dp"
-            android:text="Play"
-            android:textAllCaps="false"
-            android:textColor="@color/button_color"
-            app:drawableTint="@color/button_color"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttons_gl"
-            app:layout_constraintTop_toBottomOf="@id/description_divider_bottom" />
+            app:layout_constraintTop_toBottomOf="@id/description_divider_bottom"
+            app:layout_constraintBottom_toTopOf="@id/tracks"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_button_inverse"
+            app:layout_constraintVertical_bias="0.0">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/shuffle"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/play_button_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintEnd_toStartOf="@id/play_button_text"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_play_arrow_white_32dp"
+                android:tint="@color/button_color" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/play_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:textAlignment="viewStart"
+                android:textColor="@color/button_color"
+                android:textSize="18sp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/shuffle_collection"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@id/buttons_gl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/description_divider_bottom"
+            app:layout_constraintBottom_toBottomOf="@id/play_collection"
             android:layout_marginTop="8dp"
             android:background="@drawable/rounded_button_inverse"
-            android:drawableStart="@drawable/ic_baseline_shuffle_white_24dp"
-            android:drawablePadding="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="12dp"
-            android:text="Shuffle"
-            android:textAllCaps="false"
-            android:textColor="@color/button_color"
-            app:drawableTint="@color/button_color"
-            app:layout_constraintStart_toEndOf="@id/buttons_gl"
-            app:layout_constraintTop_toBottomOf="@id/description_divider_bottom" />
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/shuffle_button_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintEnd_toStartOf="@id/shuffle_button_text"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_baseline_shuffle_white_24dp"
+                android:tint="@color/button_color" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/shuffle_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shuffle"
+                android:textColor="@color/button_color"
+                android:textSize="18sp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracks"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/play" />
+            app:layout_constraintTop_toBottomOf="@id/play_collection"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/album_duration"
