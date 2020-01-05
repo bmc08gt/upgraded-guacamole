@@ -100,6 +100,5 @@ class LibraryFragment: LibraryBaseFragment() {
 
     private fun observe() {
         vm?.recentlyAdded?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.submitList(it) })
-        vm?.recentsNetworkState?.observe(viewLifecycleOwner, Observer { recentlyAddedItems.networkState = it })
     }
 }

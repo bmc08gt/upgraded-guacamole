@@ -12,4 +12,8 @@ dependencies {
 
     implementation deps.retrofit.gson
     implementation deps.okhttp3
+
+    implementation deps.jetpack.room_runtime
+    implementation deps.jetpack.room_compiler
+    implementation deps.jetpack.roomktx
 }

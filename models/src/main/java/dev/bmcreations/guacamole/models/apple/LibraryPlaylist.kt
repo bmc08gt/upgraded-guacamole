@@ -2,7 +2,12 @@ package dev.bmcreations.guacamole.models.apple
 
 
 import android.os.Parcelable
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import dev.bmcreations.guacamole.converters.Converters
 import dev.bmcreations.guacamole.operator.NullableFieldProperty
 import kotlinx.android.parcel.Parcelize
 import java.util.concurrent.TimeUnit
@@ -41,55 +46,46 @@ val LibraryPlaylist.Attributes.Artwork.urlWithDimensions: String?
 var LibraryPlaylist.Attributes.curator by NullableFieldProperty<LibraryPlaylist.Attributes, String>()
 var LibraryPlaylist.Attributes.trackCount by NullableFieldProperty<LibraryPlaylist.Attributes, Int>()
 
+@Entity
 @Parcelize
+@TypeConverters(Converters::class)
 data class LibraryPlaylist(
-    @SerializedName("id")
-    val id: String?,
-    @SerializedName("type")
+    @PrimaryKey
+    val id: String,
     val type: String?,
-    @SerializedName("href")
     val href: String?,
-    @SerializedName("attributes")
+    @Embedded(prefix = "attrs_")
     val attributes: Attributes?
 ) : Container(),  Parcelable {
     @Parcelize
     data class Attributes(
-        @SerializedName("artwork")
+        @Embedded(prefix = "art_")
         val artwork: Artwork?,
-        @SerializedName("playParams")
+        @Embedded(prefix = "play_")
         val playParams: PlayParams?,
-        @SerializedName("canEdit")
         val canEdit: Boolean?,
         @SerializedName("name")
         val name: String?,
-        @SerializedName("description")
+        @Embedded(prefix = "desc_")
         val description: Description?
     ) : Parcelable {
         @Parcelize
         data class PlayParams(
-            @SerializedName("id")
             val id: String?,
-            @SerializedName("kind")
             val kind: String?,
-            @SerializedName("isLibrary")
             val isLibrary: Boolean?,
-            @SerializedName("globalId")
             val globalId: String?
         ) : Parcelable
 
         @Parcelize
         data class Artwork(
-            @SerializedName("width")
             val width: Int?,
-            @SerializedName("height")
             val height: Int?,
-            @SerializedName("url")
             val url: String?
         ) : Parcelable
 
         @Parcelize
         data class Description(
-            @SerializedName("standard")
             val standard: String?
         ) : Parcelable
     }

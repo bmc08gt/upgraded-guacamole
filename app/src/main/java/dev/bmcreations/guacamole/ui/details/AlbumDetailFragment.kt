@@ -24,14 +24,17 @@ import kotlinx.android.synthetic.main.fragment_album_detail.view.*
 
 class AlbumDetailFragment : NavigationStackFragment() {
 
+    private val library get() = context?.graph()?.sessionGraph?.library
     private val librarySource get() = context?.graph()?.networkGraph?.librarySource
     private val geniusSearch get() = context?.graph()?.networkGraph?.geniusSearchSource
     private val mediaState get() = context?.graph()?.sessionGraph?.mediaState
 
     private val vm by lazy {
-        librarySource?.let { source ->
-            geniusSearch?.let { genius ->
-                getViewModel { LibraryViewModel(source, genius) }
+        library?.let { lib ->
+            librarySource?.let { source ->
+                geniusSearch?.let { genius ->
+                    getViewModel { LibraryViewModel(lib, source, genius) }
+                }
             }
         }
     }

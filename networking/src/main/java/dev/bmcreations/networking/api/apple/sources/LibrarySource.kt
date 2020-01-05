@@ -8,29 +8,33 @@ import dev.bmcreations.networking.api.provideLibraryService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Retrofit
+import kotlin.coroutines.CoroutineContext
 
 class LibrarySource(
     private val retrofit: Retrofit,
     private val storeFrontSource: StoreFrontSource
-) : CoroutineScope by CoroutineScope(Dispatchers.IO) {
+) {
 
     private val library by lazy {
         provideLibraryService(retrofit)
     }
 
-    suspend fun getUserRecentlyAdded(limit: Int? = null, offset: Int? = null): Outcome<RecentlyAddedResult> {
+    fun getUserRecentlyAdded(scope: CoroutineScope, cb: (scope: CoroutineScope, items: List<RecentlyAddedEntity>) -> Unit) {
         storeFrontSource.updateStoreIfNeeded()
-        var ret: Outcome<RecentlyAddedResult>
-        val req = library.getUserRecentlyAddedAsync(limit, offset)
         try {
-            req.await().run {
-                ret = Outcome.success(this)
-            }
+            paged(
+                pagedCall = { next ->
+                    library.getUserRecentlyAddedAsync(limit = 10,
+                        offset = next?.substringAfter("offset=")?.toInt()
+                    )
+                },
+                scope = scope,
+                onPage = cb,
+                take = 6
+            )
         } catch (e: Exception) {
             e.printStackTrace()
-            ret = Outcome.failure(e)
         }
-        return ret
     }
 
     suspend fun getLibraryAlbumById(id: String): Outcome<LibraryAlbum?> {
@@ -117,7 +121,7 @@ class LibrarySource(
         return ret
     }
 
-    fun getAllLibrarySongs(tracks: MutableLiveData<List<Track>>) {
+    fun getAllLibrarySongs(scope: CoroutineScope, cb: (scope: CoroutineScope, items: List<Track>) -> Unit) {
         storeFrontSource.updateStoreIfNeeded()
         try {
             paged(
@@ -128,8 +132,8 @@ class LibrarySource(
                         )?.toInt()
                     )
                 },
-                scope = this,
-                liveData = tracks
+                scope = scope,
+                onPage = cb
             )
         } catch (e: Exception) {
             e.printStackTrace()

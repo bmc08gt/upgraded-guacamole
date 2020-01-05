@@ -8,14 +8,17 @@ import dev.bmcreations.guacamole.ui.navigation.NavigationStackFragment
 
 open class LibraryBaseFragment: NavigationStackFragment() {
 
+    val library get() = context?.graph()?.sessionGraph?.library
     val librarySource get() = context?.graph()?.networkGraph?.librarySource
     val geniusSearch get() = context?.graph()?.networkGraph?.geniusSearchSource
     val mediaState get() = context?.graph()?.sessionGraph?.mediaState
 
     val vm by lazy {
-        librarySource?.let { source ->
-            geniusSearch?.let { genius ->
-                activity?.getViewModel { LibraryViewModel(source, genius) }
+        library?.let { lib ->
+            librarySource?.let { source ->
+                geniusSearch?.let { genius ->
+                    getViewModel { LibraryViewModel(lib, source, genius) }
+                }
             }
         }
     }

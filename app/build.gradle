@@ -32,10 +32,18 @@ android {
 
     ndkVersion "20.0.5594570"
 
+    packagingOptions {
+        pickFirst 'META-INF/library_release.kotlin_module'
+        pickFirst 'META-INF/metadata.jvm.kotlin_module'
+        pickFirst 'META-INF/metadata.kotlin_module'
+    }
+
 }
 
 dependencies {
     implementation project(':networking')
+    implementation project(':library')
+    implementation project(':library-room')
     implementation project(':mediaplayback')
     implementation project(':models')
 

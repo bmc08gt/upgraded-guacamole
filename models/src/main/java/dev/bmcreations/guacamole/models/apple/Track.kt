@@ -1,29 +1,38 @@
 package dev.bmcreations.guacamole.models.apple
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
+import androidx.room.*
+import dev.bmcreations.guacamole.converters.Converters
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class TrackResult(val data: List<Track>) : Parcelable
 
+@Entity
 @Parcelize
+@TypeConverters(Converters::class)
 data class Track(
+    @Embedded(prefix = "attr_")
     val attributes: Attributes?,
     val href: String?,
-    val id: String?,
+    @PrimaryKey
+    val id: String,
     val type: String?,
+    @Embedded(prefix = "relations_")
     val relationships: Relationships?
 ) : Parcelable {
     @Parcelize
     data class Attributes(
+        @Embedded(prefix = "art_")
         val artwork: Artwork?,
         val artistName: String?,
-        val genreNames: List<String?>?,
+        @TypeConverters(Converters::class)
+        val genreNames: List<String>?,
         val durationInMillis: Int?,
         val releaseDate: String?,
         val name: String?,
         val albumName: String?,
+        @Embedded(prefix = "play_")
         val playParams: PlayParams?,
         val trackNumber: Int?,
         val contentRating: String?
@@ -31,42 +40,40 @@ data class Track(
 
         @Parcelize
         data class Artwork(
-            @SerializedName("height")
             val height: Int?,
-            @SerializedName("url")
             val url: String?,
-            @SerializedName("width")
             val width: Int?
         ) : Parcelable
 
         @Parcelize
         data class PlayParams(
-            @SerializedName("id")
             val id: String?,
-            @SerializedName("isLibrary")
             val isLibrary: Boolean?,
-            @SerializedName("kind")
             val kind: String?,
-            @SerializedName("reporting")
             val reporting: Boolean?,
-            @SerializedName("catalogId")
             val catalogId: String?
         ) : Parcelable
     }
 
     @Parcelize
     data class Relationships(
+        @Embedded(prefix = "albums_")
+        @TypeConverters(Converters::class)
         val albums: Albums?,
+        @Embedded(prefix = "artists_")
+        @TypeConverters(Converters::class)
         val artists: Artists?
     ) : Parcelable {
         @Parcelize
         data class Albums(
-            val `data`: List<LibraryAlbum?>?,
+            @TypeConverters(Converters::class)
+            val `data`: List<LibraryAlbum>?,
             val href: String?
         ) : Parcelable
 
         @Parcelize
         data class Artists(
+            @TypeConverters(Converters::class)
             val `data`: List<LibraryArtist>
         ): Parcelable
     }

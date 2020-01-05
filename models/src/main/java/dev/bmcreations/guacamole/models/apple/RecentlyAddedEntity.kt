@@ -2,17 +2,18 @@ package dev.bmcreations.guacamole.models.apple
 
 
 import android.os.Parcelable
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import dev.bmcreations.guacamole.converters.Converters
+import dev.bmcreations.guacamole.models.PagedListImpl
 import kotlinx.android.parcel.Parcelize
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 @Parcelize
-data class RecentlyAddedResult(private val next: String? = null, val data: List<RecentlyAddedEntity>) : Parcelable {
-
-    fun nextOffset(): Int? {
-        return next?.let { "http://foobar.com$it".toHttpUrlOrNull()?.queryParameter("offset")?.toInt() }
-    }
-}
+open class RecentlyAddedResult: PagedListImpl<RecentlyAddedEntity>(), Parcelable
 
 val RecentlyAddedEntity.Attributes.Artwork.urlWithDimensions: String?
     get() {
@@ -25,47 +26,39 @@ val RecentlyAddedEntity.Attributes.Artwork.urlWithDimensions: String?
         }
     }
 
+@Entity
+@TypeConverters(Converters::class)
 @Parcelize
 data class RecentlyAddedEntity(
-    @SerializedName("attributes")
+    @PrimaryKey(autoGenerate = true)
+    val _id: Int,
+    @Embedded(prefix = "attr_")
     val attributes: Attributes?,
-    @SerializedName("href")
     val href: String?,
-    @SerializedName("id")
-    val id: String?,
-    @SerializedName("type")
+    val id: String,
     val type: String?
 ) : Parcelable {
     @Parcelize
     data class Attributes(
-        @SerializedName("artistName")
         val artistName: String?,
-        @SerializedName("artwork")
+        @Embedded(prefix = "art_")
         val artwork: Artwork?,
-        @SerializedName("name")
         val name: String?,
-        @SerializedName("playParams")
+        @Embedded(prefix = "play_")
         val playParams: PlayParams?,
-        @SerializedName("trackCount")
         val trackCount: Int?
     ) : Parcelable {
         @Parcelize
         data class Artwork(
-            @SerializedName("height")
             val height: Int?,
-            @SerializedName("url")
             val url: String?,
-            @SerializedName("width")
             val width: Int?
         ) : Parcelable
 
         @Parcelize
         data class PlayParams(
-            @SerializedName("id")
             val id: String?,
-            @SerializedName("isLibrary")
             val isLibrary: Boolean?,
-            @SerializedName("kind")
             val kind: String?
         ) : Parcelable
     }

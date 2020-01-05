@@ -138,12 +138,6 @@ class MediaState(
     private fun loadCollection(collection: Container?, position: Int = -1) {
         collection?.let {
             val newQueue = when (repeatMode) {
-                PlaybackStateCompat.REPEAT_MODE_NONE -> {
-                    it.trackList?.subList(
-                        position.coerceAtLeast(0),
-                        it.trackList?.size ?: 0
-                    ) ?: emptyList()
-                }
                 PlaybackStateCompat.REPEAT_MODE_ONE -> {
                     it.trackList?.let { tracks ->
                         listOf(tracks[position.coerceAtLeast(0)])

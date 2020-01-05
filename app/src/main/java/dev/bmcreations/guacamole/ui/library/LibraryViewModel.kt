@@ -1,31 +1,30 @@
 package dev.bmcreations.guacamole.ui.library
 
-import androidx.lifecycle.*
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dev.bmcreations.guacamole.library.Library
+import dev.bmcreations.guacamole.models.apple.*
 import dev.bmcreations.guacamole.ui.library.artists.Artist
-import dev.bmcreations.networking.NetworkState
 import dev.bmcreations.networking.Outcome
 import dev.bmcreations.networking.api.apple.sources.LibrarySource
-import dev.bmcreations.networking.api.apple.sources.RecentlyAddedDataFactory
-import dev.bmcreations.guacamole.media.MusicQueue
-import dev.bmcreations.guacamole.models.apple.*
 import dev.bmcreations.networking.api.genius.sources.GeniusSearchSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import java.util.concurrent.Executors
 
 
 class LibraryViewModel(
+    val library: Library,
     val librarySource: LibrarySource,
     val geniusSearch: GeniusSearchSource
 ) : CoroutineScope by CoroutineScope(Dispatchers.IO), ViewModel(), AnkoLogger {
 
-    var recentsNetworkState: LiveData<NetworkState>? = null
-    var recentlyAdded: LiveData<PagedList<RecentlyAddedEntity>>? = null
+    var recentlyAdded = MutableLiveData<List<RecentlyAddedEntity>>()
 
     private var _playlists: List<LibraryPlaylist> = listOf()
         set(value) {
@@ -84,23 +83,41 @@ class LibraryViewModel(
     }
 
     private fun initializeLibrarySongs() {
-        librarySource.getAllLibrarySongs(tracks)
+        launch {
+            // get cached recents
+            val cached = library.songs()
+            info { "initial songs cache=${cached.count()}" }
+            launch(Dispatchers.Main) { tracks.value = cached  }
+
+            librarySource.getAllLibrarySongs(this) { scope, page ->
+                viewModelScope.launch {
+                    library.addSongs(page)
+
+                    val cached = library.songs()
+                    info { "updated songs cache=${cached.count()}" }
+                    launch(Dispatchers.Main) { tracks.value = cached  }
+                }
+            }
+        }
     }
 
     private fun initializeRecents() {
-        val recentFactory = RecentlyAddedDataFactory().apply {
-            this.provideLibrarySource(librarySource)
-        }
-        recentsNetworkState =
-            Transformations.switchMap(recentFactory.mutableLiveData) { source -> source.networkState }
-        val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(10)
-            .setPageSize(10).build()
+        launch {
+            // get cached recents
+            val cached = library.recentlyAdded()
+            info { "initial recents cache=${cached.count()}" }
+            launch(Dispatchers.Main) { recentlyAdded.value = cached  }
 
-        recentlyAdded = LivePagedListBuilder(recentFactory, pagedListConfig)
-            .setFetchExecutor(Executors.newFixedThreadPool(5))
-            .build()
+//            // trigger network request for more
+            librarySource.getUserRecentlyAdded(this) { scope, items ->
+                scope.launch {
+                    library.addRecentlyAddedItems(items)
+                    val cached = withContext(scope.coroutineContext) { library.recentlyAdded() }
+                    info { "updated recents cache=${cached.count()}" }
+                    launch(Dispatchers.Main) { recentlyAdded.value = cached  }
+                }
+            }
+        }
     }
 
     fun getLibraryAlbumById(id: String, cb: (Album) -> Unit) {

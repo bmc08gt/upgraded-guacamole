@@ -25,6 +25,11 @@ val MediaMetadataCompat.numOfTracks: Long
 
 val MediaMetadataCompat.artistName: String?
     get() {
+        return this.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
+    }
+
+val MediaMetadataCompat.albumArtistName: String?
+    get() {
         return this.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST)
     }
 
