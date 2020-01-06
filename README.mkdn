@@ -1,3 +1,9 @@
-# kotlin-android-template
-My usual templating for a kotlin
+# Guacamole
+
+<p align="center"> 
+<img src="https://github.com/bmc08gt/upgraded-guacamole/blob/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png">
+</p>
+
+<p align="center">An open-source alternative to <a href="https://www.apple.com/apple-music/">Apple Music</a></p>
+
 
